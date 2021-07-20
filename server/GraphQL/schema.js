@@ -1,13 +1,22 @@
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
+const ADD_USER = require('./Mutations/User');
 const GET_ALL_POSTS = require('./Queries/Posts');
 
 const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
+    name: 'RootQuery',
     fields: {
         all_posts: GET_ALL_POSTS
     }
 });
 
+const Mutation = new GraphQLObjectType({
+    name: 'Mutations',
+    fields: {
+        add_user: ADD_USER
+    }
+})
+
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation,
 });
