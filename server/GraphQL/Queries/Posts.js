@@ -18,11 +18,11 @@ const GET_ALL_POSTS = {
 const GET_SINGLE_POST = {
     type: PostType,
     args: {
-        postId: { type: new GraphQLNonNull(GraphQLID) }
+        id: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args) {
         try {
-            const post = await Post.findOne({ _id: args.postId })
+            const post = await Post.findOne({ _id: args.id })
             if (!post) throw new Error('Post not found');
             return post
         }

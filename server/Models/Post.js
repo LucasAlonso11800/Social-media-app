@@ -20,6 +20,16 @@ const postSchema = new Schema({
                 },
                 createdAt: {
                     type: String
+                },
+                likes: {
+                    type: [
+                        {
+                            username: String,
+                            createdAt: {
+                                type: String
+                            }
+                        }
+                    ]
                 }
             }
         ]
@@ -27,7 +37,9 @@ const postSchema = new Schema({
     likes: {
         type: [
             {
-                username: String,
+                username: {
+                    type: String
+                },
                 createdAt: {
                     type: String
                 }

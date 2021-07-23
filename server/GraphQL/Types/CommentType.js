@@ -2,8 +2,10 @@ const {
     GraphQLObjectType,
     GraphQLNonNull,
     GraphQLID,
-    GraphQLString
+    GraphQLString,
+    GraphQLList
 } = require('graphql');
+const LikeType = require('./LikeType');
 
 const CommentType = new GraphQLObjectType({
     name: 'CommentType',
@@ -19,6 +21,9 @@ const CommentType = new GraphQLObjectType({
         },
         createdAt: {
             type: new GraphQLNonNull(GraphQLString)
+        },
+        likes: { 
+            type: new GraphQLList(LikeType)
         }
     })
 });
