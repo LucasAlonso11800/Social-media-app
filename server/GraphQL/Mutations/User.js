@@ -1,4 +1,4 @@
-const { GraphQLString } = require('graphql');
+const { GraphQLNonNull, GraphQLString } = require('graphql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../Models/User');
@@ -16,10 +16,10 @@ const ADD_USER = {
     name: 'ADD_USER',
     type: UserType,
     args: {
-        username: { type: GraphQLString },
-        password: { type: GraphQLString },
-        confirmPassword: { type: GraphQLString },
-        email: { type: GraphQLString }
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        confirmPassword: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(parent, args) {
         const { username, password, confirmPassword, email } = args
@@ -57,10 +57,10 @@ const LOGIN_USER = {
     name: 'LOGIN_USER',
     type: UserType,
     args: {
-        username: { type: GraphQLString },
-        password: { type: GraphQLString },
-        confirmPassword: { type: GraphQLString },
-        email: { type: GraphQLString }
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        confirmPassword: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(parent, args) {
         const { username, password } = args

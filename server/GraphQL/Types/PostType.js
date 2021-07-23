@@ -11,10 +11,10 @@ const PostType = new GraphQLObjectType({
         id: {
             type: new GraphQLNonNull(GraphQLID)
         },
-        username: {
+        body: {
             type: new GraphQLNonNull(GraphQLString)
         },
-        email: {
+        username: {
             type: new GraphQLNonNull(GraphQLString)
         },
         createdAt: {
