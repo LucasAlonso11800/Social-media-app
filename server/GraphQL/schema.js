@@ -1,5 +1,5 @@
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
-const ADD_USER = require('./Mutations/User');
+const  { ADD_USER, LOGIN_USER }  = require('./Mutations/User');
 const GET_ALL_POSTS = require('./Queries/Posts');
 
 const RootQuery = new GraphQLObjectType({
@@ -12,9 +12,10 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutations',
     fields: {
-        add_user: ADD_USER
+        add_user: ADD_USER,
+        login_user: LOGIN_USER
     }
-})
+});
 
 module.exports = new GraphQLSchema({
     query: RootQuery,
