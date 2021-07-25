@@ -26,3 +26,10 @@ export interface ILike {
     username: string
     __typename: string
 };
+
+export interface IAddUser {
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+};
