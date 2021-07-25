@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 const client = new ApolloClient({
-    uri: 'http://localhost:5000',
+    uri: 'http://localhost:5000/graphql',
     cache: new InMemoryCache()
 });
 
