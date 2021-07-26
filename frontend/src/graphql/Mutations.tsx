@@ -21,3 +21,21 @@ export const ADD_USER = gql`
         }
     }
 `;
+
+export const LOGIN_USER = gql`
+    mutation login_user(
+        $username: String!
+        $password: String!
+    ) {
+        login_user(
+            username: $username,
+            password: $password
+        ){
+            id
+            email
+            username
+            createdAt
+            token
+        }
+    }
+`;

@@ -33,3 +33,8 @@ export interface IAddUser {
     password: string,
     confirmPassword: string,
 };
+
+export interface ILoginUser {
+    username: string,
+    password: string,
+};

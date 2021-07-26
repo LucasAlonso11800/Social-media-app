@@ -14,7 +14,10 @@ import { IAddUser } from '../Interfaces';
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const validationSchema = yup.object({
-    username: yup.string().required('An username must be provided'),
+    username: yup
+        .string()
+        .min(6, 'The usename must be at least 6 characters long')
+        .required('An username must be provided'),
     email: yup
         .string()
         .matches(emailRegex, 'Provide a valid email')
