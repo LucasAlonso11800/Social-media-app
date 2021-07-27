@@ -1,3 +1,21 @@
+export interface IUserData{
+    createdAt: string,
+    email: string,
+    id: string,
+    token: string,
+    username: string,
+    __typename: string
+};
+
+export interface IGlobalState{
+    userData: IUserData | null
+};
+
+export interface IAction {
+    type: string,
+    payload: IUserData | null
+};
+
 export interface IPostQuery{
     all_posts: IPost[]
 };

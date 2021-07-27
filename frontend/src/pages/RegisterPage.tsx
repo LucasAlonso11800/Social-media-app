@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+// Context
+import { GlobalContext } from '../context/GlobalContext';
 import { RouteComponentProps } from 'react-router';
 // GraphQL
 import { useMutation } from '@apollo/client';
@@ -18,36 +20,42 @@ const validationSchema = yup.object({
         .string()
         .min(6, 'The usename must be at least 6 characters long')
         .required('An username must be provided'),
-    email: yup
+        email: yup
         .string()
         .matches(emailRegex, 'Provide a valid email')
         .required('An email must be provided'),
-    password: yup
+        password: yup
         .string()
         .min(8, 'The password must be at least 8 characters long')
         .required('A password must be provided'),
-    confirmPassword: yup
+        confirmPassword: yup
         .string()
         .oneOf([yup.ref('password')], "Passworda must be equal")
         .required('A password must be provided')
-});
+    });
+    
+    function RegisterPage(props: RouteComponentProps) {
+        const { state, dispatch } = useContext(GlobalContext);
 
-function RegisterPage(props: RouteComponentProps) {
-    const formik = useFormik({
-        initialValues: {
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+        const formik = useFormik({
+            initialValues: {
+                username: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => setQueryVariables(values)
     });
-
+    console.log(state)
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
 
     const [addUser, { loading }] = useMutation(ADD_USER, {
         update(proxy, result) {
+            dispatch({
+                type: 'LOGIN',
+                payload: result.data.add_user
+            })
             props.history.push('/');
         },
         variables: queryVariables

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { RouteComponentProps } from 'react-router';
+// Context
+import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../graphql/Mutations';
@@ -10,8 +12,6 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
 import { ILoginUser } from '../Interfaces';
-
-const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const validationSchema = yup.object({
     username: yup
@@ -25,6 +25,8 @@ const validationSchema = yup.object({
 });
 
 function LoginPage(props: RouteComponentProps) {
+    const { state, dispatch } = useContext(GlobalContext);
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -38,6 +40,10 @@ function LoginPage(props: RouteComponentProps) {
 
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
         update(proxy, result) {
+            dispatch({
+                type: 'LOGIN',
+                payload: result.data.login_user
+            });
             props.history.push('/');
         },
         variables: queryVariables,
