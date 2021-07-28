@@ -27,7 +27,7 @@ function HomePage() {
                     {state ? <PostForm /> : null}
                 </Grid.Row>
                 <Grid.Row>
-                    <CardGroup itemsPerRow={1} style={{width: '100%'}}>
+                    <CardGroup itemsPerRow={1} style={{ width: '100%' }}>
                         {data && data.all_posts.map(post => {
                             return <PostCard post={post} key={post.id} />
                         })}

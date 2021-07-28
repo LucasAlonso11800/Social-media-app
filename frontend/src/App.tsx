@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import 'semantic-ui-css/semantic.css'
+import 'semantic-ui-css/semantic.min.css'
 import './App.css';
 // React-router-dom
 import { BrowserRouter as Router, Route } from 'react-router-dom';

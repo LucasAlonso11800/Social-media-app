@@ -1,6 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom';
+// Semantic
 import { Card, Icon, Label, Button } from 'semantic-ui-react';
 import moment from 'moment';
+// Context
+import { GlobalContext } from '../context/GlobalContext';
+// Components
+import LikeButton from './LikeButton';
+// Interfaces
 import { IPost } from '../Interfaces';
 
 type Props = {
@@ -8,6 +15,7 @@ type Props = {
 }
 
 function PostCard(props: Props) {
+    const { state } = useContext(GlobalContext);
     const { body, createdAt, id, username, comments, likes } = props.post;
     return (
         <Card centered raised fluid>
@@ -19,15 +27,8 @@ function PostCard(props: Props) {
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as="div" labelPosition="right">
-                    <Button as="div" color='twitter' basic>
-                        <Icon name="heart" />
-                    </Button>
-                    <Label basic color="teal" pointing="left">
-                        {likes.length}
-                    </Label>
-                </Button >
-                <Button as="div" labelPosition="right">
+                <LikeButton likes={likes} id={id}/>
+                <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
                     <Button basic as="div" color='twitter'>
                         <Icon name="comment" />
                     </Button>
@@ -35,6 +36,11 @@ function PostCard(props: Props) {
                         {comments.length}
                     </Label>
                 </Button >
+                {state !== null && state.username === username ?
+                    <Button as="div" color='red' floated="right">
+                        <Icon name="trash alternate" />
+                    </Button>
+                    : null}
             </Card.Content>
         </Card>
     )

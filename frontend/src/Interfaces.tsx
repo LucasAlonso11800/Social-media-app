@@ -43,7 +43,6 @@ export interface IPost {
     id: string
     likes: ILike[]
     username: string
-    __typename: string
 };
 
 export interface IComment {
@@ -51,14 +50,12 @@ export interface IComment {
     createdAt: string
     id: string
     username: string
-    __typename: string
 };
 
 export interface ILike {
     createdAt: string
     id: string
     username: string
-    __typename: string
 };
 
 // Forms

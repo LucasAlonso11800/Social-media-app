@@ -17,7 +17,7 @@ const LIKE_POST = {
 
             if (post.likes.find(like => like.username === user.username)) {
                 const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                    likes: likes.filter(like => like.username !== user.username)
+                    likes: post.likes.filter(like => like.username !== user.username)
                 }, { new: true })
                 return newPost
             }
