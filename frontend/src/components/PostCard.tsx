@@ -10,7 +10,7 @@ type Props = {
 function PostCard(props: Props) {
     const { body, createdAt, id, username, comments, likes } = props.post;
     return (
-        <Card>
+        <Card centered raised fluid>
             <Card.Content>
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>

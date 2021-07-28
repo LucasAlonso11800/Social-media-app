@@ -11,6 +11,8 @@ const CREATE_POST = {
     },
     async resolve(parent, args, context) {
         const user = checkAuth(context)
+        if(args.body === undefined || args.body === '') throw new Error("You post can't be empty");
+        if(args.body.length > 140) throw new Error("You post can't have more than 140 characters");
 
         try {
             const newPost = new Post({

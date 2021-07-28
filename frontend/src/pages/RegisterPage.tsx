@@ -30,7 +30,7 @@ const validationSchema = yup.object({
         .required('A password must be provided'),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref('password')], "Passworda must be equal")
+        .oneOf([yup.ref('password')], "Passwords must be equal")
         .required('A password must be provided')
 });
 
