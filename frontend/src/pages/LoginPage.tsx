@@ -11,7 +11,7 @@ import { Form, Button, Container } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { ILoginUser } from '../Interfaces';
+import { ILoginUser, ActionType } from '../Interfaces';
 
 const validationSchema = yup.object({
     username: yup
@@ -25,7 +25,7 @@ const validationSchema = yup.object({
 });
 
 function LoginPage(props: RouteComponentProps) {
-    const { state, dispatch } = useContext(GlobalContext);
+    const { dispatch } = useContext(GlobalContext);
 
     const formik = useFormik({
         initialValues: {
@@ -41,7 +41,7 @@ function LoginPage(props: RouteComponentProps) {
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
         update(proxy, result) {
             dispatch({
-                type: 'LOGIN',
+                type: ActionType.LOGIN,
                 payload: result.data.login_user
             });
             props.history.push('/');

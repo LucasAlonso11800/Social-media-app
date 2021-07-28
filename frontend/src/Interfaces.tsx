@@ -7,14 +7,24 @@ export interface IUserData{
     __typename: string
 };
 
-export interface IGlobalState{
-    userData: IUserData | null
+export enum ActionType {
+    LOGIN,
+    LOGOUT
 };
 
-export interface IAction {
-    type: string,
-    payload: IUserData | null
+export interface ILoginAction {
+    type: ActionType.LOGIN;
+    payload: IUserData
 };
+
+export interface ILogoutAction {
+    type: ActionType.LOGOUT;
+    payload: null
+};
+
+export type Actions = ILoginAction | ILogoutAction;
+
+export type GlobalState = IUserData | null
 
 export interface IPostQuery{
     all_posts: IPost[]

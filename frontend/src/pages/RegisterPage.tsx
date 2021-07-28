@@ -11,7 +11,7 @@ import { Form, Button, Container } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IAddUser } from '../Interfaces';
+import { IAddUser, ActionType } from '../Interfaces';
 
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -20,45 +20,46 @@ const validationSchema = yup.object({
         .string()
         .min(6, 'The usename must be at least 6 characters long')
         .required('An username must be provided'),
-        email: yup
+    email: yup
         .string()
         .matches(emailRegex, 'Provide a valid email')
         .required('An email must be provided'),
-        password: yup
+    password: yup
         .string()
         .min(8, 'The password must be at least 8 characters long')
         .required('A password must be provided'),
-        confirmPassword: yup
+    confirmPassword: yup
         .string()
         .oneOf([yup.ref('password')], "Passworda must be equal")
         .required('A password must be provided')
-    });
-    
-    function RegisterPage(props: RouteComponentProps) {
-        const { state, dispatch } = useContext(GlobalContext);
+});
 
-        const formik = useFormik({
-            initialValues: {
-                username: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
+function RegisterPage(props: RouteComponentProps) {
+    const { dispatch } = useContext(GlobalContext);
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => setQueryVariables(values)
     });
-    console.log(state)
+
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
 
-    const [addUser, { loading }] = useMutation(ADD_USER, {
+    const [addUser, { loading, error }] = useMutation(ADD_USER, {
         update(proxy, result) {
             dispatch({
-                type: 'LOGIN',
+                type: ActionType.LOGIN,
                 payload: result.data.add_user
             })
             props.history.push('/');
         },
-        variables: queryVariables
+        variables: queryVariables,
+        onError: () => console.log('Error')
     });
 
     useEffect(() => {
@@ -108,6 +109,13 @@ const validationSchema = yup.object({
                 <Button type="submit" color="twitter" disabled={loading}>
                     Register
                 </Button>
+                {error !== undefined ?
+                    <div className="ui red message">
+                        <ul className="list">
+                            <li>{error.message}</li>
+                        </ul>
+                    </div>
+                    : null}
             </Form>
         </Container>
     )

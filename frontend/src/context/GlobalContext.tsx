@@ -1,23 +1,21 @@
 import React, { createContext, useReducer } from "react";
-import { IAction, IGlobalState } from '../Interfaces';
+import { Actions, ActionType, GlobalState } from '../Interfaces';
 
-const initialState: IGlobalState = {
-    userData: null,
-};
+const initialState: GlobalState = null;
 
-export const GlobalContext = createContext<IGlobalState | any>(initialState);
+export const GlobalContext = createContext<{
+    state: GlobalState;
+    dispatch: React.Dispatch<Actions>
+}>({
+    state: initialState,
+    dispatch: () => { }
+});
 
-function reducer(state: IGlobalState, action: IAction): IGlobalState {
+function reducer(state: GlobalState, action: Actions): GlobalState {
     switch (action.type) {
-        case 'LOGIN': return {
-            userData: action.payload,
-        }
-        case 'LOGOUT': return {
-            userData: null
-        }
-        default: return {
-            userData: action.payload
-        }
+        case ActionType.LOGIN: return action.payload
+        case ActionType.LOGOUT: return null
+        default: return state
     }
 };
 
