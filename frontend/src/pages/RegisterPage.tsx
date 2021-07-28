@@ -11,7 +11,7 @@ import { Form, Button, Container } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IAddUser, ActionType } from '../Interfaces';
+import { IAddUser, EActionType } from '../Interfaces';
 
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -53,7 +53,7 @@ function RegisterPage(props: RouteComponentProps) {
     const [addUser, { loading, error }] = useMutation(ADD_USER, {
         update(proxy, result) {
             dispatch({
-                type: ActionType.LOGIN,
+                type: EActionType.LOGIN,
                 payload: result.data.add_user
             })
             props.history.push('/');

@@ -1,13 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom';
-import { Menu } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react';
+import { GlobalContext } from '../context/GlobalContext';
+import { EActionType } from '../Interfaces';
 
 export default function NavBar() {
+    const { state, dispatch } = useContext(GlobalContext);
     const pathname = window.location.pathname;
     const path = pathname === '/' ? 'home' : pathname.substring(1);
     const [activeItem, setActiveItem] = useState(path);
 
-    return (
+    const nav = state !== null ?
+        <Menu secondary pointing size={'huge'}>
+            <Menu.Item
+                name={state.username}
+                active
+                as={Link}
+                to="/"
+            />
+            <Menu.Menu position='right'>
+                <Menu.Item
+                    name='logout'
+                    onClick={() => dispatch({
+                        type: EActionType.LOGOUT,
+                        payload: null
+                    })}
+                />
+            </Menu.Menu>
+        </Menu>
+        :
         <Menu secondary pointing size={'huge'}>
             <Menu.Item
                 name='home'
@@ -33,5 +54,6 @@ export default function NavBar() {
                 />
             </Menu.Menu>
         </Menu>
-    )
+
+    return nav
 };

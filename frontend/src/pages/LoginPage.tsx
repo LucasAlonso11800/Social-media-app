@@ -11,7 +11,7 @@ import { Form, Button, Container } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { ILoginUser, ActionType } from '../Interfaces';
+import { ILoginUser, EActionType } from '../Interfaces';
 
 const validationSchema = yup.object({
     username: yup
@@ -41,7 +41,7 @@ function LoginPage(props: RouteComponentProps) {
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
         update(proxy, result) {
             dispatch({
-                type: ActionType.LOGIN,
+                type: EActionType.LOGIN,
                 payload: result.data.login_user
             });
             props.history.push('/');

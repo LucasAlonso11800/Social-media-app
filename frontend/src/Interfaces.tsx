@@ -1,30 +1,36 @@
+// Context
 export interface IUserData{
-    createdAt: string,
-    email: string,
-    id: string,
-    token: string,
-    username: string,
-    __typename: string
+    email: string;
+    id: string;
+    token: string;
+    username: string;
 };
 
-export enum ActionType {
+export interface IDecodedToken extends IUserData {
+    exp: number;
+    iat: number;
+};
+
+export enum EActionType {
     LOGIN,
     LOGOUT
 };
 
 export interface ILoginAction {
-    type: ActionType.LOGIN;
-    payload: IUserData
+    type: EActionType.LOGIN;
+    payload: IUserData;
 };
 
 export interface ILogoutAction {
-    type: ActionType.LOGOUT;
-    payload: null
+    type: EActionType.LOGOUT;
+    payload: null;
 };
 
 export type Actions = ILoginAction | ILogoutAction;
 
-export type GlobalState = IUserData | null
+export type GlobalState = IUserData | null;
+
+// Posts
 
 export interface IPostQuery{
     all_posts: IPost[]
@@ -55,14 +61,16 @@ export interface ILike {
     __typename: string
 };
 
+// Forms
+
 export interface IAddUser {
-    username: string,
-    email: string,
-    password: string,
-    confirmPassword: string,
+    username: string
+    email: string
+    password: string
+    confirmPassword: string
 };
 
 export interface ILoginUser {
-    username: string,
-    password: string,
+    username: string
+    password: string
 };

@@ -1,7 +1,23 @@
 import React, { createContext, useReducer } from "react";
-import { Actions, ActionType, GlobalState } from '../Interfaces';
+import { Actions, EActionType, GlobalState, IDecodedToken } from '../Interfaces';
+import jwtDecode from 'jwt-decode';
 
-const initialState: GlobalState = null;
+let initialState: GlobalState = null;
+
+if(localStorage.getItem("token")){
+    const decodedToken: IDecodedToken = jwtDecode(localStorage.getItem("token") as string);
+    
+    if(decodedToken.exp * 1000 < Date.now()){
+        localStorage.removeItem("token");
+    } else {
+        initialState = {
+            email: decodedToken.email,
+            id: decodedToken.id,
+            username: decodedToken.username,
+            token: localStorage.getItem("token") as string
+        }
+    }
+};
 
 export const GlobalContext = createContext<{
     state: GlobalState;
@@ -13,8 +29,14 @@ export const GlobalContext = createContext<{
 
 function reducer(state: GlobalState, action: Actions): GlobalState {
     switch (action.type) {
-        case ActionType.LOGIN: return action.payload
-        case ActionType.LOGOUT: return null
+        case EActionType.LOGIN: {
+            localStorage.setItem("token", action.payload.token)
+            return action.payload
+        }
+        case EActionType.LOGOUT: {
+            localStorage.removeItem("token")
+            return null
+        } 
         default: return state
     }
 };
