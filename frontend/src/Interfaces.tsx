@@ -36,6 +36,10 @@ export interface IPostQuery{
     all_posts: IPost[]
 };
 
+export interface ISinglePostQuery{
+    single_post: IPost
+};
+
 export interface IPost {
     body: string
     comments: IComment[]

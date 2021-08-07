@@ -1,4 +1,4 @@
-const { GraphQLNonNull, GraphQLString } = require('graphql')
+const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql')
 const PostType = require("../Types/PostType");
 const Post = require("../../Models/Post");
 const checkAuth = require("../../Helpers/CheckAuth");
@@ -35,17 +35,17 @@ const DELETE_POST = {
     name: "DELETE_POST",
     type: GraphQLString,
     args: {
-        id: { type: new GraphQLNonNull(GraphQLString) }
+        postId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args, context) {
         const user = checkAuth(context)
         try {
-            const post = await Post.findOne({ _id: args.id })
+            const post = await Post.findOne({ _id: args.postId })
             if (!post) throw new Error('Post not found')
 
             if (user.username !== post.username) throw new Error("Action not allowed")
 
-            await Post.deleteOne({ _id: args.id })
+            await Post.deleteOne({ _id: args.postId })
             return 'Post deleted'
         }
         catch (err) {

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-
 function checkAuth(context){
     const authHeader = context.headers.authorization;
     if(authHeader){

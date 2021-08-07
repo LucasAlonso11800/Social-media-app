@@ -30,7 +30,7 @@ function LikeButton(props: Props) {
     });
 
     return (
-        <Button as="div" labelPosition="right" onClick={() => likePost()}>
+        <Button as="div" labelPosition="right" onClick={state !== null ? () => likePost() : () => {}}>
             <Button color='twitter' basic={!liked} as={state !== null ? "div" : Link} to="/login">
                 <Icon name="heart" />
             </Button>

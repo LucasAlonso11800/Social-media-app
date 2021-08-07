@@ -13,6 +13,7 @@ import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import SinglePostPage from './pages/SinglePostPage';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:5000/graphql' });
 
@@ -31,8 +32,6 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 
-console.log(client);
-
 function App() {
     const { state } = useContext(GlobalContext);
     const inLoginOrRegisterPage = window.location.pathname === "/login" || window.location.pathname === "/register";
@@ -46,6 +45,7 @@ function App() {
                     <Route exact path="/" component={HomePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
+                    <Route exact path="/posts/:postId" component={SinglePostPage} />
                 </Router>
             </GlobalProvider>
         </ApolloProvider>

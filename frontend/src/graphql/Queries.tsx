@@ -19,3 +19,23 @@ export const GET_POSTS = gql`
         }
     }
 `;
+
+export const GET_SINGLE_POST = gql`
+    query($id: ID!){
+        single_post(id: $id){
+            id
+            body
+            createdAt
+            username
+            comments{
+                id
+                body
+                username
+                createdAt
+            }
+            likes {
+                username
+            }
+        }
+    }
+`;
