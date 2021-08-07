@@ -28,7 +28,7 @@ function PostCard(props: Props) {
                 />
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
-                <Card.Description onClick={() => window.location.href = `/posts/${id}`} >
+                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${id}`} >
                     {body}
                 </Card.Description>
             </Card.Content>
@@ -42,7 +42,7 @@ function PostCard(props: Props) {
                         {comments.length}
                     </Label>
                 </Button >
-                {state !== null && state.username === username && <DeleteButton id={id} />}
+                {state !== null && state.username === username && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>
     )

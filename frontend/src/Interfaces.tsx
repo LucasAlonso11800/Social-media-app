@@ -78,4 +78,8 @@ export interface ILoginUser {
 
 export interface ICreatePost {
     body: string
-}
+};
+
+export interface IAddComment {
+    body: string
+};

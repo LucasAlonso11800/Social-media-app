@@ -10,6 +10,8 @@ import moment from 'moment';
 // Components
 import LikeButton from '../components/LikeButton';
 import DeleteButton from '../components/DeleteButton';
+import Comment from '../components/Comment';
+import CommentForm from '../components/CommentForm';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 
@@ -22,6 +24,7 @@ function SinglePostPage(props: RouteComponentProps) {
     const { error, loading, data } = useQuery<ISinglePostQuery>(GET_SINGLE_POST, {
         variables: { id: postId }
     });
+
     return (
         <Container>
             <Grid>
@@ -51,10 +54,12 @@ function SinglePostPage(props: RouteComponentProps) {
                                             {data?.single_post.comments.length}
                                         </Label>
                                     </Button>
-                                    {state !== null && state.username === data?.single_post.username && 
-                                    <DeleteButton id={data?.single_post.id} callback={deleteCallback}/>}
+                                    {state !== null && state.username === data?.single_post.username &&
+                                        <DeleteButton postId={data?.single_post.id} callback={deleteCallback} />}
                                 </Card.Content>
                             </Card>
+                            {state ? <CommentForm postId={postId} /> : null}
+                            {data?.single_post.comments.map(c => <Comment key={c.id} comment={c} postId={data?.single_post.id} />)}
                         </Grid.Column>
                     </Grid.Row>
                 }

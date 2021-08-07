@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // Semantic
 import { Form, Button } from 'semantic-ui-react';
 // GraphQL
-import { useMutation } from '@apollo/client';
-import { CREATE_POST } from '../graphql/Mutations';
-import { GET_POSTS } from '../graphql/Queries';
+import { useMutation } from '@apollo/client'
+import { ADD_COMMENT } from '../graphql/Mutations';
+// Interfaces
+import { IAddComment } from '../Interfaces';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-// Interfaces
-import { ICreatePost, IPostQuery } from '../Interfaces';
+
+type Props = {
+    postId: string
+};
 
 const validationSchema = yup.object({
-    body: yup.string().max(140, 'It can not be longer than 140 characters').required()
+    body: yup.string().max(140, 'It can not be longer than 140 characters').required("Comment must have a body")
 });
 
-function PostForm() {
+function CommentForm(props: Props) {
+    const [queryVariables, setQueryVariables] = useState<IAddComment>();
+
     const formik = useFormik({
         initialValues: {
             body: ''
@@ -24,36 +29,29 @@ function PostForm() {
         onSubmit: (values) => setQueryVariables(values)
     });
 
-    const [queryVariables, setQueryVariables] = useState<ICreatePost>();
-
-    const [createPost, { error, loading, data }] = useMutation(CREATE_POST, {
-        update(proxy, result) {
-            const data: IPostQuery = proxy.readQuery({
-                query: GET_POSTS
-            }) as IPostQuery;
-
-            proxy.writeQuery({
-                query: GET_POSTS,
-                data: { all_posts: [result.data.create_post, ...data.all_posts] }
-            })
-
-            formik.values.body = ''
+    const [addComment, { error }] = useMutation(ADD_COMMENT, {
+        update() {
+            formik.values.body = ""
         },
-        variables: queryVariables,
-        onError: () => console.log('error'),
+        variables: {
+            body: queryVariables?.body,
+            postId: props.postId
+        },
+        onError: () => console.log("Error")
     });
 
     useEffect(() => {
-        if (queryVariables) createPost()
+        if (queryVariables) addComment()
     }, [queryVariables]);
 
     return (
         <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
-            <h2>Create post</h2>
+            <h2>Comment this post</h2>
             <Form.Group style={{ width: '100%', margin: 0 }}>
                 <Form.Field width="16">
                     <Form.Input
-                        placeholder="What are you thinking about?"
+                        fluid
+                        placeholder="What would you like to say?"
                         name="body"
                         type="text"
                         value={formik.values.body}
@@ -61,8 +59,13 @@ function PostForm() {
                         error={formik.touched.body && Boolean(formik.errors.body)}
                     />
                 </Form.Field>
-                <Button type="submit" color="twitter">
-                    Post
+                <Button
+                    type="submit"
+                    color="twitter"
+                    disabled={formik.values.body.trim() === ''}
+                    className="ui button"
+                >
+                    Comment
                 </Button>
             </Form.Group>
             {error !== undefined ?
@@ -74,6 +77,6 @@ function PostForm() {
                 : null}
         </Form>
     )
-};
+}
 
-export default PostForm;
+export default CommentForm
