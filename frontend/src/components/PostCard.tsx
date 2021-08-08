@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 // Semantic
-import { Card, Icon, Label, Button, Image } from 'semantic-ui-react';
+import { Card, Icon, Label, Button, Image, Popup } from 'semantic-ui-react';
 import moment from 'moment';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
@@ -34,14 +34,20 @@ function PostCard(props: Props) {
             </Card.Content>
             <Card.Content extra>
                 <LikeButton likes={likes} id={id} />
-                <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
-                    <Button basic as="div" color='twitter'>
-                        <Icon name="comment" />
-                    </Button>
-                    <Label basic color="blue" pointing="left">
-                        {comments.length}
-                    </Label>
-                </Button >
+                <Popup
+                    content="Comment"
+                    inverted
+                    trigger={
+                        <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
+                            <Button basic as="div" color='twitter'>
+                                <Icon name="comment" />
+                            </Button>
+                            <Label basic color="blue" pointing="left">
+                                {comments.length}
+                            </Label>
+                        </Button >
+                    }
+                />
                 {state !== null && state.username === username && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>

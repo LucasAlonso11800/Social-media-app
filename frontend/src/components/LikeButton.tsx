@@ -6,7 +6,7 @@ import { LIKE_POST } from '../graphql/Mutations';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // Semantic
-import { Icon, Label, Button } from 'semantic-ui-react';
+import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
 import { ILike } from '../Interfaces';
 
@@ -30,14 +30,20 @@ function LikeButton(props: Props) {
     });
 
     return (
-        <Button as="div" labelPosition="right" onClick={state !== null ? () => likePost() : () => {}}>
-            <Button color='twitter' basic={!liked} as={state !== null ? "div" : Link} to="/login">
-                <Icon name="heart" />
-            </Button>
-            <Label basic color="teal" pointing="left">
-                {likes.length}
-            </Label>
-        </Button >
+        <Popup
+            content="Like"
+            inverted
+            trigger={
+                <Button as="div" labelPosition="right" onClick={state !== null ? () => likePost() : () => { }}>
+                    <Button color='twitter' basic={!liked} as={state !== null ? "div" : Link} to="/login">
+                        <Icon name="heart" />
+                    </Button>
+                    <Label basic color="teal" pointing="left">
+                        {likes.length}
+                    </Label>
+                </Button >
+            }
+        />
     )
 }
 

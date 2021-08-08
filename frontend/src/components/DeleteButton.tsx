@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // Semantic
-import { Button, Icon, Confirm } from 'semantic-ui-react';
+import { Button, Icon, Confirm, Popup } from 'semantic-ui-react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { DELETE_POST, DELETE_COMMENT } from '../graphql/Mutations';
@@ -40,12 +40,23 @@ function DeleteButton(props: Props) {
         },
         onError: () => console.log('Error')
     });
-    console.log(error)
+
     return (
         <>
-            <Button as="div" color='red' floated="right" onClick={() => setOpen(true)}>
-                <Icon name="trash alternate" />
-            </Button>
+            <Popup
+                content={commentId ? "Delete comment" : "Delete post"}
+                inverted
+                trigger={
+                    <Button
+                        as="div"
+                        color='red'
+                        floated="right"
+                        onClick={() => setOpen(true)}
+                    >
+                        <Icon name="trash alternate" />
+                    </Button>
+                }
+            />
             <Confirm
                 open={open}
                 onCancel={() => setOpen(false)}
