@@ -1,8 +1,9 @@
-const { GraphQLList, GraphQLNonNull, GraphQLID } = require('graphql');
-const Post = require('../../Models/Post');
-const PostType = require('../Types/PostType');
+import { GraphQLList, GraphQLNonNull, GraphQLID } from 'graphql';
+import { IGetSinglePost } from '../../Interfaces';
+import Post from '../../Models/Post';
+import { PostType } from '../Types/PostType';
 
-const GET_ALL_POSTS = {
+export const GET_ALL_POSTS = {
     type: GraphQLList(PostType),
     async resolve() {
         try {
@@ -15,12 +16,12 @@ const GET_ALL_POSTS = {
     }
 };
 
-const GET_SINGLE_POST = {
+export const GET_SINGLE_POST = {
     type: PostType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(parent, args) {
+    async resolve(_: any, args: IGetSinglePost) {
         try {
             const post = await Post.findOne({ _id: args.id })
             if (!post) throw new Error('Post not found');
@@ -31,5 +32,3 @@ const GET_SINGLE_POST = {
         }
     }
 };
-
-module.exports = { GET_ALL_POSTS, GET_SINGLE_POST };

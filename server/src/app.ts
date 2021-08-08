@@ -1,13 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const { graphqlHTTP } = require('express-graphql');
-require('dotenv').config()
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import { graphqlHTTP } from 'express-graphql';
+import 'dotenv/config';
 
-const schema = require('./GraphQL/schema');
+import schema from './GraphQL/schema';
 const app = express();
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI as string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
@@ -23,7 +23,7 @@ app.use('/graphql', graphqlHTTP((req, res) => {
             headers: req.headers,
         }
     }
-}))
+}));
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

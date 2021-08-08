@@ -1,18 +1,19 @@
-const { GraphQLNonNull, GraphQLString } = require('graphql');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../../Models/User');
-const UserType = require('../Types/UserType');
+import { GraphQLNonNull, GraphQLString } from 'graphql';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../../Models/User';
+import { UserType } from '../Types/UserType';
+import { IAddUser, ILoginUser, IUser } from '../../Interfaces';
 
-function generateToken(user) {
+function generateToken(user: IUser) {
     return jwt.sign({
         id: user._id,
         email: user.email,
         username: user.username,
-    }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
+    }, process.env.JWT_SECRET_KEY as string, { expiresIn: '1h' })
 };
 
-const ADD_USER = {
+export const ADD_USER = {
     name: 'ADD_USER',
     type: UserType,
     args: {
@@ -21,7 +22,7 @@ const ADD_USER = {
         confirmPassword: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(parent, args) {
+    async resolve(_: any, args: IAddUser) {
         const { username, password, confirmPassword, email } = args
         try {
             if (password !== confirmPassword) throw new Error("Passwords don't match")
@@ -53,14 +54,14 @@ const ADD_USER = {
     }
 };
 
-const LOGIN_USER = {
+export const LOGIN_USER = {
     name: 'LOGIN_USER',
     type: UserType,
     args: {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(parent, args) {
+    async resolve(_: any, args: ILoginUser) {
         const { username, password } = args
         const user = await User.findOne({ username })
 
@@ -79,5 +80,3 @@ const LOGIN_USER = {
         }
     }
 };
-
-module.exports = { ADD_USER, LOGIN_USER }

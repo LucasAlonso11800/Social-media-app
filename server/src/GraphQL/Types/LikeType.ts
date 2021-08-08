@@ -1,11 +1,6 @@
-const {
-    GraphQLObjectType,
-    GraphQLNonNull,
-    GraphQLID,
-    GraphQLString
-} = require('graphql');
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
-const LikeType = new GraphQLObjectType({
+export const LikeType = new GraphQLObjectType({
     name: 'LikeType',
     fields: () => ({
         id: {
@@ -19,5 +14,3 @@ const LikeType = new GraphQLObjectType({
         }
     })
 });
-
-module.exports = LikeType;

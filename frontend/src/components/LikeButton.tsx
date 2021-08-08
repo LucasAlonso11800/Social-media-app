@@ -39,7 +39,7 @@ function LikeButton(props: Props) {
                         <Icon name="heart" />
                     </Button>
                     <Label basic color="teal" pointing="left">
-                        {likes.length}
+                        {likes?.length}
                     </Label>
                 </Button >
             }
