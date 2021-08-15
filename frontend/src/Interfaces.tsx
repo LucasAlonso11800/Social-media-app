@@ -1,3 +1,5 @@
+import Profile from "./components/Profile";
+
 // Context
 export interface IUserData{
     email: string;
@@ -38,6 +40,10 @@ export interface IPostQuery{
 
 export interface ISinglePostQuery{
     single_post: IPost
+};
+
+export interface IPostsFromUserQuery{
+    posts_from_user: IPost[]
 };
 
 export interface IPost {
@@ -82,4 +88,25 @@ export interface ICreatePost {
 
 export interface IAddComment {
     body: string
+};
+
+
+// Profiles
+
+export interface IProfile {
+    profileName: string
+    profileImage: string
+    bio: string
+    user: {
+        image: string
+    }
+};
+
+export interface IProfileQuery {
+    profile: IProfile
+};
+
+export interface IEditProfile {
+    profileName: string
+    bio: string
 };

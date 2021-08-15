@@ -28,6 +28,10 @@ export interface IGetSinglePost {
     id: string
 };
 
+export interface IGetPostsFromUser {
+    username: string
+};
+
 export interface ICreatePost {
     body: string
 };
@@ -69,4 +73,23 @@ export interface ILikePost {
 export interface ILikeComment {
     postId: string
     commentId: string
+};
+
+// Profile
+
+export interface IAddProfile {
+    profileName: string | null
+    bio: string | null
+    profileImage: string | null
+};
+
+export interface IEditProfile {
+    userId: string
+    profileName: string
+    bio: string
+    profileImage: string
+};
+
+export interface IGetProfile{
+    username: string
 };

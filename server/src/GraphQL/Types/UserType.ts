@@ -7,6 +7,7 @@ export const UserType = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         token: { type: new GraphQLNonNull(GraphQLString) },
         username: { type: new GraphQLNonNull(GraphQLString) },
+        image: { type: new GraphQLNonNull(GraphQLString) },
         createdAt: { type: new GraphQLNonNull(GraphQLString) }
     })
 });

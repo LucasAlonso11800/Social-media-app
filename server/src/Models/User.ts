@@ -15,7 +15,14 @@ const userSchema = new Schema({
     },
     createdAt: {
         type: String,
-    }
+    },
+    image: {
+        type: String 
+    },
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: 'profiles'
+    },
 })
 
 export default model('User', userSchema);

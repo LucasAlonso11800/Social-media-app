@@ -39,3 +39,36 @@ export const GET_SINGLE_POST = gql`
         }
     }
 `;
+
+export const GET_POSTS_FROM_USER = gql`
+    query($username: String!){
+        posts_from_user(username: $username){
+            id
+            body
+            createdAt
+            username
+            comments{
+                id
+                body
+                username
+                createdAt
+            }
+            likes {
+                username
+            }
+        }
+    }
+`;
+
+export const GET_PROFILE = gql`
+    query($username: String!){
+        profile(username: $username){
+            profileName
+            profileImage
+            bio
+            user{
+                id
+            }
+        }
+    }
+`

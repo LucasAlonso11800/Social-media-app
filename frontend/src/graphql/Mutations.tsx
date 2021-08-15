@@ -120,3 +120,14 @@ export const DELETE_COMMENT = gql`
         }   
     }  
 `;
+
+export const EDIT_PROFILE = gql`
+    mutation edit_profile($userId: String!, $profileName: String!, $profileImage: String, $bio: String!){
+        edit_profile(userId: $userId, profileName: $profileName, profileImage: $profileImage, bio: $bio){
+            id
+            profileName
+            profileImage
+            bio
+        }
+    }
+`;

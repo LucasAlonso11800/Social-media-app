@@ -18,6 +18,7 @@ interface Props {
 function PostCard(props: Props) {
     const { state } = useContext(GlobalContext);
     const { body, createdAt, id, username, comments, likes } = props.post;
+
     return (
         <Card centered raised fluid>
             <Card.Content>
@@ -26,7 +27,7 @@ function PostCard(props: Props) {
                     size="mini"
                     src="https://react.semantic-ui.com/images/avatar/large/molly.png"
                 />
-                <Card.Header>{username}</Card.Header>
+                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${username}`} >{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
                 <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${id}`} >
                     {body}

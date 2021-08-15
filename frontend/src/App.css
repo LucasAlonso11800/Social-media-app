@@ -10,3 +10,59 @@
 i.icon{
     margin: 0!important;
 }
+
+.profile__image{
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.profile__name-follow-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile__numbers-container{
+    display: flex;
+    margin-top: 2rem;
+}
+
+.profile__number{
+    margin-right: 1rem!important;
+}
+
+.profile-modal__form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.profile-modal__title{
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.profile-modal__img-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.profile-modal__img{
+    height: 15rem;
+    max-width: 50%!important;
+}
+
+.profile-modal__img-button{
+    height: fit-content;
+}
+
+.profile-modal__close-button{
+    margin-right: 1rem!important;
+}
+
+.profile-modal__submit-button{
+    margin-left: 1rem!important;
+}

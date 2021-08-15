@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGO_URI as string, {
 }, () => console.log('Connected to DB'));
 
 app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/graphql', graphqlHTTP((req, res) => {
     return {
