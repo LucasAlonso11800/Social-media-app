@@ -17,7 +17,12 @@ type Props = {
     open: boolean,
     setOpen: Function,
     profile: IProfile
-}
+};
+
+const validationSchema = yup.object({
+    profileName: yup.string().required("Profile name can't be empty"),
+    bio: yup.string().required("Profile description can't be empty"),
+});
 
 function ProfileModal(props: Props) {
     const { open, setOpen, profile } = props;
@@ -29,7 +34,7 @@ function ProfileModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { error, loading, data }] = useMutation(EDIT_PROFILE, {
+    const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
         update() { window.location.reload() },
         variables: {
             ...queryVariables,
@@ -37,11 +42,6 @@ function ProfileModal(props: Props) {
             userId: state?.id
         },
         onError: () => console.log('error')
-    });
-
-    const validationSchema = yup.object({
-        profileName: yup.string().required("Profile name can't be empty"),
-        bio: yup.string().required("Profile description can't be empty"),
     });
 
     const formik = useFormik({
@@ -116,11 +116,22 @@ function ProfileModal(props: Props) {
                             type="button"
                             onClick={() => onButtonClick()}
                             className="profile-modal__img-button"
+                            disabled={loading}
                         >Change image</Button>
                     </div>
                     <Button.Group fluid>
-                        <Button color="grey" onClick={() => setOpen(false)} className="profile-modal__close-button">Close</Button>
-                        <Button color="twitter" type="submit" className="profile-modal__submit-button">Edit Profile</Button>
+                        <Button
+                            color="grey"
+                            onClick={() => setOpen(false)}
+                            className="profile-modal__close-button"
+                            disabled={loading}
+                        >Close</Button>
+                        <Button
+                            color="twitter"
+                            type="submit"
+                            className="profile-modal__submit-button"
+                            disabled={loading}
+                        >Edit Profile</Button>
                     </Button.Group>
                 </Form>
             </Container>

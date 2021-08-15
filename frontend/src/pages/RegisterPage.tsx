@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalContext';
 import { RouteComponentProps } from 'react-router';
 // GraphQL
 import { useMutation } from '@apollo/client';
-import { ADD_USER } from '../graphql/Mutations';
+import { ADD_PROFILE, ADD_USER } from '../graphql/Mutations';
 // Semantic
 import { Form, Button, Container } from 'semantic-ui-react';
 // Form
@@ -50,21 +50,35 @@ function RegisterPage(props: RouteComponentProps) {
 
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
 
-    const [addUser, { loading, error }] = useMutation(ADD_USER, {
+    const [addUser, { loading, error: addUserError, data }] = useMutation(ADD_USER, {
         update(proxy, result) {
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.add_user
             })
-            props.history.push('/');
         },
         variables: queryVariables,
-        onError: () => console.log('Error')
+        onError: (): any => console.log(JSON.stringify(addUserError, null, 2))
+    });
+
+    const [addProfile, { error: addProfileError }] = useMutation(ADD_PROFILE, {
+        update() {
+            props.history.push(`/user/${data?.add_user.username}`);
+        },
+        variables: {
+            userId: data?.add_user.id,
+            profileName: data?.add_user.username
+        },
+        onError: (): any => console.log(JSON.stringify(addProfileError, null, 2))
     });
 
     useEffect(() => {
         if (queryVariables) addUser();
-    }, [queryVariables])
+    }, [queryVariables]);
+
+    useEffect(() => {
+        if(data) addProfile(data)
+    }, [data])
 
     return (
         <Container>
@@ -72,7 +86,7 @@ function RegisterPage(props: RouteComponentProps) {
                 <h1>Register</h1>
                 <Form.Input
                     name="username"
-                    label="Username"
+                    label="Username (Minimum length 6 characters)"
                     placeholder="Choose an username"
                     type="text"
                     value={formik.values.username}
@@ -90,7 +104,7 @@ function RegisterPage(props: RouteComponentProps) {
                 />
                 <Form.Input
                     name="password"
-                    label="Password"
+                    label="Password (Minimum length 8 characters)"
                     placeholder="Choose a password"
                     type="password"
                     value={formik.values.password}
@@ -109,10 +123,10 @@ function RegisterPage(props: RouteComponentProps) {
                 <Button type="submit" color="twitter" disabled={loading}>
                     Register
                 </Button>
-                {error !== undefined ?
+                {addUserError !== undefined ?
                     <div className="ui red message">
                         <ul className="list">
-                            <li>{error.message}</li>
+                            <li>{addUserError.message}</li>
                         </ul>
                     </div>
                     : null}

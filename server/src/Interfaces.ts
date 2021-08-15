@@ -78,9 +78,8 @@ export interface ILikeComment {
 // Profile
 
 export interface IAddProfile {
-    profileName: string | null
-    bio: string | null
-    profileImage: string | null
+    profileName: string
+    userId: string
 };
 
 export interface IEditProfile {

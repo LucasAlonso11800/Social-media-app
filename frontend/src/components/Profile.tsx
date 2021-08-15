@@ -41,7 +41,7 @@ function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2>{profileName}</h2>
                         <div>
-                            <Button color="twitter">Follow</Button>
+                            {!state || state.username !== username ? <Button color="twitter">Follow</Button> : null}
                             {state && state.username === username &&
                                 <Popup
                                     content="Edit profile"
@@ -62,7 +62,7 @@ function Profile(props: Props) {
                         <p className="profile__number"><b>200 </b>Following</p>
                     </div>
                 </Card.Content>
-                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile}/>
+                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile} />
             </Card>
         )
     }

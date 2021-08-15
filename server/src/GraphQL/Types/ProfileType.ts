@@ -8,7 +8,7 @@ export const ProfileType = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID)
         },
         profileName: {
-            type: GraphQLString
+            type: new GraphQLNonNull(GraphQLString)
         },
         bio: {
             type: GraphQLString
@@ -17,7 +17,7 @@ export const ProfileType = new GraphQLObjectType({
             type: GraphQLString
         },
         user: {
-            type: UserType
+            type: new GraphQLNonNull(UserType)
         }
     })
 });

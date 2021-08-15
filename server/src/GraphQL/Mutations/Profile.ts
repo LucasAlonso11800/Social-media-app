@@ -8,17 +8,14 @@ import Profile from '../../Models/Profile';
 export const ADD_PROFILE = {
     type: ProfileType,
     args: {
-        profileName: { type: GraphQLString },
-        bio: { type: GraphQLString },
-        profileImage: { type: GraphQLString },
+        profileName: { type: new GraphQLNonNull(GraphQLString) },
+        userId: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IAddProfile, context: IContext) {
-        const user = checkAuth(context) as JwtPayload;
-
-        const { profileName, bio, profileImage } = args;
+    async resolve(_: any, args: IAddProfile) {
+        const { userId, profileName } = args;
 
         const newProfile = new Profile({
-            profileName, bio, profileImage, user: user.id
+            profileName, bio: '', profileImage: '', user: userId
         });
 
         try {

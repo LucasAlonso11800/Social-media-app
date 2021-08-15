@@ -47,7 +47,7 @@ function LoginPage(props: RouteComponentProps) {
             props.history.push('/');
         },
         variables: queryVariables,
-        onError: () => console.log('Error')
+        onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
     useEffect(() => {

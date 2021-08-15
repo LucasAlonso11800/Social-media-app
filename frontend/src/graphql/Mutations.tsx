@@ -121,13 +121,20 @@ export const DELETE_COMMENT = gql`
     }  
 `;
 
+// Profiles
+
+export const ADD_PROFILE = gql`
+    mutation add_profile($userId: String!, $profileName: String!){
+        add_profile(userId: $userId, profileName: $profileName){
+            profileName
+        }
+    }
+`;
+
 export const EDIT_PROFILE = gql`
     mutation edit_profile($userId: String!, $profileName: String!, $profileImage: String, $bio: String!){
         edit_profile(userId: $userId, profileName: $profileName, profileImage: $profileImage, bio: $bio){
-            id
             profileName
-            profileImage
-            bio
         }
     }
 `;

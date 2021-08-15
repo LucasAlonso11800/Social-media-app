@@ -27,9 +27,12 @@ export const ADD_USER = {
         try {
             if (password !== confirmPassword) throw new Error("Passwords don't match")
 
-            const user = await User.findOne({ username });
-            if (user) throw new Error('Username already taken');
+            const usernameExists = await User.findOne({ username });
+            if (usernameExists) throw new Error('Username already taken');
 
+            const emailExists = await User.findOne({ email });
+            if (emailExists) throw new Error('Email already registered');
+            
             const newUser = new User({
                 username,
                 password,
