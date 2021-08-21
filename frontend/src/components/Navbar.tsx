@@ -13,10 +13,18 @@ export default function NavBar() {
     const nav = state !== null ?
         <Menu secondary pointing size={'huge'}>
             <Menu.Item
-                name={state.username}
-                active
+                name="Home"
+                active={activeItem === 'home'}
                 as={Link}
                 to="/"
+                onClick={() => setActiveItem('home')}
+            />
+            <Menu.Item
+                name={state.username}
+                active={activeItem === 'user'}
+                as={Link}
+                to={`/user/${state.username}`}
+                onClick={() => setActiveItem('user')}
             />
             <Menu.Menu position='right'>
                 <Menu.Item
