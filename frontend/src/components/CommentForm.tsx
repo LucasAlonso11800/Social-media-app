@@ -26,7 +26,10 @@ function CommentForm(props: Props) {
             body: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        onSubmit: (values) => {
+            addComment()
+            setQueryVariables(values)
+        } 
     });
 
     const [addComment, { error }] = useMutation(ADD_COMMENT, {

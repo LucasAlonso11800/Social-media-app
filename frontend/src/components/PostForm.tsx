@@ -21,7 +21,10 @@ function PostForm() {
             body: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        onSubmit: (values) => {
+            createPost()
+            setQueryVariables(values)
+        } 
     });
 
     const [queryVariables, setQueryVariables] = useState<ICreatePost>();

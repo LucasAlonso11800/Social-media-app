@@ -37,19 +37,9 @@ const validationSchema = yup.object({
 function RegisterPage(props: RouteComponentProps) {
     const { dispatch } = useContext(GlobalContext);
 
-    const formik = useFormik({
-        initialValues: {
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
-    });
-
+    
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
-
+    
     const [addUser, { loading, error: addUserError, data }] = useMutation(ADD_USER, {
         update(proxy, result) {
             dispatch({
@@ -60,7 +50,21 @@ function RegisterPage(props: RouteComponentProps) {
         variables: queryVariables,
         onError: (): any => console.log(JSON.stringify(addUserError, null, 2))
     });
-
+    
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            addUser()
+            setQueryVariables(values)
+        } 
+    });
+    
     const [addProfile, { error: addProfileError }] = useMutation(ADD_PROFILE, {
         update() {
             props.history.push(`/user/${data?.add_user.username}`);

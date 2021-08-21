@@ -33,7 +33,10 @@ function LoginPage(props: RouteComponentProps) {
             password: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        onSubmit: (values) => {
+            loginUser()
+            setQueryVariables(values)
+        } 
     });
 
     const [queryVariables, setQueryVariables] = useState<ILoginUser>();
