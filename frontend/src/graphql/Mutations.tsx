@@ -17,6 +17,14 @@ export const ADD_USER = gql`
             email
             username
             token
+            followers{
+                username
+                image
+            }
+            following{
+                username
+                image
+            }
         }
     }
 `;
@@ -34,9 +42,19 @@ export const LOGIN_USER = gql`
             email
             username
             token
+            followers{
+                username
+                image
+            }
+            following{
+                username
+                image
+            }
         }
     }
 `;
+
+// Posts
 
 export const CREATE_POST = gql`
     mutation create_post($body: String!){
@@ -82,6 +100,8 @@ export const LIKE_POST = gql`
         }
     }
 `;
+
+// Comments
 
 export const ADD_COMMENT = gql`
     mutation add_comment($postId: ID!, $body: String!){
@@ -135,6 +155,18 @@ export const EDIT_PROFILE = gql`
     mutation edit_profile($userId: String!, $profileName: String!, $profileImage: String, $bio: String!){
         edit_profile(userId: $userId, profileName: $profileName, profileImage: $profileImage, bio: $bio){
             profileName
+        }
+    }
+`;
+
+// Followers
+
+export const FOLLOW_USER = gql`
+    mutation follow_user($followingUsername: String!, $followedUsername: String!, $followingImage: String, $followedImage: String){
+        follow_user(followingUsername: $followingUsername, followedUsername: $followedUsername, followingImage: $followingImage, followedImage: $followedImage){
+            following{
+                username
+            }
         }
     }
 `;

@@ -68,6 +68,13 @@ export const GET_PROFILE = gql`
             bio
             user{
                 id
+                username
+                followers{
+                    username
+                }
+                following{
+                    username
+                }
             }
         }
     }

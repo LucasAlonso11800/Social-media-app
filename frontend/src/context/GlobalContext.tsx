@@ -14,7 +14,9 @@ if(localStorage.getItem("token")){
             email: decodedToken.email,
             id: decodedToken.id,
             username: decodedToken.username,
-            token: localStorage.getItem("token") as string
+            token: localStorage.getItem("token") as string,
+            followers: [],
+            following: []
         }
     }
 };

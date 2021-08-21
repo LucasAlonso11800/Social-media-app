@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
 import { PostType } from "../Types/PostType";
 import Post from "../../Models/Post";
 import checkAuth from "../../Helpers/CheckAuth";
-import { IContext, ICreatePost, IDeletePost } from '../../Interfaces';
+import { IContext, ICreatePost, IDeletePost, IPost } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const CREATE_POST = {
@@ -11,9 +11,9 @@ export const CREATE_POST = {
     args: {
         body: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(args: ICreatePost, context: IContext) {
+    async resolve(_: any, args: ICreatePost, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        
+
         if (args.body === undefined || args.body === '') throw new Error("You post can't be empty");
         if (args.body.length > 140) throw new Error("You post can't have more than 140 characters");
 
@@ -25,7 +25,7 @@ export const CREATE_POST = {
                 createdAt: new Date().toISOString()
             })
 
-            const post = await Post.insertMany(newPost)
+            const post: IPost[] = await Post.insertMany(newPost)
             return post[0]
         }
         catch (err) {
@@ -40,7 +40,7 @@ export const DELETE_POST = {
     args: {
         postId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(args: IDeletePost, context: IContext) {
+    async resolve(_: any, args: IDeletePost, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         try {
             const post = await Post.findOne({ _id: args.postId })

@@ -1,5 +1,5 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
-import { IContext, IAddProfile, IEditProfile } from '../../Interfaces';
+import { IContext, IAddProfile, IEditProfile, IProfile } from '../../Interfaces';
 import { ProfileType } from '../Types/ProfileType';
 import checkAuth from "../../Helpers/CheckAuth";
 import { JwtPayload } from 'jsonwebtoken';
@@ -19,7 +19,7 @@ export const ADD_PROFILE = {
         });
 
         try {
-            const profile = await Profile.insertMany(newProfile)
+            const profile: IProfile[] = await Profile.insertMany(newProfile)
             return profile[0]
         }
         catch (err) {
@@ -42,10 +42,10 @@ export const EDIT_PROFILE = {
         const { userId, profileName, profileImage, bio } = args;
 
         try {
-            const profile = await Profile.findOne({ user: userId });
+            const profile: IProfile = await Profile.findOne({ user: userId });
             if (profile.user.toString() !== user.id) throw new Error("Action not allowed");
 
-            const newProfile = await Profile.findOneAndUpdate({ _id: profile._id }, {
+            const newProfile: IProfile = await Profile.findOneAndUpdate({ _id: profile._id }, {
                 profileName, bio, profileImage, user: user.id
             }, { new: true });
 

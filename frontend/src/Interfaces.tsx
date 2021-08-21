@@ -2,15 +2,17 @@ import Profile from "./components/Profile";
 
 // Context
 export interface IUserData{
-    email: string;
-    id: string;
-    token: string;
-    username: string;
+    email: string
+    id: string
+    token: string
+    username: string
+    followers: IFollower[]
+    following: IFollower[]
 };
 
 export interface IDecodedToken extends IUserData {
-    exp: number;
-    iat: number;
+    exp: number
+    iat: number
 };
 
 export enum EActionType {
@@ -19,13 +21,13 @@ export enum EActionType {
 };
 
 export interface ILoginAction {
-    type: EActionType.LOGIN;
-    payload: IUserData;
+    type: EActionType.LOGIN
+    payload: IUserData
 };
 
 export interface ILogoutAction {
-    type: EActionType.LOGOUT;
-    payload: null;
+    type: EActionType.LOGOUT
+    payload: null
 };
 
 export type Actions = ILoginAction | ILogoutAction;
@@ -99,6 +101,7 @@ export interface IProfile {
     bio: string
     user: {
         image: string
+        username: string
     }
 };
 
@@ -110,3 +113,10 @@ export interface IEditProfile {
     profileName: string
     bio: string
 };
+
+// Followers
+
+export interface IFollower {
+    username: string
+    image: string
+}

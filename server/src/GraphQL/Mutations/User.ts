@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, ILoginUser, IUser } from '../../Interfaces';
+import { IAddUser, IFollowUser, ILoginUser, IUser } from '../../Interfaces';
 
 function generateToken(user: IUser) {
     return jwt.sign({
@@ -32,7 +32,7 @@ export const ADD_USER = {
 
             const emailExists = await User.findOne({ email });
             if (emailExists) throw new Error('Email already registered');
-            
+
             const newUser = new User({
                 username,
                 password,
@@ -40,7 +40,7 @@ export const ADD_USER = {
                 createdAt: new Date().toISOString()
             })
             newUser.password = await bcrypt.hash(password, 10);
-            const res = await User.insertMany(newUser)
+            const res: IUser[] = await User.insertMany(newUser)
             const token = generateToken(res[0])
 
             return {
@@ -48,7 +48,9 @@ export const ADD_USER = {
                 username: res[0].username,
                 email: res[0].email,
                 createdAt: res[0].createdAt,
-                token
+                token,
+                followers: res[0].followers,
+                following: res[0].following
             }
         }
         catch (err) {
@@ -66,7 +68,7 @@ export const LOGIN_USER = {
     },
     async resolve(_: any, args: ILoginUser) {
         const { username, password } = args
-        const user = await User.findOne({ username })
+        const user: IUser = await User.findOne({ username })
 
         if (!user) throw new Error('User not found');
 
@@ -79,7 +81,62 @@ export const LOGIN_USER = {
             username: user.username,
             email: user.email,
             createdAt: user.createdAt,
-            token
+            token,
+            followers: user.followers,
+            following: user.following
+        }
+    }
+};
+
+export const FOLLOW_USER = {
+    name: 'FOLLOW_USER',
+    type: UserType,
+    args: {
+        followingUsername: { type: new GraphQLNonNull(GraphQLString) },
+        followedUsername: { type: new GraphQLNonNull(GraphQLString) },
+        followingImage: { type: GraphQLString },
+        followedImage: { type: GraphQLString },
+    },
+    async resolve(_: any, args: IFollowUser) {
+        const { followingUsername, followedUsername, followingImage, followedImage } = args;
+        try {
+            const followingUser: IUser = await User.findOne({ username: followingUsername });
+            const followedUser: IUser = await User.findOne({ username: followedUsername });
+
+            if (!followedUser) throw new Error('User not found');
+
+            const alreadyFollows = followedUser.followers.find(f => f.username === followingUser.username);
+
+            if (alreadyFollows) {
+                const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
+                    following: followingUser.following.filter(f => f.username !== followedUsername)
+                }, { new: true });
+
+                await User.findOneAndUpdate({ username: followedUsername }, {
+                    followers: followingUser.followers.filter(f => f.username !== followingUsername)
+                }, { new: true });
+                return newFollowingUser 
+            };
+
+            if (!alreadyFollows) {
+                const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
+                    following: [...followingUser.following, {
+                        username: followedUsername,
+                        image: followedImage
+                    }]
+                }, { new: true });
+
+                await User.findOneAndUpdate({ username: followedUsername }, {
+                    followers: [...followedUser.followers, {
+                        username: followingUsername,
+                        image: followingImage
+                    }]
+                }, { new: true });
+                return newFollowingUser
+            };
+        }
+        catch (err) {
+            throw new Error(err)
         }
     }
 };

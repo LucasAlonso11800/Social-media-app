@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
 import { PostType } from '../Types/PostType';
 import Post from '../../Models/Post';
 import checkAuth from '../../Helpers/CheckAuth';
-import { IAddComment, IComment, IContext, IDeleteComment } from '../../Interfaces';
+import { IAddComment, IComment, IContext, IDeleteComment, IPost } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const ADD_COMMENT = {
@@ -16,17 +16,16 @@ export const ADD_COMMENT = {
         const user = checkAuth(context) as JwtPayload;
         if (args.body.trim() === '') throw new Error('Empty comment')
         try {
-            const post = await Post.findOne({ _id: args.postId });
+            const post: IPost = await Post.findOne({ _id: args.postId });
             if (!post) throw new Error('Post not found');
 
             const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                comments:
-                    [{
-                        body: args.body,
-                        username: user.username,
-                        createdAt: new Date().toISOString()
-                    }, ...post.comments]
-            }, { new: true })
+                comments: [{
+                    body: args.body,
+                    username: user.username,
+                    createdAt: new Date().toISOString()
+                }, ...post.comments]
+            }, { new: true });
 
             return newPost
         }
@@ -46,17 +45,17 @@ export const DELETE_COMMENT = {
     async resolve(_: any, args: IDeleteComment, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         try {
-            const post = await Post.findOne({ _id: args.postId });
+            const post: IPost = await Post.findOne({ _id: args.postId });
             if (!post) throw new Error('Post not found');
 
-            const comment = post.comments.filter((c: IComment) => c._id == args.commentId);
+            const comment = post.comments.filter(c => c._id == args.commentId);
 
             if (comment.length === 0) throw new Error('Comment not found');
             if (comment[0].username !== user.username) throw new Error('Action not allowed');
 
             const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                comments: post.comments.filter((c: IComment) => c._id !== comment[0]._id),
-            }, { new: true })
+                comments: post.comments.filter(c => c._id !== comment[0]._id),
+            }, { new: true });
 
             return newPost
         }

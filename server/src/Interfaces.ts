@@ -9,6 +9,10 @@ export interface IUser {
     _id: string
     email: string
     username: string
+    createdAt: string
+    password: string
+    followers: IFollower[]
+    following: IFollower[]
 };
 
 export interface IAddUser {
@@ -24,6 +28,15 @@ export interface ILoginUser {
 };
 
 // Posts
+export interface IPost {
+    body: string
+    user: string
+    username: string
+    createdAt: string
+    comments: IComment[]
+    likes: ILike[]
+};
+
 export interface IGetSinglePost {
     id: string
 };
@@ -77,6 +90,18 @@ export interface ILikeComment {
 
 // Profile
 
+export interface IProfile {
+    _id: string
+    profileName: string
+    bio: string
+    profileImage: string
+    user: string
+};
+
+export interface IGetProfile {
+    username: string
+};
+
 export interface IAddProfile {
     profileName: string
     userId: string
@@ -89,6 +114,17 @@ export interface IEditProfile {
     profileImage: string
 };
 
-export interface IGetProfile{
+// Follower
+
+export interface IFollower {
+    _id: string
     username: string
+    image: string
+};
+
+export interface IFollowUser {
+    followingUsername: string
+    followedUsername: string
+    followingImage: string
+    followedImage: string
 };

@@ -19,10 +19,32 @@ const userSchema = new Schema({
     image: {
         type: String 
     },
-    profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'profiles'
+    followers: {
+        type: [
+            {
+                username: {
+                    type: String,
+                    required: true,
+                },
+                image: {
+                    type: String
+                }
+            }
+        ]
     },
+    following: {
+        type: [
+            {
+                username: {
+                    type: String,
+                    required: true,
+                },
+                image: {
+                    type: String
+                }
+            }
+        ]
+    }
 })
 
 export default model('User', userSchema);

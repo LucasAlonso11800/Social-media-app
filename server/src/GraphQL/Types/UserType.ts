@@ -1,4 +1,5 @@
-import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
+import { FollowerType } from './FollowerType';
 
 export const UserType = new GraphQLObjectType({
     name: 'UserType',
@@ -8,6 +9,8 @@ export const UserType = new GraphQLObjectType({
         token: { type: new GraphQLNonNull(GraphQLString) },
         username: { type: new GraphQLNonNull(GraphQLString) },
         image: { type: new GraphQLNonNull(GraphQLString) },
-        createdAt: { type: new GraphQLNonNull(GraphQLString) }
+        createdAt: { type: new GraphQLNonNull(GraphQLString) },
+        followers: { type: new GraphQLList(FollowerType) },
+        following: { type: new GraphQLList(FollowerType) },
     })
 });

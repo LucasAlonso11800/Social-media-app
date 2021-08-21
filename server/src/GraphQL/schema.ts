@@ -1,4 +1,5 @@
 import { ADD_PROFILE, EDIT_PROFILE } from "./Mutations/Profile";
+import { FOLLOW_USER } from "./Mutations/User";
 import { GET_POSTS_FROM_USER } from "./Queries/Posts";
 import { GET_PROFILE } from "./Queries/Profile";
 
@@ -24,6 +25,7 @@ const Mutation = new GraphQLObjectType({
     fields: {
         add_user: ADD_USER,
         login_user: LOGIN_USER,
+        follow_user: FOLLOW_USER,
         create_post: CREATE_POST,
         delete_post: DELETE_POST,
         add_comment: ADD_COMMENT,

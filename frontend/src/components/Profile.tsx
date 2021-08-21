@@ -5,9 +5,10 @@ import { GET_PROFILE } from '../graphql/Queries';
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
-import { Grid, Card, Image, Button, Icon, Popup } from 'semantic-ui-react'
+import { Grid, Card, Image, Button, Icon, Popup } from 'semantic-ui-react';
 import ProfileModal from './ProfileModal';
-import ProfilePlaceholder from '../assets/ProfilePlaceholder.png'
+import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
+import FollowButton from './FollowButton';
 // Interfaces
 import { IProfileQuery } from '../Interfaces';
 
@@ -15,7 +16,7 @@ type Props = {
     username: string;
 };
 
-function Profile(props: Props) {
+export default function Profile(props: Props) {
     const { state } = useContext(GlobalContext);
     const { username } = props;
     const [modalOpen, setModalOpen] = useState(false);
@@ -24,6 +25,8 @@ function Profile(props: Props) {
 
     if (data) {
         const { profile: { profileName, profileImage, bio, user } } = data as IProfileQuery;
+        
+        const followsUser = state?.following.find(f => f.username === user.username);
 
         return (
             <Card fluid>
@@ -41,7 +44,7 @@ function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2>{profileName}</h2>
                         <div>
-                            {!state || state.username !== username ? <Button color="twitter">Follow</Button> : null}
+                            {!state || state.username !== username ? <FollowButton followsUser={followsUser} followedUser={user}/> : null}
                             {state && state.username === username &&
                                 <Popup
                                     content="Edit profile"
@@ -67,6 +70,4 @@ function Profile(props: Props) {
         )
     }
     return null
-}
-
-export default Profile;
+};
