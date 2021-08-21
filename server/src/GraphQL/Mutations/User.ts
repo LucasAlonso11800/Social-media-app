@@ -115,6 +115,7 @@ export const FOLLOW_USER = {
                 await User.findOneAndUpdate({ username: followedUsername }, {
                     followers: followingUser.followers.filter(f => f.username !== followingUsername)
                 }, { new: true });
+
                 return newFollowingUser 
             };
 
@@ -132,6 +133,7 @@ export const FOLLOW_USER = {
                         image: followingImage
                     }]
                 }, { new: true });
+
                 return newFollowingUser
             };
         }

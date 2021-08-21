@@ -1,11 +1,10 @@
-import Profile from "./components/Profile";
-
 // Context
 export interface IUserData{
     email: string
     id: string
     token: string
     username: string
+    image: string
     followers: IFollower[]
     following: IFollower[]
 };
@@ -102,6 +101,8 @@ export interface IProfile {
     user: {
         image: string
         username: string
+        followers: IFollower[]
+        following: IFollower[]
     }
 };
 
@@ -119,4 +120,10 @@ export interface IEditProfile {
 export interface IFollower {
     username: string
     image: string
-}
+};
+
+export interface IFollowUserQuery {
+    follow_user: {
+        following: IFollower[]
+    }
+};

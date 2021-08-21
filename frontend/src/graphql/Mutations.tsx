@@ -164,9 +164,9 @@ export const EDIT_PROFILE = gql`
 export const FOLLOW_USER = gql`
     mutation follow_user($followingUsername: String!, $followedUsername: String!, $followingImage: String, $followedImage: String){
         follow_user(followingUsername: $followingUsername, followedUsername: $followedUsername, followingImage: $followingImage, followedImage: $followedImage){
-            following{
-                username
-            }
+           following{
+               username
+           }
         }
     }
 `;

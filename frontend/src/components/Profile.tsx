@@ -25,9 +25,8 @@ export default function Profile(props: Props) {
 
     if (data) {
         const { profile: { profileName, profileImage, bio, user } } = data as IProfileQuery;
-        
         const followsUser = state?.following.find(f => f.username === user.username);
-
+        
         return (
             <Card fluid>
                 <Grid>
@@ -44,7 +43,7 @@ export default function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2>{profileName}</h2>
                         <div>
-                            {!state || state.username !== username ? <FollowButton followsUser={followsUser} followedUser={user}/> : null}
+                            {!state || state.username !== username ? <FollowButton followsUser={followsUser} followedUser={user} /> : null}
                             {state && state.username === username &&
                                 <Popup
                                     content="Edit profile"
@@ -61,8 +60,8 @@ export default function Profile(props: Props) {
                     <Card.Meta>{username}</Card.Meta>
                     <Card.Description>{bio}</Card.Description>
                     <div className="profile__numbers-container">
-                        <p className="profile__number"><b>200 </b>Followers</p>
-                        <p className="profile__number"><b>200 </b>Following</p>
+                        <p className="profile__number"><b>{user.followers.length} </b>Followers</p>
+                        <p className="profile__number"><b>{user.following.length} </b>Following</p>
                     </div>
                 </Card.Content>
                 <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile} />

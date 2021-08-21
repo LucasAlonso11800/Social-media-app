@@ -7,7 +7,8 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import { Button } from 'semantic-ui-react';
 // Interfaces
-import { IFollower } from '../Interfaces';
+import { IFollower, IFollowUserQuery, IProfileQuery } from '../Interfaces';
+import { GET_PROFILE } from '../graphql/Queries';
 
 type Props = {
     followsUser: IFollower | undefined
@@ -22,16 +23,15 @@ export default function FollowButton(props: Props) {
     const { followsUser, followedUser } = props;
     const [follows, setFollows] = useState(followsUser ? true : false);
 
-    const [followUser, { error, loading, data }] = useMutation(FOLLOW_USER, {
-        update() {
-            const isFollowingNow = data.follow_user.following.find((f: IFollower) => f.username === followedUser.username);
-            setFollows(isFollowingNow ? true : false);
+    const [followUser, { error, loading }] = useMutation(FOLLOW_USER, {
+        onCompleted: (data: IFollowUserQuery) => {
+            data.follow_user.following.find(f => f.username === followedUser.username) ? setFollows(true) : setFollows(false)
         },
         variables: {
             followingUsername: state?.username,
             followedUsername: followedUser.username,
-            followingImage: '',
-            followedImage: '',
+            followingImage: state?.image,
+            followedImage: followedUser.image,
         },
         onError: (): any => console.log(error, JSON.stringify(error, null, 2))
     });

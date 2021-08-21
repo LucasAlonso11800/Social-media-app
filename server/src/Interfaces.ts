@@ -11,6 +11,7 @@ export interface IUser {
     username: string
     createdAt: string
     password: string
+    image: string
     followers: IFollower[]
     following: IFollower[]
 };

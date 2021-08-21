@@ -15,6 +15,7 @@ if(localStorage.getItem("token")){
             id: decodedToken.id,
             username: decodedToken.username,
             token: localStorage.getItem("token") as string,
+            image: '',
             followers: [],
             following: []
         }
