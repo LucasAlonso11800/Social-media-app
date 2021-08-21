@@ -35,7 +35,9 @@ function ProfileModal(props: Props) {
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
     const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
-        update() { window.location.reload() },
+        update() {
+            window.location.reload()
+        },
         variables: {
             ...queryVariables,
             profileImage: image.src === profile.profileImage ? image.src : newImage,

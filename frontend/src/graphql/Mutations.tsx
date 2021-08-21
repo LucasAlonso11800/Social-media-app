@@ -54,6 +54,14 @@ export const LOGIN_USER = gql`
     }
 `;
 
+export const EDIT_USER_IMAGE = gql`
+    mutation edit_user_image($image: String){
+        edit_user_image(image: $image){
+            username
+        }
+    }
+`;
+
 // Posts
 
 export const CREATE_POST = gql`
@@ -152,8 +160,17 @@ export const ADD_PROFILE = gql`
 `;
 
 export const EDIT_PROFILE = gql`
-    mutation edit_profile($userId: String!, $profileName: String!, $profileImage: String, $bio: String!){
-        edit_profile(userId: $userId, profileName: $profileName, profileImage: $profileImage, bio: $bio){
+    mutation edit_profile($userId: String!, 
+        $profileName: String!, 
+        $profileImage: String, 
+        $bio: String!
+    ){
+        edit_profile(
+            userId: $userId, 
+            profileName: $profileName, 
+            profileImage: $profileImage, 
+            bio: $bio
+        ){
             profileName
         }
     }
@@ -162,9 +179,19 @@ export const EDIT_PROFILE = gql`
 // Followers
 
 export const FOLLOW_USER = gql`
-    mutation follow_user($followingUsername: String!, $followedUsername: String!, $followingImage: String, $followedImage: String){
-        follow_user(followingUsername: $followingUsername, followedUsername: $followedUsername, followingImage: $followingImage, followedImage: $followedImage){
-           following{
+    mutation follow_user(
+        $followingUsername: String!, 
+        $followedUsername: String!, 
+        $followingImage: String, 
+        $followedImage: String
+    ){
+        follow_user(
+            followingUsername: $followingUsername, 
+            followedUsername: $followedUsername, 
+            followingImage: $followingImage, 
+            followedImage: $followedImage)
+        {
+           following {
                username
            }
         }

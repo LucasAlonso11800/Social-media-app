@@ -28,6 +28,10 @@ export interface ILoginUser {
     password: string
 };
 
+export interface IEditUserImage {
+    image: string
+};
+
 // Posts
 export interface IPost {
     body: string

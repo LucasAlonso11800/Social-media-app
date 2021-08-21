@@ -1,9 +1,10 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IFollowUser, ILoginUser, IUser } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext } from '../../Interfaces';
 
 function generateToken(user: IUser) {
     return jwt.sign({
@@ -88,6 +89,26 @@ export const LOGIN_USER = {
     }
 };
 
+export const EDIT_USER_IMAGE = {
+    name: 'EDIT_USER_IMAGE',
+    type: UserType,
+    args: {
+        image: { type: GraphQLString }
+    },
+    async resolve(_: any, args: IEditUserImage, context: IContext) {
+        const user = checkAuth(context) as JwtPayload;
+
+        const userToEdit: IUser = await User.findOne({ username: user.username });
+        if (!userToEdit) throw new Error('User not found');
+
+        const newUser = await User.findOneAndUpdate({ username: user.username }, {
+            image: args.image
+        }, { new: true });
+
+        return newUser
+    }
+};
+
 export const FOLLOW_USER = {
     name: 'FOLLOW_USER',
     type: UserType,
@@ -116,7 +137,7 @@ export const FOLLOW_USER = {
                     followers: followingUser.followers.filter(f => f.username !== followingUsername)
                 }, { new: true });
 
-                return newFollowingUser 
+                return newFollowingUser
             };
 
             if (!alreadyFollows) {

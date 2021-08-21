@@ -11,19 +11,76 @@ i.icon{
     margin: 0!important;
 }
 
-.profile__image{
-    max-height: 200px;
+.profile__profile-image{
+    max-height: 250px;
     object-fit: cover;
+    width: 100%;
+}
+
+.profile__user-image-container{
+    height: 125px;
+    width: 125px;
+    position: absolute;
+    z-index: 100;
+    top: 70%;
+    left: 5%;
+}
+
+.profile__user-image{
+    border-radius: 100em;
+    border: 2px solid #35a2f4;
+    height: 125px!important;
+    width: 125px!important;
+    object-fit: cover;
+}
+
+.profile__change-user-image{
+    display: none;
+}
+
+.profile__actual-change-user-image{
+    display: none;
+    height: 125px;
+    width: 125px;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 100em;
+    text-shadow: -1px 0px 5px #000;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.profile__user-image-container:hover .profile__actual-change-user-image{
+    display: flex;
+}
+
+.profile__actual-change-user-image:hover{
+    background-color: rgba(53, 162, 244, 0.3);
+    opacity: 1;
 }
 
 .profile__name-follow-container{
     display: flex;
     justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.profile__profile-info{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
 }
 
 .profile__numbers-container{
     display: flex;
-    margin-top: 2rem;
 }
 
 .profile__number{
@@ -65,4 +122,34 @@ i.icon{
 
 .profile-modal__submit-button{
     margin-left: 1rem!important;
+}
+
+.user-modal{
+    padding: 2rem;
+}
+
+.user-modal__title{
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.user-modal__subtitle{
+    text-align: center;
+}
+
+.user-modal__img-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.user-modal__img{
+    max-height: 400px;
+    max-width: 80%!important;
+}
+
+.user-modal__img-button{
+    margin-right: 0!important;
 }

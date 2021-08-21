@@ -75,6 +75,7 @@ export const GET_PROFILE = gql`
                 following{
                     username
                 }
+                image
             }
         }
     }
