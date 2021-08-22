@@ -11,7 +11,8 @@ import PostCard from '../components/PostCard';
 import Profile from '../components/Profile';
 
 function UserPage() {
-    const username = window.location.pathname.substring(6);
+    const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
+
     const { error, loading, data } = useQuery<IPostsFromUserQuery>(GET_POSTS_FROM_USER, { variables: { username: username } });
 
     return (

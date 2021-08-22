@@ -13,7 +13,6 @@ import { GET_PROFILE } from '../graphql/Queries';
 type Props = {
     followsUser: IFollower | undefined
     followedUser: {
-        image: string
         username: string
     }
 };
@@ -29,19 +28,21 @@ export default function FollowButton(props: Props) {
         },
         variables: {
             followingUsername: state?.username,
-            followedUsername: followedUser.username,
-            followingImage: state?.image,
-            followedImage: followedUser.image,
+            followedUsername: followedUser.username
         },
         onError: (): any => console.log(error, JSON.stringify(error, null, 2))
     });
 
     return (
-        <Button color="twitter" disabled={loading}
+        <Button
+            color="twitter"
+            disabled={loading}
+            className={loading ? 'loading' : ''}
             onClick={() => {
                 if (state) return followUser()
                 return window.location.href = '/login'
-            }}>
+            }}
+        >
             {follows ? 'Unfollow' : 'Follow'}
         </Button>
     )

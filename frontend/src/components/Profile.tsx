@@ -12,6 +12,7 @@ import FollowButton from './FollowButton';
 // Interfaces
 import { IProfileQuery } from '../Interfaces';
 import UserImageModal from './UserImageModal';
+import BlockUserButton from './BlockUserButton';
 
 type Props = {
     username: string;
@@ -24,11 +25,15 @@ export default function Profile(props: Props) {
     const [userImageModalOpen, setUserImageModalOpen] = useState(false);
 
     const { error, loading, data } = useQuery<IProfileQuery>(GET_PROFILE, { variables: { username } });
-
+    console.log(state)
     if (data) {
         const { profile: { profileName, profileImage, bio, user } } = data as IProfileQuery;
         const followsUser = state?.following.find(f => f.username === user.username);
-        console.log(user)
+        const userIsBlocked = state?.blockedUsers.find(u => u.username === username);
+
+        const hasBeenBlocked = user.blockedUsers.find(u => u.username === state?.username);
+        if(hasBeenBlocked) window.location.replace('/');
+
         return (
             <Card fluid>
                 <Grid>
@@ -61,6 +66,7 @@ export default function Profile(props: Props) {
                                     }
                                 />
                             }
+                            {state && state.username !== username ? <BlockUserButton profile={data.profile} userIsBlocked={userIsBlocked ? true : false}/> : null}
                         </div>
                     </div>
                     <Card.Meta>{username}</Card.Meta>

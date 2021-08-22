@@ -43,6 +43,7 @@ function LoginPage(props: RouteComponentProps) {
 
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
         update(proxy, result) {
+            console.log(result.data)
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.login_user

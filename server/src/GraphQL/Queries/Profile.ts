@@ -20,7 +20,7 @@ export const GET_PROFILE = {
             if (!profile) throw new Error('Profile not found');
 
             const { _id, profileName, profileImage, bio } = profile;
-            
+
             return {
                 id: _id,
                 profileName,

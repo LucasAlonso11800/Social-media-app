@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
 import { FollowerType } from './FollowerType';
 
-export const UserType = new GraphQLObjectType({
+export const UserType: GraphQLObjectType = new GraphQLObjectType({
     name: 'UserType',
     fields: () => ({
         id: { type: new GraphQLNonNull(GraphQLID) },
@@ -12,5 +12,6 @@ export const UserType = new GraphQLObjectType({
         createdAt: { type: new GraphQLNonNull(GraphQLString) },
         followers: { type: new GraphQLList(FollowerType) },
         following: { type: new GraphQLList(FollowerType) },
+        blockedUsers: { type: new GraphQLList(UserType) }
     })
 });

@@ -4,13 +4,16 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser } from '../../Interfaces';
 
 function generateToken(user: IUser) {
     return jwt.sign({
         id: user._id,
         email: user.email,
         username: user.username,
+        followers: user.followers,
+        following: user.following,
+        blockedUsers: user.blockedUsers
     }, process.env.JWT_SECRET_KEY as string, { expiresIn: '1h' })
 };
 
@@ -51,7 +54,8 @@ export const ADD_USER = {
                 createdAt: res[0].createdAt,
                 token,
                 followers: res[0].followers,
-                following: res[0].following
+                following: res[0].following,
+                blockedUsers: res[0].blockedUsers
             }
         }
         catch (err) {
@@ -84,7 +88,8 @@ export const LOGIN_USER = {
             createdAt: user.createdAt,
             token,
             followers: user.followers,
-            following: user.following
+            following: user.following,
+            blockedUsers: user.blockedUsers
         }
     }
 };
@@ -114,12 +119,10 @@ export const FOLLOW_USER = {
     type: UserType,
     args: {
         followingUsername: { type: new GraphQLNonNull(GraphQLString) },
-        followedUsername: { type: new GraphQLNonNull(GraphQLString) },
-        followingImage: { type: GraphQLString },
-        followedImage: { type: GraphQLString },
+        followedUsername: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(_: any, args: IFollowUser) {
-        const { followingUsername, followedUsername, followingImage, followedImage } = args;
+        const { followingUsername, followedUsername } = args;
         try {
             const followingUser: IUser = await User.findOne({ username: followingUsername });
             const followedUser: IUser = await User.findOne({ username: followedUsername });
@@ -142,20 +145,58 @@ export const FOLLOW_USER = {
 
             if (!alreadyFollows) {
                 const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
-                    following: [...followingUser.following, {
-                        username: followedUsername,
-                        image: followedImage
-                    }]
+                    following: [...followingUser.following, { username: followedUsername }]
                 }, { new: true });
 
                 await User.findOneAndUpdate({ username: followedUsername }, {
-                    followers: [...followedUser.followers, {
-                        username: followingUsername,
-                        image: followingImage
-                    }]
+                    followers: [...followedUser.followers, { username: followingUsername }]
                 }, { new: true });
 
                 return newFollowingUser
+            };
+        }
+        catch (err) {
+            throw new Error(err)
+        }
+    }
+};
+
+export const BLOCK_USER = {
+    name: 'BLOCK_USER',
+    type: UserType,
+    args: {
+        blockedUsername: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(_: any, args: IBlockUser, context: IContext) {
+        const user = checkAuth(context) as JwtPayload;
+
+        const { blockedUsername } = args;
+        try {
+            const blockingUser: IUser = await User.findOne({ username: user.username })
+            const blockedUser: IUser = await User.findOne({ username: blockedUsername });
+
+            if (!blockedUser) throw new Error('User not found');
+
+            const alreadyBlocked = blockingUser.blockedUsers.find((user: IUser) => user.username === blockedUsername);
+
+            if (alreadyBlocked) {
+                const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
+                    blockedUsers: blockingUser.blockedUsers.filter(u => u.username !== blockedUsername),
+                }, { new: true });
+                return newUser
+            };
+
+            if (!alreadyBlocked) {
+                const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
+                    blockedUsers: [...blockingUser.blockedUsers, { username: blockedUsername }],
+                    followers: blockingUser.followers.filter(f => f.username !== blockedUsername)
+                }, { new: true });
+
+                await User.findOneAndUpdate({ username: blockedUser.username }, {
+                    following: blockedUser.following.filter(f => f.username !== blockingUser.username)
+                }, { new: true });
+
+                return newUser
             };
         }
         catch (err) {

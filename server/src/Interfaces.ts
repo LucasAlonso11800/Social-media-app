@@ -14,6 +14,7 @@ export interface IUser {
     image: string
     followers: IFollower[]
     following: IFollower[]
+    blockedUsers: IUser[]
 };
 
 export interface IAddUser {
@@ -34,7 +35,11 @@ export interface IEditUserImage {
 
 export interface IGetUserImage {
     username: string
-}
+};
+
+export interface IBlockUser {
+    blockedUsername: string
+};
 
 // Posts
 export interface IPost {
@@ -134,6 +139,4 @@ export interface IFollower {
 export interface IFollowUser {
     followingUsername: string
     followedUsername: string
-    followingImage: string
-    followedImage: string
 };

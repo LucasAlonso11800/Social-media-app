@@ -6,7 +6,7 @@ let initialState: GlobalState = null;
 
 if(localStorage.getItem("token")){
     const decodedToken: IDecodedToken = jwtDecode(localStorage.getItem("token") as string);
-    
+    console.log(decodedToken)
     if(decodedToken.exp * 1000 < Date.now()){
         localStorage.removeItem("token");
     } else {
@@ -16,8 +16,9 @@ if(localStorage.getItem("token")){
             username: decodedToken.username,
             token: localStorage.getItem("token") as string,
             image: '',
-            followers: [],
-            following: []
+            followers: decodedToken.followers,
+            following: decodedToken.following,
+            blockedUsers: decodedToken.blockedUsers
         }
     }
 };
@@ -29,7 +30,6 @@ export const GlobalContext = createContext<{
     state: initialState,
     dispatch: () => { }
 });
-
 function reducer(state: GlobalState, action: Actions): GlobalState {
     switch (action.type) {
         case EActionType.LOGIN: {

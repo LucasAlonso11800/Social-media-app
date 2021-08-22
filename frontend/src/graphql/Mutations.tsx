@@ -25,6 +25,9 @@ export const ADD_USER = gql`
                 username
                 image
             }
+            blockedUsers{
+                username
+            }
         }
     }
 `;
@@ -50,6 +53,9 @@ export const LOGIN_USER = gql`
                 username
                 image
             }
+            blockedUsers{
+                username
+            }
         }
     }
 `;
@@ -58,6 +64,16 @@ export const EDIT_USER_IMAGE = gql`
     mutation edit_user_image($image: String){
         edit_user_image(image: $image){
             username
+        }
+    }
+`;
+
+export const BLOCK_USER = gql`
+    mutation block_user($blockedUsername: String!){
+        block_user(blockedUsername: $blockedUsername){
+            blockedUsers{
+                username
+            }
         }
     }
 `;
@@ -181,15 +197,12 @@ export const EDIT_PROFILE = gql`
 export const FOLLOW_USER = gql`
     mutation follow_user(
         $followingUsername: String!, 
-        $followedUsername: String!, 
-        $followingImage: String, 
-        $followedImage: String
+        $followedUsername: String!
     ){
         follow_user(
             followingUsername: $followingUsername, 
-            followedUsername: $followedUsername, 
-            followingImage: $followingImage, 
-            followedImage: $followedImage)
+            followedUsername: $followedUsername
+            )
         {
            following {
                username

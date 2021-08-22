@@ -7,6 +7,7 @@ export interface IUserData{
     image: string
     followers: IFollower[]
     following: IFollower[]
+    blockedUsers: IUserData[]
 };
 
 export interface IDecodedToken extends IUserData {
@@ -32,6 +33,12 @@ export interface ILogoutAction {
 export type Actions = ILoginAction | ILogoutAction;
 
 export type GlobalState = IUserData | null;
+
+// Users
+
+export interface IBlockUserQuery{
+    block_user: IUserData
+}
 
 // Posts
 
@@ -98,12 +105,7 @@ export interface IProfile {
     profileName: string
     profileImage: string
     bio: string
-    user: {
-        image: string
-        username: string
-        followers: IFollower[]
-        following: IFollower[]
-    }
+    user: IUserData
 };
 
 export interface IProfileQuery {
@@ -119,7 +121,6 @@ export interface IEditProfile {
 
 export interface IFollower {
     username: string
-    image: string
 };
 
 export interface IFollowUserQuery {

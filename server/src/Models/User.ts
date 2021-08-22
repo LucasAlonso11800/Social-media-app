@@ -25,9 +25,6 @@ const userSchema = new Schema({
                 username: {
                     type: String,
                     required: true,
-                },
-                image: {
-                    type: String
                 }
             }
         ]
@@ -38,9 +35,16 @@ const userSchema = new Schema({
                 username: {
                     type: String,
                     required: true,
-                },
-                image: {
-                    type: String
+                }
+            }
+        ]
+    },
+    blockedUsers: {
+        type: [
+            {
+                username: {
+                    type: String,
+                    required: true
                 }
             }
         ]

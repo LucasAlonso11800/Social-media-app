@@ -84,6 +84,9 @@ export const GET_PROFILE = gql`
                     username
                 }
                 image
+                blockedUsers{
+                    username
+                }
             }
         }
     }
