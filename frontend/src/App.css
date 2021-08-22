@@ -11,6 +11,15 @@ i.icon{
     margin: 0!important;
 }
 
+.post__user-image{
+    border-radius: 100em;
+    height: 75px;
+    width: 75px;
+    object-fit: cover;
+    border: 1px solid #35a2f4;
+    cursor: pointer;
+}
+
 .profile__profile-image{
     max-height: 250px;
     object-fit: cover;

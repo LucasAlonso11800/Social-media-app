@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
+// GraphQL
+import { useQuery } from '@apollo/client';
 // Semantic
 import { Card, Icon, Label, Button, Image, Popup } from 'semantic-ui-react';
 import moment from 'moment';
@@ -8,8 +10,10 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
+import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 // Interfaces
 import { IPost } from '../Interfaces';
+import { GET_USER_IMAGE } from '../graphql/Queries';
 
 interface Props {
     post: IPost;
@@ -19,13 +23,18 @@ function PostCard(props: Props) {
     const { state } = useContext(GlobalContext);
     const { body, createdAt, id, username, comments, likes } = props.post;
 
+    const { error, loading, data } = useQuery(GET_USER_IMAGE, {
+        variables: {
+            username: username
+        }
+    });
+
     return (
         <Card centered raised fluid>
             <Card.Content>
-                <Image
-                    floated="right"
-                    size="mini"
-                    src="https://react.semantic-ui.com/images/avatar/large/molly.png"
+                <Image floated="right" className="post__user-image" 
+                src={data?.user_image.image ? `data:image/png;base64,${data?.user_image.image}` : ProfilePlaceholder} 
+                onClick={() => window.location.href = `/user/${username}`}
                 />
                 <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${username}`} >{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>

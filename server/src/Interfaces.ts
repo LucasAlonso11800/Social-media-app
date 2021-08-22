@@ -32,6 +32,10 @@ export interface IEditUserImage {
     image: string
 };
 
+export interface IGetUserImage {
+    username: string
+}
+
 // Posts
 export interface IPost {
     body: string

@@ -60,6 +60,14 @@ export const GET_POSTS_FROM_USER = gql`
     }
 `;
 
+export const GET_USER_IMAGE = gql`
+    query($username: String!){
+        user_image(username: $username){
+            image
+        }
+    }
+`;
+
 export const GET_PROFILE = gql`
     query($username: String!){
         profile(username: $username){

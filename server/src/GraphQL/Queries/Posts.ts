@@ -7,7 +7,6 @@ export const GET_ALL_POSTS = {
     type: GraphQLList(PostType),
     async resolve() {
         try {
-            Post.find().populate()
             const posts = await Post.find().sort({ createdAt: -1 })
             return posts
         }
