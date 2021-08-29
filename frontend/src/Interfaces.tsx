@@ -38,12 +38,21 @@ export type GlobalState = IUserData | null;
 
 export interface IBlockUserQuery{
     block_user: IUserData
-}
+};
+
+export interface IUsersBySearchQuery{
+    users_by_search: IUserData[]
+};
+
 
 // Posts
 
 export interface IPostQuery{
     all_posts: IPost[]
+};
+
+export interface IPostsBySearchQuery{
+    posts_by_search: IPost[]
 };
 
 export interface ISinglePostQuery{

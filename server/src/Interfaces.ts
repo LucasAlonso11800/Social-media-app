@@ -41,6 +41,10 @@ export interface IBlockUser {
     blockedUsername: string
 };
 
+export interface IGetUsersBySearch {
+    query: string
+};
+
 // Posts
 export interface IPost {
     body: string
@@ -57,6 +61,10 @@ export interface IGetSinglePost {
 
 export interface IGetPostsFromUser {
     username: string
+};
+
+export interface IGetPostsBySearch {
+    query: string
 };
 
 export interface ICreatePost {

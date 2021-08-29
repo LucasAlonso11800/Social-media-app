@@ -24,17 +24,17 @@ function PostCard(props: Props) {
     const { body, createdAt, id, username, comments, likes } = props.post;
 
     const { error, loading, data } = useQuery(GET_USER_IMAGE, {
-        variables: {
-            username: username
-        }
+        variables: { username }
     });
 
     return (
         <Card centered raised fluid>
             <Card.Content>
-                <Image floated="right" className="post__user-image" 
-                src={data?.user_image.image ? `data:image/png;base64,${data?.user_image.image}` : ProfilePlaceholder} 
-                onClick={() => window.location.href = `/user/${username}`}
+                <Image
+                    floated="right"
+                    className={loading ? 'loading' : "post__user-image"}
+                    src={data?.user_image.image ? `data:image/png;base64,${data?.user_image.image}` : ProfilePlaceholder}
+                    onClick={() => window.location.href = `/user/${username}`}
                 />
                 <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${username}`} >{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>

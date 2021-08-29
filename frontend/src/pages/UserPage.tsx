@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 // GraphQL
 import { useQuery } from '@apollo/client';
 import { GET_POSTS_FROM_USER } from '../graphql/Queries';
+// Context
+import { GlobalContext } from '../context/GlobalContext';
 // Semantic
-import { Grid, Container, Card, CardGroup } from 'semantic-ui-react';
+import { Grid, Container, CardGroup } from 'semantic-ui-react';
 // Interfaces
 import { IPostsFromUserQuery } from '../Interfaces';
 // Components
 import PostCard from '../components/PostCard';
 import Profile from '../components/Profile';
+import PostForm from '../components/PostForm';
 
 function UserPage() {
+    const { state } = useContext(GlobalContext);
     const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
 
     const { error, loading, data } = useQuery<IPostsFromUserQuery>(GET_POSTS_FROM_USER, { variables: { username: username } });
@@ -23,6 +27,9 @@ function UserPage() {
                 </Grid.Row>
                 <Grid.Row>
                     <Profile username={username}/>
+                </Grid.Row>
+                <Grid.Row>
+                    {state ? <PostForm /> : null}
                 </Grid.Row>
                 <Grid.Row>
                     <CardGroup itemsPerRow={1} style={{ width: '100%' }}>

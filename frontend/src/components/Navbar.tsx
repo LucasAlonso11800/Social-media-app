@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
+// Context
 import { GlobalContext } from '../context/GlobalContext';
+// Interfaces
 import { EActionType } from '../Interfaces';
-
 export default function NavBar() {
     const { state, dispatch } = useContext(GlobalContext);
+    
     const pathname = window.location.pathname;
     const path = pathname === '/' ? 'home' : pathname.substring(1);
     const [activeItem, setActiveItem] = useState(path);

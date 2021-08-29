@@ -1,5 +1,5 @@
 import { GraphQLList, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
-import { IGetPostsFromUser, IGetSinglePost } from '../../Interfaces';
+import { IGetPostsBySearch, IGetPostsFromUser, IGetSinglePost } from '../../Interfaces';
 import Post from '../../Models/Post';
 import { PostType } from '../Types/PostType';
 
@@ -45,6 +45,22 @@ export const GET_POSTS_FROM_USER = {
         }
         catch (err) {
             throw new Error(err)
+        }
+    }
+};
+
+export const GET_POSTS_BY_SEARCH = {
+    type: GraphQLList(PostType),
+    args: {
+        query: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(_: any, args: IGetPostsBySearch) {
+        try {
+            const posts = await Post.find({ body: { '$regex': args.query, '$options': 'i' } }).sort({ createdAt: -1 });
+            return posts
+        }
+        catch (err) {
+            throw new Error(err);
         }
     }
 };

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+// Posts
 export const GET_POSTS = gql`
     {
         all_posts {
@@ -60,6 +61,27 @@ export const GET_POSTS_FROM_USER = gql`
     }
 `;
 
+export const GET_POSTS_BY_SEARCH = gql`
+    query($query: String!){
+        posts_by_search(query: $query){
+            id
+            body
+            createdAt
+            username
+            comments{
+                id
+                body
+                username
+                createdAt
+            }
+            likes {
+                username
+            }
+        }
+    }  
+`;
+
+// Users
 export const GET_USER_IMAGE = gql`
     query($username: String!){
         user_image(username: $username){
@@ -90,4 +112,19 @@ export const GET_PROFILE = gql`
             }
         }
     }
-`
+`;
+
+export const GET_USERS_BY_SEARCH = gql`
+    query($query: String!){
+        users_by_search(query: $query){
+            id
+            username
+            followers{
+                username
+            }
+            following{
+                username
+            }
+        }
+    }
+`;

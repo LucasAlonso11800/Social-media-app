@@ -11,6 +11,27 @@ i.icon{
     margin: 0!important;
 }
 
+.ui.selection.dropdown>.delete.icon, .ui.selection.dropdown>.dropdown.icon, .ui.selection.dropdown>.search.icon{
+    top: 0.1em!important
+}
+
+.ui.selection.dropdown{
+    min-width: 10rem!important;
+    margin-left: 2rem!important;
+}
+
+.search-bar{
+    width: 100%;
+    display: flex;
+}
+.search-bar .ui.input{
+    flex-grow: 1;
+}
+
+.home-page__loader{
+    margin-top: 4rem;
+}
+
 .post__user-image{
     border-radius: 100em;
     height: 75px;
@@ -161,4 +182,28 @@ i.icon{
 
 .user-modal__img-button{
     margin-right: 0!important;
+}
+
+.user-card__user-image-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.user-card__user-image{
+    height: 150px;
+    object-fit: cover;
+    border-radius: 100em;
+    border: 1px solid #35a2f4;
+}
+
+.user-card__username{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.user-card__user-data{
+    display: flex;
+    justify-content: space-between;
 }
