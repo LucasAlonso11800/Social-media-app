@@ -32,7 +32,7 @@ function PostCard(props: Props) {
             <Card.Content>
                 <Image
                     floated="right"
-                    className={loading ? 'loading' : "post__user-image"}
+                    className="post__user-image"
                     src={data?.user_image.image ? `data:image/png;base64,${data?.user_image.image}` : ProfilePlaceholder}
                     onClick={() => window.location.href = `/user/${username}`}
                 />
@@ -43,7 +43,7 @@ function PostCard(props: Props) {
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <LikeButton likes={likes} id={id} />
+                <LikeButton likes={likes} id={id}/>
                 <Popup
                     content="Comment"
                     inverted
@@ -58,7 +58,7 @@ function PostCard(props: Props) {
                         </Button >
                     }
                 />
-                {state !== null && state.username === username && <DeleteButton postId={id} />}
+                {state !== null && state.username === username && window.location.pathname !== '/' && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>
     )

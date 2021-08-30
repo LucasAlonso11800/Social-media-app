@@ -32,10 +32,14 @@ i.icon{
     margin-top: 4rem;
 }
 
+.user-page__profile-container{
+    min-height: 420px;
+}
+
 .post__user-image{
     border-radius: 100em;
-    height: 75px;
-    width: 75px;
+    height: 75px!important;
+    width: 75px!important;
     object-fit: cover;
     border: 1px solid #35a2f4;
     cursor: pointer;
@@ -48,8 +52,8 @@ i.icon{
 }
 
 .profile__user-image-container{
-    height: 125px;
-    width: 125px;
+    height: 125px!important;
+    width: 125px!important;
     position: absolute;
     z-index: 100;
     top: 70%;
@@ -70,8 +74,8 @@ i.icon{
 
 .profile__actual-change-user-image{
     display: none;
-    height: 125px;
-    width: 125px;
+    height: 125px!important;
+    width: 125px!important;
     position: absolute;
     z-index: 100;
     top: 0;

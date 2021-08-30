@@ -25,7 +25,7 @@ export default function Profile(props: Props) {
     const [userImageModalOpen, setUserImageModalOpen] = useState(false);
 
     const { error, loading, data } = useQuery<IProfileQuery>(GET_PROFILE, { variables: { username } });
-    console.log(state)
+
     if (data) {
         const { profile: { profileName, profileImage, bio, user } } = data as IProfileQuery;
         const followsUser = state?.following.find(f => f.username === user.username);

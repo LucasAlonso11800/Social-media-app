@@ -40,7 +40,7 @@ export const GET_POSTS_FROM_USER = {
     },
     async resolve(_: any, args: IGetPostsFromUser) {
         try {
-            const posts = await Post.find({ username: args.username });
+            const posts = await Post.find({ username: args.username }).sort({ createdAt: -1 });
             return posts
         }
         catch (err) {

@@ -8,7 +8,7 @@ import { GlobalContext } from '../context/GlobalContext';
 // Semantic
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
-import { ILike } from '../Interfaces';
+import { ILike, IPost } from '../Interfaces';
 
 type Props = {
     likes: ILike[],
@@ -20,12 +20,18 @@ function LikeButton(props: Props) {
     const { state } = useContext(GlobalContext);
     const { likes, id } = props;
 
+    const [likeCount, setLikeCount] = useState(likes.length)
+
     useEffect(() => {
         const userHasLikedThePost = state !== null && likes.find(like => like.username === state.username)
         userHasLikedThePost ? setLiked(true) : setLiked(false)
     }, [state, likes]);
 
     const [likePost] = useMutation(LIKE_POST, {
+        onCompleted: () => {
+            liked ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
+            setLiked(!liked)
+        },
         variables: { postId: id }
     });
 
@@ -39,7 +45,7 @@ function LikeButton(props: Props) {
                         <Icon name="heart" />
                     </Button>
                     <Label basic color="teal" pointing="left">
-                        {likes?.length}
+                        {likeCount}
                     </Label>
                 </Button >
             }

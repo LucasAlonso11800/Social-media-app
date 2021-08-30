@@ -5,7 +5,7 @@ import { GET_POSTS_FROM_USER } from '../graphql/Queries';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // Semantic
-import { Grid, Container, CardGroup } from 'semantic-ui-react';
+import { Grid, Container, CardGroup, Dimmer, Loader } from 'semantic-ui-react';
 // Interfaces
 import { IPostsFromUserQuery } from '../Interfaces';
 // Components
@@ -22,15 +22,20 @@ function UserPage() {
     return (
         <Container>
             <Grid>
-                <Grid.Row>
-                    {loading ? <h1>Loading profile...</h1> : null}
+                <Grid.Row className="user-page__profile-container">
+                    {loading ?
+                        <Dimmer active={loading} inverted className="home-page__loader">
+                            <Loader>Loading...</Loader>
+                        </Dimmer>
+                        :
+                        <Profile username={username} />
+                    }
                 </Grid.Row>
-                <Grid.Row>
-                    <Profile username={username}/>
-                </Grid.Row>
-                <Grid.Row>
-                    {state ? <PostForm /> : null}
-                </Grid.Row>
+                {state && state.username === username &&
+                    <Grid.Row>
+                        <PostForm />
+                    </Grid.Row>
+                }
                 <Grid.Row>
                     <CardGroup itemsPerRow={1} style={{ width: '100%' }}>
                         {data && data.posts_from_user.map(post => {

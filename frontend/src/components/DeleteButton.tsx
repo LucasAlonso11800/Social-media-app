@@ -4,8 +4,8 @@ import { Button, Icon, Confirm, Popup } from 'semantic-ui-react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { DELETE_POST, DELETE_COMMENT } from '../graphql/Mutations';
-import { GET_POSTS } from '../graphql/Queries';
-import { IPostQuery } from '../Interfaces';
+import { GET_POSTS_FROM_USER } from '../graphql/Queries';
+import { IPostsFromUserQuery } from '../Interfaces';
 
 type Props = {
     postId: string,
@@ -19,16 +19,20 @@ function DeleteButton(props: Props) {
 
     const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
 
+    const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
+
     const [deleteMutation, { error }] = useMutation(mutation, {
         update(proxy) {
             if (!commentId) {
-                const data: IPostQuery = proxy.readQuery({
-                    query: GET_POSTS
-                }) as IPostQuery;
+                const data: IPostsFromUserQuery = proxy.readQuery({
+                    query: GET_POSTS_FROM_USER,
+                    variables: { username }
+                }) as IPostsFromUserQuery;
 
                 proxy.writeQuery({
-                    query: GET_POSTS,
-                    data: { all_posts: data.all_posts.filter(p => p.id !== postId) }
+                    query: GET_POSTS_FROM_USER,
+                    variables: { username },
+                    data: { posts_from_user: data.posts_from_user.filter(p => p.id !== postId) }
                 });
             }
             setOpen(false);
@@ -38,7 +42,7 @@ function DeleteButton(props: Props) {
             postId,
             commentId
         },
-        onError: () => console.log('Error')
+        onError: (): any => console.log(JSON.stringify(error, null, 2)),
     });
 
     return (

@@ -35,6 +35,7 @@ export const GET_SINGLE_POST = gql`
                 createdAt
             }
             likes {
+                id
                 username
             }
         }
@@ -55,6 +56,7 @@ export const GET_POSTS_FROM_USER = gql`
                 createdAt
             }
             likes {
+                id
                 username
             }
         }
@@ -75,6 +77,7 @@ export const GET_POSTS_BY_SEARCH = gql`
                 createdAt
             }
             likes {
+                id
                 username
             }
         }
