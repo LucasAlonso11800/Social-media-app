@@ -38,7 +38,7 @@ function PostCard(props: Props) {
                 />
                 <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${username}`} >{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
-                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${id}`} >
+                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${username}/${id}`} >
                     {body}
                 </Card.Description>
             </Card.Content>
