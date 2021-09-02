@@ -1,14 +1,14 @@
 import { GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql';
-import { IGetUserImage, IGetUsersBySearch } from '../../Interfaces';
+import { IGetUser, IGetUsersBySearch } from '../../Interfaces';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
 
-export const GET_USER_IMAGE = {
+export const GET_USER = {
     type: UserType,
     args: {
         username: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IGetUserImage) {
+    async resolve(_: any, args: IGetUser) {
         try {
             const user = await User.findOne({ username: args.username })
             return user

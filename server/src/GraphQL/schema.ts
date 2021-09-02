@@ -2,7 +2,7 @@ import { ADD_PROFILE, EDIT_PROFILE } from "./Mutations/Profile";
 import { BLOCK_USER, EDIT_USER_IMAGE, FOLLOW_USER } from "./Mutations/User";
 import { GET_POSTS_BY_SEARCH, GET_POSTS_FROM_USER } from "./Queries/Posts";
 import { GET_PROFILE } from "./Queries/Profile";
-import { GET_USERS_BY_SEARCH, GET_USER_IMAGE } from './Queries/Users';
+import { GET_USERS_BY_SEARCH, GET_USER } from './Queries/Users';
 
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
 const { ADD_USER, LOGIN_USER } = require('./Mutations/User');
@@ -18,7 +18,8 @@ const RootQuery = new GraphQLObjectType({
         single_post: GET_SINGLE_POST,
         posts_from_user: GET_POSTS_FROM_USER,
         posts_by_search: GET_POSTS_BY_SEARCH,
-        user_image: GET_USER_IMAGE,
+        user_image: GET_USER,
+        blocked_users: GET_USER,
         users_by_search: GET_USERS_BY_SEARCH,
         profile: GET_PROFILE
     }

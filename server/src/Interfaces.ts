@@ -33,7 +33,7 @@ export interface IEditUserImage {
     image: string
 };
 
-export interface IGetUserImage {
+export interface IGetUser {
     username: string
 };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_USER_IMAGE } from '../graphql/Queries';
 // Components
-import { Card, Container, Image } from 'semantic-ui-react';
+import { Card, Image } from 'semantic-ui-react';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 // Interfaces
 import { IUserData } from '../Interfaces';

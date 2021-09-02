@@ -93,6 +93,16 @@ export const GET_USER_IMAGE = gql`
     }
 `;
 
+export const GET_BLOCKED_USERS = gql`
+    query($username: String!){
+        blocked_users(username: $username){
+            blockedUsers{
+                username
+            }
+        }
+    }
+`;
+
 export const GET_PROFILE = gql`
     query($username: String!){
         profile(username: $username){

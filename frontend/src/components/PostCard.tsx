@@ -12,7 +12,7 @@ import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 // Interfaces
-import { IPost } from '../Interfaces';
+import { IPost, IUserImageQuery } from '../Interfaces';
 import { GET_USER_IMAGE } from '../graphql/Queries';
 
 interface Props {
@@ -23,7 +23,7 @@ function PostCard(props: Props) {
     const { state } = useContext(GlobalContext);
     const { body, createdAt, id, username, comments, likes } = props.post;
 
-    const { error, loading, data } = useQuery(GET_USER_IMAGE, {
+    const { error, loading, data } = useQuery<IUserImageQuery>(GET_USER_IMAGE, {
         variables: { username }
     });
 
@@ -58,7 +58,7 @@ function PostCard(props: Props) {
                         </Button >
                     }
                 />
-                {state !== null && state.username === username && window.location.pathname !== '/' && <DeleteButton postId={id} />}
+                {state !== null && state.username === username && window.location.pathname.startsWith('/user/') && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>
     )

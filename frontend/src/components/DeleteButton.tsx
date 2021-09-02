@@ -10,7 +10,6 @@ import { IPostsFromUserQuery } from '../Interfaces';
 type Props = {
     postId: string,
     commentId?: string,
-    callback?: Function
 };
 
 function DeleteButton(props: Props) {
@@ -36,7 +35,6 @@ function DeleteButton(props: Props) {
                 });
             }
             setOpen(false);
-            if (props.callback) props.callback()
         },
         variables: {
             postId,

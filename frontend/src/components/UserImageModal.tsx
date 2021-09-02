@@ -21,6 +21,7 @@ export default function UserImageModal(props: Props) {
         alt: 'User image'
     });
     const [newImage, setNewImage] = useState('');
+    const [fileSizeError, setFileSizeError] = useState(false);
 
     const [editImage, { error, loading }] = useMutation(EDIT_USER_IMAGE, {
         update() {
@@ -41,6 +42,8 @@ export default function UserImageModal(props: Props) {
     const handleImg = (e: any) => {
         const file = e.target.files[0]
         if (file) {
+            if (file.size > 1048577) return setFileSizeError(true);
+            setFileSizeError(false);
             setImage({ ...image, alt: file.name })
             const reader = new FileReader();
             reader.onload = _handleReaderLoaded;
@@ -75,6 +78,13 @@ export default function UserImageModal(props: Props) {
                     disabled={loading}
                 >Change image</Button>
             </div>
+            {fileSizeError ?
+                <div className="ui red message">
+                    <ul className="list">
+                        <li>File size must be under 1MB</li>
+                    </ul>
+                </div>
+                : null}
             <Button.Group fluid>
                 <Button
                     color="grey"

@@ -8,7 +8,7 @@ import { GlobalContext } from '../context/GlobalContext';
 // Semantic
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
-import { ILike, IPost } from '../Interfaces';
+import { ILike } from '../Interfaces';
 
 type Props = {
     likes: ILike[],

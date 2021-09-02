@@ -15,6 +15,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SinglePostPage from './pages/SinglePostPage';
 import UserPage from './pages/UserPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:5000/graphql' });
 
@@ -48,6 +49,7 @@ function App() {
                     <Route exact path="/register" component={RegisterPage} />
                     <Route exact path="/posts/:username/:postId" component={SinglePostPage} />
                     <Route exact path="/user/:username" component={UserPage} />
+                    <Route exact path="/404" component={NotFoundPage} />
                 </Router>
             </GlobalProvider>
         </ApolloProvider>

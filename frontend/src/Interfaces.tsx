@@ -44,6 +44,18 @@ export interface IUsersBySearchQuery{
     users_by_search: IUserData[]
 };
 
+export interface IBlockedUsersQuery{
+    blocked_users: {
+        username: string
+    }[]
+};
+
+export interface IUserImageQuery{
+    user_image: {
+        image: string
+    }
+};
+
 
 // Posts
 

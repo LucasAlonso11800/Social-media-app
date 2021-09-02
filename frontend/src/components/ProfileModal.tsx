@@ -31,10 +31,11 @@ function ProfileModal(props: Props) {
         alt: 'Profile image',
         src: profile.profileImage
     });
+    const [fileSizeError, setFileSizeError] = useState(false);
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
+    const [editProfile, { loading }] = useMutation(EDIT_PROFILE, {
         update() {
             window.location.reload()
         },
@@ -68,6 +69,8 @@ function ProfileModal(props: Props) {
     const handleImg = (e: any) => {
         const file = e.target.files[0]
         if (file) {
+            if (file.size > 1048577) return setFileSizeError(true);
+            setFileSizeError(false);
             setImage({ ...image, alt: file.name })
             const reader = new FileReader();
             reader.onload = _handleReaderLoaded;
@@ -121,6 +124,13 @@ function ProfileModal(props: Props) {
                             disabled={loading}
                         >Change image</Button>
                     </div>
+                    {fileSizeError ?
+                        <div className="ui red message">
+                            <ul className="list">
+                                <li>File size must be under 1MB</li>
+                            </ul>
+                        </div>
+                        : null}
                     <Button.Group fluid>
                         <Button
                             color="grey"

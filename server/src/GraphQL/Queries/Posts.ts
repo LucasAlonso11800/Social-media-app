@@ -1,6 +1,7 @@
 import { GraphQLList, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 import { IGetPostsBySearch, IGetPostsFromUser, IGetSinglePost } from '../../Interfaces';
 import Post from '../../Models/Post';
+import User from '../../Models/User';
 import { PostType } from '../Types/PostType';
 
 export const GET_ALL_POSTS = {
@@ -40,6 +41,8 @@ export const GET_POSTS_FROM_USER = {
     },
     async resolve(_: any, args: IGetPostsFromUser) {
         try {
+            const user = await User.findOne({ username: args.username});
+            if(!user) throw new Error('User not found');
             const posts = await Post.find({ username: args.username }).sort({ createdAt: -1 });
             return posts
         }
