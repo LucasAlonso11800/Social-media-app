@@ -22,7 +22,7 @@ export const ADD_PROFILE = {
             const profile: IProfile[] = await Profile.insertMany(newProfile)
             return profile[0]
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -56,7 +56,7 @@ export const EDIT_PROFILE = {
                 bio: newProfile.bio,
             }
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err);
         }
     }

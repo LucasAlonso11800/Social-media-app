@@ -27,23 +27,10 @@ const validationSchema = yup.object({
 function LoginPage(props: RouteComponentProps) {
     const { dispatch } = useContext(GlobalContext);
 
-    const formik = useFormik({
-        initialValues: {
-            username: '',
-            password: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            loginUser()
-            setQueryVariables(values)
-        } 
-    });
-
     const [queryVariables, setQueryVariables] = useState<ILoginUser>();
 
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
         update(proxy, result) {
-            console.log(result.data)
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.login_user
@@ -52,6 +39,18 @@ function LoginPage(props: RouteComponentProps) {
         },
         variables: queryVariables,
         onError: (): any => console.log(JSON.stringify(error, null, 2))
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: ''
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            if(error !== undefined) loginUser()
+            setQueryVariables(values)
+        }
     });
 
     useEffect(() => {
@@ -71,6 +70,13 @@ function LoginPage(props: RouteComponentProps) {
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     onChange={formik.handleChange}
                 />
+                {formik.touched.username && formik.errors.username &&
+                    <div className="ui red message">
+                        <ul className="list">
+                            <li>{formik.errors.username}</li>
+                        </ul>
+                    </div>
+                }
                 <Form.Input
                     name="password"
                     label="Password"
@@ -80,6 +86,13 @@ function LoginPage(props: RouteComponentProps) {
                     error={formik.touched.password && Boolean(formik.errors.password)}
                     onChange={formik.handleChange}
                 />
+                {formik.touched.password && formik.errors.password &&
+                    <div className="ui red message">
+                        <ul className="list">
+                            <li>{formik.errors.password}</li>
+                        </ul>
+                    </div>
+                }
                 <Button type="submit" color="twitter" disabled={loading}>
                     Login
                 </Button>

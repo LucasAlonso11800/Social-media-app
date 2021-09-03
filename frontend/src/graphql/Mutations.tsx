@@ -6,17 +6,26 @@ export const ADD_USER = gql`
         $password: String!
         $confirmPassword: String!
         $email: String!
+        $country: String!
+        $city: String!
+        $birthDate: String!
     ) {
         add_user(
             username: $username,
             password: $password
             confirmPassword: $confirmPassword
             email: $email,
+            country: $country,
+            city: $city,
+            birthDate: $birthDate,
         ){
             id
             email
             username
             token
+            country
+            city
+            birthDate
             followers{
                 username
                 image
@@ -45,6 +54,9 @@ export const LOGIN_USER = gql`
             email
             username
             token
+            country
+            city
+            birthDate
             followers{
                 username
                 image
@@ -176,7 +188,8 @@ export const ADD_PROFILE = gql`
 `;
 
 export const EDIT_PROFILE = gql`
-    mutation edit_profile($userId: String!, 
+    mutation edit_profile(
+        $userId: String!, 
         $profileName: String!, 
         $profileImage: String, 
         $bio: String!
@@ -187,7 +200,10 @@ export const EDIT_PROFILE = gql`
             profileImage: $profileImage, 
             bio: $bio
         ){
+            id
             profileName
+            profileImage
+            bio
         }
     }
 `;

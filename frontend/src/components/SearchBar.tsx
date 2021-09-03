@@ -39,7 +39,11 @@ export default function SearchBar(props: Props) {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Look for users or posts"
             />
-            <Select onChange={(e) => setLookingForPosts(e.currentTarget.innerText === 'Posts' ? true : false)} defaultValue='p' options={options} />
+            <Select
+                onChange={(e) => setLookingForPosts(e.currentTarget.innerText === 'Posts' ? true : false)}
+                defaultValue='p'
+                options={options}
+            />
         </div>
     )
 }

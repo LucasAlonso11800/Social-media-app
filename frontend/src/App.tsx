@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import './App.css';
+import { serverURL } from './consts/ServerURL';
 // React-router-dom
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 // Apollo
@@ -17,7 +18,7 @@ import SinglePostPage from './pages/SinglePostPage';
 import UserPage from './pages/UserPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-const httpLink = createHttpLink({ uri: 'http://localhost:5000/graphql' });
+const httpLink = createHttpLink({ uri: serverURL });
 
 const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem("token");
@@ -34,7 +35,7 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 
-function App() {
+export default function App() {
     const { state } = useContext(GlobalContext);
     const inLoginOrRegisterPage = window.location.pathname === "/login" || window.location.pathname === "/register";
     if (state !== null && inLoginOrRegisterPage) window.location.pathname = '/';
@@ -54,6 +55,4 @@ function App() {
             </GlobalProvider>
         </ApolloProvider>
     );
-}
-
-export default App;
+};

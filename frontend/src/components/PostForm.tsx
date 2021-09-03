@@ -16,17 +16,6 @@ const validationSchema = yup.object({
 });
 
 function PostForm() {
-    const formik = useFormik({
-        initialValues: {
-            body: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            createPost()
-            setQueryVariables(values)
-        }
-    });
-
     const [queryVariables, setQueryVariables] = useState<ICreatePost>();
 
     const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
@@ -48,6 +37,17 @@ function PostForm() {
         },
         variables: queryVariables,
         onError: (): any => console.log(JSON.stringify(error, null, 2)),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            body: ''
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            if(error !== undefined) createPost()
+            setQueryVariables(values)
+        }
     });
 
     useEffect(() => {

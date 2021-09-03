@@ -11,6 +11,9 @@ function generateToken(user: IUser) {
         id: user._id,
         email: user.email,
         username: user.username,
+        country: user.country,
+        city: user.city,
+        birthDate: user.birthDate,
         followers: user.followers,
         following: user.following,
         blockedUsers: user.blockedUsers
@@ -24,10 +27,13 @@ export const ADD_USER = {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
         confirmPassword: { type: new GraphQLNonNull(GraphQLString) },
-        email: { type: new GraphQLNonNull(GraphQLString) }
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        country: { type: new GraphQLNonNull(GraphQLString) },
+        city: { type: new GraphQLNonNull(GraphQLString) },
+        birthDate: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(_: any, args: IAddUser) {
-        const { username, password, confirmPassword, email } = args
+        const { username, password, confirmPassword, email, country, city, birthDate } = args
         try {
             if (password !== confirmPassword) throw new Error("Passwords don't match")
 
@@ -41,8 +47,12 @@ export const ADD_USER = {
                 username,
                 password,
                 email,
+                country,
+                city,
+                birthDate,
                 createdAt: new Date().toISOString()
-            })
+            });
+            
             newUser.password = await bcrypt.hash(password, 10);
             const res: IUser[] = await User.insertMany(newUser)
             const token = generateToken(res[0])
@@ -53,12 +63,15 @@ export const ADD_USER = {
                 email: res[0].email,
                 createdAt: res[0].createdAt,
                 token,
+                country: res[0].country,
+                city: res[0].city,
+                birthDate: res[0].birthDate,
                 followers: res[0].followers,
                 following: res[0].following,
                 blockedUsers: res[0].blockedUsers
             }
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -87,6 +100,9 @@ export const LOGIN_USER = {
             email: user.email,
             createdAt: user.createdAt,
             token,
+            country: user.country,
+            city: user.city,
+            birthDate: user.birthDate,
             followers: user.followers,
             following: user.following,
             blockedUsers: user.blockedUsers
@@ -155,7 +171,7 @@ export const FOLLOW_USER = {
                 return newFollowingUser
             };
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -199,7 +215,7 @@ export const BLOCK_USER = {
                 return newUser
             };
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }

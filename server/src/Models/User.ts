@@ -13,6 +13,18 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    country: {
+        type: String,
+        required: true,
+    },
+    city: {
+        type: String,
+        required: true,
+    },
+    birthDate: {
+        type: String,
+        required: true,
+    },
     createdAt: {
         type: String,
     },

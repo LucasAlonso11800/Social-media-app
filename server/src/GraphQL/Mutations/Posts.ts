@@ -28,7 +28,7 @@ export const CREATE_POST = {
             const post: IPost[] = await Post.insertMany(newPost)
             return post[0]
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -51,7 +51,7 @@ export const DELETE_POST = {
             await Post.deleteOne({ _id: args.postId })
             return 'Post deleted'
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }

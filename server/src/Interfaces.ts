@@ -11,6 +11,9 @@ export interface IUser {
     username: string
     createdAt: string
     password: string
+    country: string
+    city: string
+    birthDate: string
     image: string
     followers: IFollower[]
     following: IFollower[]
@@ -20,6 +23,9 @@ export interface IUser {
 export interface IAddUser {
     username: string
     password: string
+    country: string
+    city: string
+    birthDate: string
     confirmPassword: string
     email: string
 };

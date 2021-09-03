@@ -5,6 +5,9 @@ export interface IUserData{
     token: string
     username: string
     image: string
+    country: string
+    city: string
+    birthDate: string
     followers: IFollower[]
     following: IFollower[]
     blockedUsers: IUserData[]
@@ -104,6 +107,9 @@ export interface IAddUser {
     email: string
     password: string
     confirmPassword: string
+    country: string
+    city: string
+    birthDate: string
 };
 
 export interface ILoginUser {

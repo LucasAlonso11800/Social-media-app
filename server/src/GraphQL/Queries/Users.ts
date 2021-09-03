@@ -13,7 +13,7 @@ export const GET_USER = {
             const user = await User.findOne({ username: args.username })
             return user
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -29,7 +29,7 @@ export const GET_USERS_BY_SEARCH = {
             const users = await User.find({ username: { '$regex': args.query, '$options': 'i' } }).sort({ createdAt: -1 });
             return users
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err);
         }
     }

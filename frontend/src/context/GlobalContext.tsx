@@ -16,6 +16,9 @@ if(localStorage.getItem("token")){
             username: decodedToken.username,
             token: localStorage.getItem("token") as string,
             image: '',
+            country: decodedToken.country,
+            city: decodedToken.city,
+            birthDate: decodedToken.birthDate,
             followers: decodedToken.followers,
             following: decodedToken.following,
             blockedUsers: decodedToken.blockedUsers

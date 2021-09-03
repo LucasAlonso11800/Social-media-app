@@ -29,7 +29,7 @@ export const GET_PROFILE = {
                 user: profile.user
             }
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }

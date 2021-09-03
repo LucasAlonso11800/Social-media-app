@@ -61,7 +61,7 @@ export default function HomePage() {
                         </CardGroup>
                     }
                     {!loading && posts.length === 0 &&
-                        <CardGroup itemsPerRow={3} style={{ width: '100%' }}>
+                        <CardGroup itemsPerRow={4} style={{ width: '100%' }}>
                             {users.map(user => {
                                 return <UserCard user={user} key={user.id} />
                             })}

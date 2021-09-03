@@ -11,7 +11,7 @@ export const GET_ALL_POSTS = {
             const posts = await Post.find().sort({ createdAt: -1 })
             return posts
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -28,7 +28,7 @@ export const GET_SINGLE_POST = {
             if (!post) throw new Error('Post not found');
             return post
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -46,7 +46,7 @@ export const GET_POSTS_FROM_USER = {
             const posts = await Post.find({ username: args.username }).sort({ createdAt: -1 });
             return posts
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -62,7 +62,7 @@ export const GET_POSTS_BY_SEARCH = {
             const posts = await Post.find({ body: { '$regex': args.query, '$options': 'i' } }).sort({ createdAt: -1 });
             return posts
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err);
         }
     }

@@ -7,19 +7,21 @@
     list-style-type: none;
 }
 
-i.icon{
+/* Semantic */
+/* i.icon{
     margin: 0!important;
-}
+} */
 
 .ui.selection.dropdown>.delete.icon, .ui.selection.dropdown>.dropdown.icon, .ui.selection.dropdown>.search.icon{
     top: 0.1em!important
 }
 
-.ui.selection.dropdown{
+.search-bar .ui.selection.dropdown{
     min-width: 10rem!important;
     margin-left: 2rem!important;
 }
 
+/* Search bar */
 .search-bar{
     width: 100%;
     display: flex;
@@ -28,14 +30,22 @@ i.icon{
     flex-grow: 1;
 }
 
+/* Home */
 .home-page__loader{
     margin-top: 4rem;
 }
 
+/* User Page */
 .user-page__profile-container{
     min-height: 420px;
 }
 
+/* Form */
+.form__submit-button{
+    margin-bottom: 2rem!important;
+}
+
+/* Posts */
 .post__user-image{
     border-radius: 100em;
     height: 75px!important;
@@ -45,6 +55,7 @@ i.icon{
     cursor: pointer;
 }
 
+/* Profile */
 .profile__profile-image{
     max-height: 250px;
     object-fit: cover;
@@ -110,6 +121,8 @@ i.icon{
 .profile__profile-info{
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    /* word-wrap: */
     margin-top: 2rem;
 }
 
@@ -121,6 +134,7 @@ i.icon{
     margin-right: 1rem!important;
 }
 
+/* Profile Modal */
 .profile-modal__form{
     display: flex;
     flex-direction: column;
@@ -158,6 +172,7 @@ i.icon{
     margin-left: 1rem!important;
 }
 
+/* User Modal */
 .user-modal{
     padding: 2rem;
 }
@@ -188,6 +203,7 @@ i.icon{
     margin-right: 0!important;
 }
 
+/* User card */
 .user-card__user-image-container{
     width: 100%;
     display: flex;
@@ -200,18 +216,24 @@ i.icon{
     object-fit: cover;
     border-radius: 100em;
     border: 1px solid #35a2f4;
+    cursor: pointer;
 }
 
 .user-card__username{
     text-align: center;
     margin-bottom: 1rem;
+    cursor: pointer;
 }
 
 .user-card__user-data{
     display: flex;
-    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+.user-card__user-data-icon{
+    margin-right: 0.5rem!important;
 }
 
+/* Not found */
 .not-found__container{
     display: flex!important;
     flex-direction: column;

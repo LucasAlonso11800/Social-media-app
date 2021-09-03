@@ -29,7 +29,7 @@ export const ADD_COMMENT = {
 
             return newPost
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -59,7 +59,7 @@ export const DELETE_COMMENT = {
 
             return newPost
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }

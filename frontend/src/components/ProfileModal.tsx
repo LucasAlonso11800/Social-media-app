@@ -9,23 +9,25 @@ import { EDIT_PROFILE } from '../graphql/Mutations';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IEditProfile, IProfile } from '../Interfaces';
+import { IEditProfile, IProfile, IProfileQuery } from '../Interfaces';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
+import { GET_PROFILE } from '../graphql/Queries';
 
 type Props = {
     open: boolean,
     setOpen: Function,
-    profile: IProfile
+    profile: IProfile,
+    username: string
 };
 
 const validationSchema = yup.object({
-    profileName: yup.string().required("Profile name can't be empty"),
-    bio: yup.string().required("Profile description can't be empty"),
+    profileName: yup.string().max(40, "Profile name can't be longer than 40 characters").required("Profile name can't be empty"),
+    bio: yup.string().max(140, "Description can't be longer than 140 characters").required("Profile description can't be empty"),
 });
 
 function ProfileModal(props: Props) {
-    const { open, setOpen, profile } = props;
+    const { open, setOpen, profile, username } = props;
     const { state } = useContext(GlobalContext)
     const [image, setImage] = useState({
         alt: 'Profile image',
@@ -35,16 +37,34 @@ function ProfileModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { loading }] = useMutation(EDIT_PROFILE, {
-        update() {
-            window.location.reload()
+    const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
+        update: (proxy, result) => {
+            const data: IProfileQuery = proxy.readQuery({
+                query: GET_PROFILE,
+                variables: { username }
+            }) as IProfileQuery;
+
+            proxy.writeQuery({
+                query: GET_PROFILE,
+                variables: { username },
+                data: {
+                    profile: {
+                        user: data.profile.user,
+                        bio: result.data.edit_profile.bio,
+                        id: result.data.edit_profile.id,
+                        profileImage: result.data.edit_profile.profileImage,
+                        profileName: result.data.edit_profile.profileName
+                    }
+                }
+            });
+            setOpen(false);
         },
         variables: {
             ...queryVariables,
             profileImage: image.src === profile.profileImage ? image.src : newImage,
             userId: state?.id
         },
-        onError: () => console.log('error')
+        onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
     const formik = useFormik({
@@ -53,7 +73,10 @@ function ProfileModal(props: Props) {
             bio: profile.bio,
         },
         validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        onSubmit: (values) => {
+            if(queryVariables?.bio === values.bio && queryVariables?.profileName === values.profileName && image.src !== profile.profileImage) return editProfile()
+            setQueryVariables(values)
+        }
     });
 
     useEffect(() => {
@@ -95,6 +118,13 @@ function ProfileModal(props: Props) {
                         error={formik.touched.profileName && Boolean(formik.errors.profileName)}
                         onChange={formik.handleChange}
                     />
+                    {formik.touched.profileName && formik.errors.profileName &&
+                        <div className="ui red message">
+                            <ul className="list">
+                                <li>{formik.errors.profileName}</li>
+                            </ul>
+                        </div>
+                    }
                     <Form.Input
                         name="bio"
                         label="Profile description"
@@ -104,6 +134,13 @@ function ProfileModal(props: Props) {
                         error={formik.touched.bio && Boolean(formik.errors.bio)}
                         onChange={formik.handleChange}
                     />
+                    {formik.touched.bio && formik.errors.bio &&
+                        <div className="ui red message">
+                            <ul className="list">
+                                <li>{formik.errors.bio}</li>
+                            </ul>
+                        </div>
+                    }
                     <div className="profile-modal__img-container">
                         <Image
                             src={image.src ? `data:image/png;base64,${image.src}` : ProfilePlaceholder}

@@ -36,7 +36,7 @@ export const LIKE_POST = {
                 return newPost
             }
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }
@@ -92,7 +92,7 @@ export const LIKE_COMMENT = {
                 return newPost
             }
         }
-        catch (err) {
+        catch (err: any) {
             throw new Error(err)
         }
     }

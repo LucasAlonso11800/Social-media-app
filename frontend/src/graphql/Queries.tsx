@@ -112,6 +112,9 @@ export const GET_PROFILE = gql`
             user{
                 id
                 username
+                country
+                city
+                birthDate
                 followers{
                     username
                 }
@@ -132,6 +135,9 @@ export const GET_USERS_BY_SEARCH = gql`
         users_by_search(query: $query){
             id
             username
+            city
+            country
+            birthDate
             followers{
                 username
             }

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import moment from 'moment';
 // GraphQL
 import { useQuery } from '@apollo/client';
 import { GET_PROFILE } from '../graphql/Queries';
@@ -32,8 +33,7 @@ export default function Profile(props: Props) {
         const userIsBlocked = state?.blockedUsers.find(u => u.username === username);
 
         const hasBeenBlocked = user.blockedUsers.find(u => u.username === state?.username);
-        if(hasBeenBlocked) window.location.replace('/');
-
+        if (hasBeenBlocked) window.location.replace('/');
         return (
             <Card fluid>
                 <Grid>
@@ -66,19 +66,26 @@ export default function Profile(props: Props) {
                                     }
                                 />
                             }
-                            {state && state.username !== username ? <BlockUserButton profile={data.profile} userIsBlocked={userIsBlocked ? true : false}/> : null}
+                            {state && state.username !== username ? <BlockUserButton profile={data.profile} userIsBlocked={userIsBlocked ? true : false} /> : null}
                         </div>
                     </div>
-                    <Card.Meta>{username}</Card.Meta>
+                    <Card.Meta><Icon name="user outline" /> {username}</Card.Meta>
+                    <Card.Meta>
+                        <Popup
+                            inverted
+                            content="Lives in"
+                            trigger={<Icon name="map marker alternate" />}
+                        />{user.city}, {user.country}</Card.Meta>
+                    <Card.Meta>Age: {moment(user.birthDate).fromNow(true)}</Card.Meta>
                     <div className="profile__profile-info">
-                        <Card.Description>{bio}</Card.Description>
+                        <Card.Description><b>About {user.username}:</b> {bio}</Card.Description>
                         <div className="profile__numbers-container">
-                            <p className="profile__number"><b>{user.followers.length} </b>Followers</p>
-                            <p className="profile__number"><b>{user.following.length} </b>Following</p>
+                            <p className="profile__number">Followers: <b>{user.followers.length} </b></p>
+                            <p className="profile__number">Following: <b>{user.following.length} </b></p>
                         </div>
                     </div>
                 </Card.Content>
-                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile} />
+                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile} username={username} />
                 <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} profile={data.profile} />
             </Card>
         )
