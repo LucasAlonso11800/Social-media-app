@@ -4,6 +4,7 @@ import { ProfileType } from '../Types/ProfileType';
 import checkAuth from "../../Helpers/CheckAuth";
 import { JwtPayload } from 'jsonwebtoken';
 import Profile from '../../Models/Profile';
+import validateProfile from '../../Helpers/EditProfileValidation';
 
 export const ADD_PROFILE = {
     type: ProfileType,
@@ -38,8 +39,9 @@ export const EDIT_PROFILE = {
     },
     async resolve(_: any, args: IEditProfile, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-
         const { userId, profileName, profileImage, bio } = args;
+
+        validateProfile(profileName, bio);
 
         try {
             const profile: IProfile = await Profile.findOne({ user: userId });

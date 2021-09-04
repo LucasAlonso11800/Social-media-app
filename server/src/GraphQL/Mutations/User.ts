@@ -5,6 +5,7 @@ import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
 import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser } from '../../Interfaces';
+import validateUser from '../../Helpers/AddUserValidation';
 
 function generateToken(user: IUser) {
     return jwt.sign({
@@ -33,7 +34,10 @@ export const ADD_USER = {
         birthDate: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(_: any, args: IAddUser) {
-        const { username, password, confirmPassword, email, country, city, birthDate } = args
+        const { username, password, confirmPassword, email, country, city, birthDate } = args;
+
+        validateUser(username, password);
+        
         try {
             if (password !== confirmPassword) throw new Error("Passwords don't match")
 

@@ -10,7 +10,7 @@ export default function checkAuth(context: IContext){
                 const user = jwt.verify(token, process.env.JWT_SECRET_KEY as string)
                 return user
             }
-            catch(err){
+            catch(err: any){
                 throw new Error(err)
             }
         }

@@ -4,6 +4,7 @@ import Post from "../../Models/Post";
 import checkAuth from "../../Helpers/CheckAuth";
 import { IContext, ICreatePost, IDeletePost, IPost } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+import validatePost from '../../Helpers/CreatePostValidation';
 
 export const CREATE_POST = {
     name: 'CREATE_POST',
@@ -14,8 +15,7 @@ export const CREATE_POST = {
     async resolve(_: any, args: ICreatePost, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
 
-        if (args.body === undefined || args.body === '') throw new Error("You post can't be empty");
-        if (args.body.length > 140) throw new Error("You post can't have more than 140 characters");
+        validatePost(args.body);
 
         try {
             const newPost = new Post({
