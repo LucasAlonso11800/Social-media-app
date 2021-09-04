@@ -8,9 +8,9 @@
 }
 
 /* Semantic */
-/* i.icon{
+i.icon{
     margin: 0!important;
-} */
+}
 
 .ui.selection.dropdown>.delete.icon, .ui.selection.dropdown>.dropdown.icon, .ui.selection.dropdown>.search.icon{
     top: 0.1em!important
@@ -118,11 +118,14 @@
     margin-top: 3rem;
 }
 
+i.icon.profile__icon{
+    margin-right: 0.5rem!important;
+}
+
 .profile__profile-info{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    /* word-wrap: */
     margin-top: 2rem;
 }
 
@@ -229,7 +232,7 @@
     display: flex;
     margin-bottom: 0.5rem;
 }
-.user-card__user-data-icon{
+i.icon.user-card__user-data-icon{
     margin-right: 0.5rem!important;
 }
 

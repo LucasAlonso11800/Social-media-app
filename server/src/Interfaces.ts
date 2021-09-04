@@ -51,6 +51,10 @@ export interface IGetUsersBySearch {
     query: string
 };
 
+export interface IDeleteUser {
+    username: string
+};
+
 // Posts
 export interface IPost {
     body: string

@@ -4,8 +4,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser } from '../../Interfaces';
 import validateUser from '../../Helpers/AddUserValidation';
+import Post from '../../Models/Post';
+import Profile from '../../Models/Profile';
 
 function generateToken(user: IUser) {
     return jwt.sign({
@@ -37,7 +39,7 @@ export const ADD_USER = {
         const { username, password, confirmPassword, email, country, city, birthDate } = args;
 
         validateUser(username, password);
-        
+
         try {
             if (password !== confirmPassword) throw new Error("Passwords don't match")
 
@@ -56,7 +58,7 @@ export const ADD_USER = {
                 birthDate,
                 createdAt: new Date().toISOString()
             });
-            
+
             newUser.password = await bcrypt.hash(password, 10);
             const res: IUser[] = await User.insertMany(newUser)
             const token = generateToken(res[0])
@@ -218,6 +220,31 @@ export const BLOCK_USER = {
 
                 return newUser
             };
+        }
+        catch (err: any) {
+            throw new Error(err)
+        }
+    }
+};
+
+export const DELETE_USER = {
+    name: 'DELETE_USER',
+    type: UserType,
+    args: {
+        username: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(_: any, args: IDeleteUser, context: IContext) {
+        const user = checkAuth(context) as JwtPayload;
+        if (args.username !== user.username) throw new Error("Action not allowed");
+
+        try {
+            const deleted: IUser = await User.findOneAndDelete({ username: args.username });
+            if (!deleted) throw new Error('User not found');
+
+            await Post.deleteMany({ username: args.username });
+            await Profile.findOneAndDelete({ user: deleted._id });
+
+            return deleted
         }
         catch (err: any) {
             throw new Error(err)

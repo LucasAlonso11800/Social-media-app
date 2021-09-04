@@ -14,6 +14,7 @@ import FollowButton from './FollowButton';
 import { IProfileQuery } from '../Interfaces';
 import UserImageModal from './UserImageModal';
 import BlockUserButton from './BlockUserButton';
+import DeleteUserButton from './DeleteUserButton';
 
 type Props = {
     username: string;
@@ -56,27 +57,35 @@ export default function Profile(props: Props) {
                         <div>
                             {!state || state.username !== username ? <FollowButton followsUser={followsUser} followedUser={user} /> : null}
                             {state && state.username === username &&
-                                <Popup
-                                    content="Edit profile"
-                                    inverted
-                                    trigger={
-                                        <Button as="div" color="grey" onClick={() => setModalOpen(true)}>
-                                            <Icon name="edit" />
-                                        </Button>
-                                    }
-                                />
+                                <>
+                                    <Popup
+                                        content="Edit profile"
+                                        inverted
+                                        trigger={
+                                            <Button as="div" color="grey" onClick={() => setModalOpen(true)}>
+                                                <Icon name="edit" />
+                                            </Button>
+                                        }
+                                    />
+                                    <DeleteUserButton username={username}/>
+                                </>
                             }
                             {state && state.username !== username ? <BlockUserButton profile={data.profile} userIsBlocked={userIsBlocked ? true : false} /> : null}
                         </div>
                     </div>
-                    <Card.Meta><Icon name="user outline" /> {username}</Card.Meta>
+                    <Card.Meta><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
                     <Card.Meta>
                         <Popup
                             inverted
                             content="Lives in"
-                            trigger={<Icon name="map marker alternate" />}
+                            trigger={<Icon name="map marker alternate" className="profile__icon" />}
                         />{user.city}, {user.country}</Card.Meta>
-                    <Card.Meta>Age: {moment(user.birthDate).fromNow(true)}</Card.Meta>
+                    <Card.Meta>
+                        <Popup
+                            inverted
+                            content="Age"
+                            trigger={<Icon name="calendar times" className="profile__icon" />}
+                        />{moment(user.birthDate).fromNow(true)}</Card.Meta>
                     <div className="profile__profile-info">
                         <Card.Description><b>About {user.username}:</b> {bio}</Card.Description>
                         <div className="profile__numbers-container">

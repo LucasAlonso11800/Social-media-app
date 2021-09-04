@@ -90,6 +90,14 @@ export const BLOCK_USER = gql`
     }
 `;
 
+export const DELETE_USER = gql`
+    mutation delete_user($username: String!){
+        delete_user(username: $username){
+            username
+        }
+    }
+`;
+
 // Posts
 
 export const CREATE_POST = gql`
