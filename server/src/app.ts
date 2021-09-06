@@ -1,17 +1,23 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
+import mysql from 'mysql2';
 import { graphqlHTTP } from 'express-graphql';
 import 'dotenv/config';
 
 import schema from './GraphQL/schema';
 const app = express();
 
-mongoose.connect(process.env.MONGO_URI as string, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-}, () => console.log('Connected to DB'));
+const connection = mysql.createConnection({
+    host: process.env.dbHost,
+    database: process.env.dbDatabase,
+    user: process.env.dbUser,
+    password: process.env.dbPassword
+});
+
+connection.connect((err) => {
+    if(err) throw err;
+    console.log('Connected to MySQL');
+});
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -23,6 +29,7 @@ app.use('/graphql', graphqlHTTP((req, res) => {
         graphiql: true,
         context: {
             headers: req.headers,
+            connection: connection
         }
     }
 }));

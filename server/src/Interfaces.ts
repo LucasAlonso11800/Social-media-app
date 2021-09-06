@@ -1,23 +1,37 @@
 import express from 'express';
+import { Connection } from 'mysql2';
 
 export interface IContext {
-    headers: typeof express.request.headers
+    headers: typeof express.request.headers,
+    connection: Connection
+};
+
+// MySQL
+export interface IMySQLQuery {
+    fieldCount: number
+    affectedRows: number
+    insertId: number
+    info: string
+    serverStatus: number
+    warningStatus: number
+};
+
+export interface IMySQLError {
+    sqlError: string
 };
 
 // Users
 export interface IUser {
-    _id: string
-    email: string
-    username: string
-    createdAt: string
-    password: string
-    country: string
-    city: string
-    birthDate: string
-    image: string
-    followers: IFollower[]
-    following: IFollower[]
-    blockedUsers: IUser[]
+    user_id: number
+    user_email: string
+    user_username: string
+    user_password: string
+    user_country: string
+    user_city: string
+    user_birth_date: string
+    user_followers: any
+    user_following: any
+    user_blocked_users: any
 };
 
 export interface IAddUser {
@@ -52,7 +66,7 @@ export interface IGetUsersBySearch {
 };
 
 export interface IDeleteUser {
-    username: string
+    id: number
 };
 
 // Posts

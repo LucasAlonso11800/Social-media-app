@@ -1,25 +1,24 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser, IMySQLQuery } from '../../Interfaces';
 import validateUser from '../../Helpers/AddUserValidation';
-import Post from '../../Models/Post';
-import Profile from '../../Models/Profile';
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 function generateToken(user: IUser) {
     return jwt.sign({
-        id: user._id,
-        email: user.email,
-        username: user.username,
-        country: user.country,
-        city: user.city,
-        birthDate: user.birthDate,
-        followers: user.followers,
-        following: user.following,
-        blockedUsers: user.blockedUsers
+        id: user.user_id,
+        email: user.user_email,
+        username: user.user_username,
+        country: user.user_country,
+        city: user.user_city,
+        birthDate: user.user_birth_date,
+        followers: user.user_followers ? user.user_followers : [],
+        following: user.user_following ? user.user_following : [],
+        blockedUsers: user.user_blocked_users ? user.user_blocked_users : []
     }, process.env.JWT_SECRET_KEY as string, { expiresIn: '1h' })
 };
 
@@ -35,216 +34,231 @@ export const ADD_USER = {
         city: { type: new GraphQLNonNull(GraphQLString) },
         birthDate: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IAddUser) {
+    async resolve(_: any, args: IAddUser, context: IContext) {
         const { username, password, confirmPassword, email, country, city, birthDate } = args;
 
         validateUser(username, password);
 
         try {
-            if (password !== confirmPassword) throw new Error("Passwords don't match")
+            if (password !== confirmPassword) throw new Error("Passwords don't match");
+            const hash = await bcrypt.hash(password, 10);
+            const insertUserQuery = `INSERT INTO users (
+                user_username,
+                user_email,
+                user_password,
+                user_city,
+                user_country,
+                user_birth_date
+            ) VALUES (
+                "${username}",
+                "${email}",
+                "${hash}",
+                "${city}",
+                "${country}",
+                "${birthDate}"
+            )`;
 
-            const usernameExists = await User.findOne({ username });
-            if (usernameExists) throw new Error('Username already taken');
+            const queryResult: IMySQLQuery = await mysqlQuery(insertUserQuery, context.connection);
+            const user: IUser[] = await mysqlQuery(`SELECT * FROM users WHERE user_id = ${queryResult.insertId}`, context.connection);
 
-            const emailExists = await User.findOne({ email });
-            if (emailExists) throw new Error('Email already registered');
+            const insertProfileQuery = `INSERT INTO profiles(
+                profile_user_id,
+                profile_profile_name
+            ) VALUES (
+                ${user[0].user_id},
+                "${user[0].user_username}"
+            )`;
 
-            const newUser = new User({
-                username,
-                password,
-                email,
-                country,
-                city,
-                birthDate,
-                createdAt: new Date().toISOString()
-            });
-
-            newUser.password = await bcrypt.hash(password, 10);
-            const res: IUser[] = await User.insertMany(newUser)
-            const token = generateToken(res[0])
+            await mysqlQuery(insertProfileQuery, context.connection);
+            const token = generateToken(user[0]);
 
             return {
-                id: res[0]._id,
-                username: res[0].username,
-                email: res[0].email,
-                createdAt: res[0].createdAt,
-                token,
-                country: res[0].country,
-                city: res[0].city,
-                birthDate: res[0].birthDate,
-                followers: res[0].followers,
-                following: res[0].following,
-                blockedUsers: res[0].blockedUsers
+                username: user[0].user_username,
+                email: user[0].user_email,
+                country: user[0].user_country,
+                city: user[0].user_city,
+                birthDate: user[0].user_birth_date,
+                followers: [],
+                following: [],
+                blockedUsers: [],
+                token
             }
         }
         catch (err: any) {
+            if (err.sqlMessage.startsWith('Duplicate entry')) {
+                if (/users.user_username/.test(err.sqlMessage)) throw new Error("Username already registered");
+                if (/users.user_email/.test(err.sqlMessage)) throw new Error("Email already registered");
+            }
             throw new Error(err)
         }
     }
 };
 
-export const LOGIN_USER = {
-    name: 'LOGIN_USER',
-    type: UserType,
-    args: {
-        username: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-    },
-    async resolve(_: any, args: ILoginUser) {
-        const { username, password } = args
-        const user: IUser = await User.findOne({ username })
+// export const LOGIN_USER = {
+//     name: 'LOGIN_USER',
+//     type: UserType,
+//     args: {
+//         username: { type: new GraphQLNonNull(GraphQLString) },
+//         password: { type: new GraphQLNonNull(GraphQLString) },
+//     },
+//     async resolve(_: any, args: ILoginUser) {
 
-        if (!user) throw new Error('User not found');
+// const getFollowersQuery = `
+//     SELECT user_username, user_id FROM users
+//     JOIN follows
+//     ON follows.follower_id = users.user_id
+//     WHERE follows.followee_id = ""
+// `;
+//         const { username, password } = args
+//         const user: IUser = await User.findOne({ username })
 
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) throw new Error('Wrong username or password');
+//         if (!user) throw new Error('User not found');
 
-        const token = generateToken(user)
-        return {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            createdAt: user.createdAt,
-            token,
-            country: user.country,
-            city: user.city,
-            birthDate: user.birthDate,
-            followers: user.followers,
-            following: user.following,
-            blockedUsers: user.blockedUsers
-        }
-    }
-};
+//         const match = await bcrypt.compare(password, user.password);
+//         if (!match) throw new Error('Wrong username or password');
 
-export const EDIT_USER_IMAGE = {
-    name: 'EDIT_USER_IMAGE',
-    type: UserType,
-    args: {
-        image: { type: GraphQLString }
-    },
-    async resolve(_: any, args: IEditUserImage, context: IContext) {
-        const user = checkAuth(context) as JwtPayload;
+//         const token = generateToken(user)
+//         return {
+//             id: user._id,
+//             username: user.username,
+//             email: user.email,
+//             createdAt: user.createdAt,
+//             token,
+//             country: user.country,
+//             city: user.city,
+//             birthDate: user.birthDate,
+//             followers: user.followers,
+//             following: user.following,
+//             blockedUsers: user.blockedUsers
+//         }
+//     }
+// };
 
-        const userToEdit: IUser = await User.findOne({ username: user.username });
-        if (!userToEdit) throw new Error('User not found');
+// export const EDIT_USER_IMAGE = {
+//     name: 'EDIT_USER_IMAGE',
+//     type: UserType,
+//     args: {
+//         image: { type: GraphQLString }
+//     },
+//     async resolve(_: any, args: IEditUserImage, context: IContext) {
+//         const user = checkAuth(context) as JwtPayload;
 
-        const newUser = await User.findOneAndUpdate({ username: user.username }, {
-            image: args.image
-        }, { new: true });
+//         const userToEdit: IUser = await User.findOne({ username: user.username });
+//         if (!userToEdit) throw new Error('User not found');
 
-        return newUser
-    }
-};
+//         const newUser = await User.findOneAndUpdate({ username: user.username }, {
+//             image: args.image
+//         }, { new: true });
 
-export const FOLLOW_USER = {
-    name: 'FOLLOW_USER',
-    type: UserType,
-    args: {
-        followingUsername: { type: new GraphQLNonNull(GraphQLString) },
-        followedUsername: { type: new GraphQLNonNull(GraphQLString) }
-    },
-    async resolve(_: any, args: IFollowUser) {
-        const { followingUsername, followedUsername } = args;
-        try {
-            const followingUser: IUser = await User.findOne({ username: followingUsername });
-            const followedUser: IUser = await User.findOne({ username: followedUsername });
+//         return newUser
+//     }
+// };
 
-            if (!followedUser) throw new Error('User not found');
+// export const FOLLOW_USER = {
+//     name: 'FOLLOW_USER',
+//     type: UserType,
+//     args: {
+//         followingUsername: { type: new GraphQLNonNull(GraphQLString) },
+//         followedUsername: { type: new GraphQLNonNull(GraphQLString) }
+//     },
+//     async resolve(_: any, args: IFollowUser) {
+//         const { followingUsername, followedUsername } = args;
+//         try {
+//             const followingUser: IUser = await User.findOne({ username: followingUsername });
+//             const followedUser: IUser = await User.findOne({ username: followedUsername });
 
-            const alreadyFollows = followedUser.followers.find(f => f.username === followingUser.username);
+//             if (!followedUser) throw new Error('User not found');
 
-            if (alreadyFollows) {
-                const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
-                    following: followingUser.following.filter(f => f.username !== followedUsername)
-                }, { new: true });
+//             const alreadyFollows = followedUser.followers.find(f => f.username === followingUser.username);
 
-                await User.findOneAndUpdate({ username: followedUsername }, {
-                    followers: followingUser.followers.filter(f => f.username !== followingUsername)
-                }, { new: true });
+//             if (alreadyFollows) {
+//                 const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
+//                     following: followingUser.following.filter(f => f.username !== followedUsername)
+//                 }, { new: true });
 
-                return newFollowingUser
-            };
+//                 await User.findOneAndUpdate({ username: followedUsername }, {
+//                     followers: followingUser.followers.filter(f => f.username !== followingUsername)
+//                 }, { new: true });
 
-            if (!alreadyFollows) {
-                const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
-                    following: [...followingUser.following, { username: followedUsername }]
-                }, { new: true });
+//                 return newFollowingUser
+//             };
 
-                await User.findOneAndUpdate({ username: followedUsername }, {
-                    followers: [...followedUser.followers, { username: followingUsername }]
-                }, { new: true });
+//             if (!alreadyFollows) {
+//                 const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
+//                     following: [...followingUser.following, { username: followedUsername }]
+//                 }, { new: true });
 
-                return newFollowingUser
-            };
-        }
-        catch (err: any) {
-            throw new Error(err)
-        }
-    }
-};
+//                 await User.findOneAndUpdate({ username: followedUsername }, {
+//                     followers: [...followedUser.followers, { username: followingUsername }]
+//                 }, { new: true });
 
-export const BLOCK_USER = {
-    name: 'BLOCK_USER',
-    type: UserType,
-    args: {
-        blockedUsername: { type: new GraphQLNonNull(GraphQLString) }
-    },
-    async resolve(_: any, args: IBlockUser, context: IContext) {
-        const user = checkAuth(context) as JwtPayload;
+//                 return newFollowingUser
+//             };
+//         }
+//         catch (err: any) {
+//             throw new Error(err)
+//         }
+//     }
+// };
 
-        const { blockedUsername } = args;
-        try {
-            const blockingUser: IUser = await User.findOne({ username: user.username })
-            const blockedUser: IUser = await User.findOne({ username: blockedUsername });
+// export const BLOCK_USER = {
+//     name: 'BLOCK_USER',
+//     type: UserType,
+//     args: {
+//         blockedUsername: { type: new GraphQLNonNull(GraphQLString) }
+//     },
+//     async resolve(_: any, args: IBlockUser, context: IContext) {
+//         const user = checkAuth(context) as JwtPayload;
 
-            if (!blockedUser) throw new Error('User not found');
+//         const { blockedUsername } = args;
+//         try {
+//             const blockingUser: IUser = await User.findOne({ username: user.username })
+//             const blockedUser: IUser = await User.findOne({ username: blockedUsername });
 
-            const alreadyBlocked = blockingUser.blockedUsers.find((user: IUser) => user.username === blockedUsername);
+//             if (!blockedUser) throw new Error('User not found');
 
-            if (alreadyBlocked) {
-                const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
-                    blockedUsers: blockingUser.blockedUsers.filter(u => u.username !== blockedUsername),
-                }, { new: true });
-                return newUser
-            };
+//             const alreadyBlocked = blockingUser.blockedUsers.find((user: IUser) => user.username === blockedUsername);
 
-            if (!alreadyBlocked) {
-                const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
-                    blockedUsers: [...blockingUser.blockedUsers, { username: blockedUsername }],
-                    followers: blockingUser.followers.filter(f => f.username !== blockedUsername)
-                }, { new: true });
+//             if (alreadyBlocked) {
+//                 const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
+//                     blockedUsers: blockingUser.blockedUsers.filter(u => u.username !== blockedUsername),
+//                 }, { new: true });
+//                 return newUser
+//             };
 
-                await User.findOneAndUpdate({ username: blockedUser.username }, {
-                    following: blockedUser.following.filter(f => f.username !== blockingUser.username)
-                }, { new: true });
+//             if (!alreadyBlocked) {
+//                 const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
+//                     blockedUsers: [...blockingUser.blockedUsers, { username: blockedUsername }],
+//                     followers: blockingUser.followers.filter(f => f.username !== blockedUsername)
+//                 }, { new: true });
 
-                return newUser
-            };
-        }
-        catch (err: any) {
-            throw new Error(err)
-        }
-    }
-};
+//                 await User.findOneAndUpdate({ username: blockedUser.username }, {
+//                     following: blockedUser.following.filter(f => f.username !== blockingUser.username)
+//                 }, { new: true });
+
+//                 return newUser
+//             };
+//         }
+//         catch (err: any) {
+//             throw new Error(err)
+//         }
+//     }
+// };
 
 export const DELETE_USER = {
     name: 'DELETE_USER',
-    type: UserType,
+    type: GraphQLString,
     args: {
-        username: { type: new GraphQLNonNull(GraphQLString) }
+        id: { type: new GraphQLNonNull(GraphQLInt) }
     },
     async resolve(_: any, args: IDeleteUser, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if (args.username !== user.username) throw new Error("Action not allowed");
+        if(args.id !== user.id) throw new Error("Action not allowed");
 
         try {
-            const deleted: IUser = await User.findOneAndDelete({ username: args.username });
-            if (!deleted) throw new Error('User not found');
-
-            await Post.deleteMany({ username: args.username });
-            await Profile.findOneAndDelete({ user: deleted._id });
-
-            return deleted
+            const deleteUserQuery = `DELETE FROM users WHERE user_id = ${args.id}`;
+            await mysqlQuery(deleteUserQuery, context.connection);
+            return "User deleted"
         }
         catch (err: any) {
             throw new Error(err)
