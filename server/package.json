@@ -9,7 +9,7 @@
         "build": "tsc -p"
     },
     "keywords": [],
-    "author": "",
+    "author": "Lucas Alonso",
     "license": "ISC",
     "dependencies": {
         "@types/bcryptjs": "^2.4.2",
