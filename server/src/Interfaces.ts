@@ -58,7 +58,8 @@ export interface IGetUser {
 };
 
 export interface IBlockUser {
-    blockedUsername: string
+    blocking_user_id: number
+    blocked_user_id: number
 };
 
 export interface IGetUsersBySearch {
@@ -163,12 +164,18 @@ export interface IEditProfile {
 // Follower
 
 export interface IFollower {
-    _id: string
+    id: string
     username: string
-    image: string
 };
 
 export interface IFollowUser {
-    followingUsername: string
-    followedUsername: string
+    follower_id: number
+    followee_id: number
+};
+
+// Blocked
+
+export interface IBlocked {
+    id: string
+    username: string
 };

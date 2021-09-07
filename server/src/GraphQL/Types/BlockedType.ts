@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
-export const FollowerType = new GraphQLObjectType({
-    name: 'FollowerType',
+export const BlockedType = new GraphQLObjectType({
+    name: 'BlockedType',
     fields: () => ({
         id: {
             type: new GraphQLNonNull(GraphQLID)

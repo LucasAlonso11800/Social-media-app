@@ -1,12 +1,14 @@
-import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import checkAuth from '../../Helpers/CheckAuth';
 import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser, IMySQLQuery } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser, IMySQLQuery, IFollower, IBlocked } from '../../Interfaces';
 import validateUser from '../../Helpers/AddUserValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { FollowerType } from '../Types/FollowerType';
+import { BlockedType } from '../Types/BlockedType';
 
 function generateToken(user: IUser) {
     return jwt.sign({
@@ -94,45 +96,60 @@ export const ADD_USER = {
     }
 };
 
-// export const LOGIN_USER = {
-//     name: 'LOGIN_USER',
-//     type: UserType,
-//     args: {
-//         username: { type: new GraphQLNonNull(GraphQLString) },
-//         password: { type: new GraphQLNonNull(GraphQLString) },
-//     },
-//     async resolve(_: any, args: ILoginUser) {
+export const LOGIN_USER = {
+    name: 'LOGIN_USER',
+    type: UserType,
+    args: {
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+    },
+    async resolve(_: any, args: ILoginUser, context: IContext) {
+        const { username, password } = args
 
-// const getFollowersQuery = `
-//     SELECT user_username, user_id FROM users
-//     JOIN follows
-//     ON follows.follower_id = users.user_id
-//     WHERE follows.followee_id = ""
-// `;
-//         const { username, password } = args
-//         const user: IUser = await User.findOne({ username })
+        const getUserQuery = `SELECT * FROM users WHERE user_username = "${username}"`;
+        const response: IUser[] = await mysqlQuery(getUserQuery, context.connection);
+        const user = response[0];
 
-//         if (!user) throw new Error('User not found');
+        if (!user) throw new Error('User not found');
+        const match = await bcrypt.compare(password, user.user_password);
+        if (!match) throw new Error('Wrong username or password');
 
-//         const match = await bcrypt.compare(password, user.password);
-//         if (!match) throw new Error('Wrong username or password');
+        const getFollowersQuery = `
+            SELECT user_id AS id, user_username AS username FROM follows
+            JOIN users ON users.user_id = follower_id
+            WHERE followee_id = ${user.user_id}
+        `;
+        const getFollowingQuery = `
+            SELECT user_id AS id, user_username AS username FROM follows
+            JOIN users ON users.user_id = followee_id
+            WHERE follower_id = ${user.user_id}
+        `;
+        const getBlockedUsersQuery = `
+            SELECT user_id AS id, user_username AS username FROM blocks
+            JOIN users ON users.user_id = blocked_user_id
+            WHERE blocking_user_id =  ${user.user_id}
+        `;
 
-//         const token = generateToken(user)
-//         return {
-//             id: user._id,
-//             username: user.username,
-//             email: user.email,
-//             createdAt: user.createdAt,
-//             token,
-//             country: user.country,
-//             city: user.city,
-//             birthDate: user.birthDate,
-//             followers: user.followers,
-//             following: user.following,
-//             blockedUsers: user.blockedUsers
-//         }
-//     }
-// };
+        const followers = await mysqlQuery(getFollowersQuery, context.connection);
+        const following = await mysqlQuery(getFollowingQuery, context.connection);
+        const blockedUsers = await mysqlQuery(getBlockedUsersQuery, context.connection);
+
+        const token = generateToken(user);
+
+        return {
+            id: user.user_id,
+            username: user.user_username,
+            email: user.user_email,
+            token,
+            country: user.user_country,
+            city: user.user_city,
+            birthDate: user.user_birth_date,
+            followers,
+            following,
+            blockedUsers
+        }
+    }
+};
 
 // export const EDIT_USER_IMAGE = {
 //     name: 'EDIT_USER_IMAGE',
@@ -154,97 +171,6 @@ export const ADD_USER = {
 //     }
 // };
 
-// export const FOLLOW_USER = {
-//     name: 'FOLLOW_USER',
-//     type: UserType,
-//     args: {
-//         followingUsername: { type: new GraphQLNonNull(GraphQLString) },
-//         followedUsername: { type: new GraphQLNonNull(GraphQLString) }
-//     },
-//     async resolve(_: any, args: IFollowUser) {
-//         const { followingUsername, followedUsername } = args;
-//         try {
-//             const followingUser: IUser = await User.findOne({ username: followingUsername });
-//             const followedUser: IUser = await User.findOne({ username: followedUsername });
-
-//             if (!followedUser) throw new Error('User not found');
-
-//             const alreadyFollows = followedUser.followers.find(f => f.username === followingUser.username);
-
-//             if (alreadyFollows) {
-//                 const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
-//                     following: followingUser.following.filter(f => f.username !== followedUsername)
-//                 }, { new: true });
-
-//                 await User.findOneAndUpdate({ username: followedUsername }, {
-//                     followers: followingUser.followers.filter(f => f.username !== followingUsername)
-//                 }, { new: true });
-
-//                 return newFollowingUser
-//             };
-
-//             if (!alreadyFollows) {
-//                 const newFollowingUser = await User.findOneAndUpdate({ username: followingUsername }, {
-//                     following: [...followingUser.following, { username: followedUsername }]
-//                 }, { new: true });
-
-//                 await User.findOneAndUpdate({ username: followedUsername }, {
-//                     followers: [...followedUser.followers, { username: followingUsername }]
-//                 }, { new: true });
-
-//                 return newFollowingUser
-//             };
-//         }
-//         catch (err: any) {
-//             throw new Error(err)
-//         }
-//     }
-// };
-
-// export const BLOCK_USER = {
-//     name: 'BLOCK_USER',
-//     type: UserType,
-//     args: {
-//         blockedUsername: { type: new GraphQLNonNull(GraphQLString) }
-//     },
-//     async resolve(_: any, args: IBlockUser, context: IContext) {
-//         const user = checkAuth(context) as JwtPayload;
-
-//         const { blockedUsername } = args;
-//         try {
-//             const blockingUser: IUser = await User.findOne({ username: user.username })
-//             const blockedUser: IUser = await User.findOne({ username: blockedUsername });
-
-//             if (!blockedUser) throw new Error('User not found');
-
-//             const alreadyBlocked = blockingUser.blockedUsers.find((user: IUser) => user.username === blockedUsername);
-
-//             if (alreadyBlocked) {
-//                 const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
-//                     blockedUsers: blockingUser.blockedUsers.filter(u => u.username !== blockedUsername),
-//                 }, { new: true });
-//                 return newUser
-//             };
-
-//             if (!alreadyBlocked) {
-//                 const newUser = await User.findOneAndUpdate({ username: blockingUser.username }, {
-//                     blockedUsers: [...blockingUser.blockedUsers, { username: blockedUsername }],
-//                     followers: blockingUser.followers.filter(f => f.username !== blockedUsername)
-//                 }, { new: true });
-
-//                 await User.findOneAndUpdate({ username: blockedUser.username }, {
-//                     following: blockedUser.following.filter(f => f.username !== blockingUser.username)
-//                 }, { new: true });
-
-//                 return newUser
-//             };
-//         }
-//         catch (err: any) {
-//             throw new Error(err)
-//         }
-//     }
-// };
-
 export const DELETE_USER = {
     name: 'DELETE_USER',
     type: GraphQLString,
@@ -253,7 +179,7 @@ export const DELETE_USER = {
     },
     async resolve(_: any, args: IDeleteUser, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if(args.id !== user.id) throw new Error("Action not allowed");
+        if (args.id !== user.id) throw new Error("Action not allowed");
 
         try {
             const deleteUserQuery = `DELETE FROM users WHERE user_id = ${args.id}`;

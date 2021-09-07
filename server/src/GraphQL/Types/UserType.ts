@@ -11,7 +11,6 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
         country: { type: new GraphQLNonNull(GraphQLString) },
         city: { type: new GraphQLNonNull(GraphQLString) },
         birthDate: { type: new GraphQLNonNull(GraphQLString) },
-        image: { type: GraphQLString },
         createdAt: { type: new GraphQLNonNull(GraphQLString) },
         followers: { type: new GraphQLList(FollowerType) },
         following: { type: new GraphQLList(FollowerType) },

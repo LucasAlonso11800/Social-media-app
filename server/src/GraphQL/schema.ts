@@ -1,5 +1,7 @@
 // import { ADD_PROFILE, EDIT_PROFILE } from "./Mutations/Profile";
 // import { BLOCK_USER, DELETE_USER, EDIT_USER_IMAGE, FOLLOW_USER } from "./Mutations/User";
+import { BLOCK_USER } from "./Mutations/Blocks";
+import { FOLLOW_USER } from "./Mutations/Follows";
 // import { GET_POSTS_BY_SEARCH, GET_POSTS_FROM_USER } from "./Queries/Posts";
 // import { GET_PROFILE } from "./Queries/Profile";
 // import { GET_USERS_BY_SEARCH, GET_USER } from './Queries/Users';
@@ -31,10 +33,10 @@ const Mutation = new GraphQLObjectType({
     name: 'Mutations',
     fields: {
         add_user: ADD_USER,
-        // login_user: LOGIN_USER,
+        login_user: LOGIN_USER,
         // edit_user_image: EDIT_USER_IMAGE,
-        // follow_user: FOLLOW_USER,
-        // block_user: BLOCK_USER,
+        follow_user: FOLLOW_USER,
+        block_user: BLOCK_USER,
         delete_user: DELETE_USER
         // create_post: CREATE_POST,
         // delete_post: DELETE_POST,
