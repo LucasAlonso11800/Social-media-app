@@ -58,11 +58,6 @@ export interface IGetUser {
     username: string
 };
 
-export interface IBlockUser {
-    blocking_user_id: number
-    blocked_user_id: number
-};
-
 export interface IGetUsersBySearch {
     query: string
 };
@@ -77,8 +72,6 @@ export interface IPost {
     user: string
     username: string
     createdAt: string
-    comments: IComment[]
-    likes: ILike[]
 };
 
 export interface IGetSinglePost {
@@ -99,6 +92,7 @@ export interface ICreatePost {
 
 export interface IDeletePost {
     postId: string
+    username: string
 };
 
 // Comments
@@ -107,7 +101,6 @@ export interface IComment {
     body: string
     username: string
     createdAt: string
-    likes: ILike[]
 };
 
 export interface IAddComment {
@@ -181,3 +174,18 @@ export interface IBlocked {
     id: string
     username: string
 };
+
+export interface IBlockUser {
+    blocking_user_id: number
+    blocked_user_id: number
+};
+
+// Images
+
+export interface IImage {
+    image_id: number
+    image_type: string
+    image_user_id: number
+    image_profile_id: number
+    image_image: string
+}

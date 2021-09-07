@@ -1,5 +1,5 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-import { IContext, IEditProfile } from '../../Interfaces';
+import { IContext, IEditProfile, IProfile } from '../../Interfaces';
 import { ProfileType } from '../Types/ProfileType';
 import checkAuth from "../../Helpers/CheckAuth";
 import { JwtPayload } from 'jsonwebtoken';
@@ -25,15 +25,15 @@ export const EDIT_PROFILE = {
 
         try {
             const updateProfileQuery = `UPDATE profiles 
-                SET profile_profile_name = ${profileName},
-                    profile_profile_description = ${bio}
+                SET profile_profile_name = "${profileName}",
+                    profile_profile_description = "${bio}"
                 WHERE profile_id = ${profileId}
             `;
             await mysqlQuery(updateProfileQuery, context.connection);
 
             if (profileImage !== null) {
                 const updateProfileImageQuery = `UPDATE images
-                    SET image_image = ${profileImage}
+                    SET image_image = "${profileImage}"
                     WHERE image_profile_id = ${profileId}
                 `;
                 await mysqlQuery(updateProfileImageQuery, context.connection);
@@ -48,8 +48,10 @@ export const EDIT_PROFILE = {
                 JOIN images
                 ON profile_id = images.image_profile_id
                 WHERE profile_id = ${profileId}
-            `
-            return await mysqlQuery(getProfileQuery, context.connection);
+            `;
+            
+            const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection); 
+            return response[0]
         }
         catch (err: any) {
             throw new Error(err);

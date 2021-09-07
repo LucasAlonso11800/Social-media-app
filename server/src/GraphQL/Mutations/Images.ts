@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
 import { JwtPayload } from "jsonwebtoken";
 import checkAuth from "../../Helpers/CheckAuth";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
-import { IContext, IEditUserImage } from "../../Interfaces";
+import { IContext, IEditUserImage, IImage } from "../../Interfaces";
 
 export const EDIT_USER_IMAGE = {
     name: 'EDIT_USER_IMAGE',
@@ -16,11 +16,13 @@ export const EDIT_USER_IMAGE = {
         if(args.userId !== user.id) throw new Error("Action not allowed");
         
         try {
-            const updateUserImageQuery = `UPDATE images SET image_image = ${args.image} WHERE user_id = ${user.id}`;
+            const updateUserImageQuery = `UPDATE images SET image_image = "${args.image}" WHERE image_user_id = ${args.userId}`;
             await mysqlQuery(updateUserImageQuery, context.connection)
     
-            const getUserImageQuery = `SELECT image_image FROM images WHERE image_user_id = ${user.id}`;
-            return await mysqlQuery(getUserImageQuery, context.connection);
+            const getUserImageQuery = `SELECT image_image FROM images WHERE image_user_id = ${args.userId}`;
+            const response: IImage[] = await mysqlQuery(getUserImageQuery, context.connection)
+            
+            return response[0].image_image
         }
         catch (err: any) {
             throw new Error(err)

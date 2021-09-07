@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
+import { BlockedType } from './BlockedType';
 import { FollowerType } from './FollowerType';
 
 export const UserType: GraphQLObjectType = new GraphQLObjectType({
@@ -11,9 +12,8 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
         country: { type: new GraphQLNonNull(GraphQLString) },
         city: { type: new GraphQLNonNull(GraphQLString) },
         birthDate: { type: new GraphQLNonNull(GraphQLString) },
-        createdAt: { type: new GraphQLNonNull(GraphQLString) },
         followers: { type: new GraphQLList(FollowerType) },
         following: { type: new GraphQLList(FollowerType) },
-        blockedUsers: { type: new GraphQLList(UserType) }
+        blockedUsers: { type: new GraphQLList(BlockedType) }
     })
 });

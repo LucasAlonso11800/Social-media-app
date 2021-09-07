@@ -1,5 +1,4 @@
-import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
-import { LikeType } from './LikeType';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
 export const CommentType = new GraphQLObjectType({
     name: 'CommentType',
@@ -15,9 +14,6 @@ export const CommentType = new GraphQLObjectType({
         },
         createdAt: {
             type: new GraphQLNonNull(GraphQLString)
-        },
-        likes: { 
-            type: new GraphQLList(LikeType)
         }
     })
 });
