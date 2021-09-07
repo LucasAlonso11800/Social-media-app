@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 import { IBlockUser, IContext } from "../../Interfaces";
 import { BlockedType } from "../Types/BlockedType";
@@ -7,8 +7,8 @@ export const BLOCK_USER = {
     name: 'BLOCK_USER',
     type: new GraphQLList(BlockedType),
     args: {
-        blocking_user_id: { type: new GraphQLNonNull(GraphQLInt) },
-        blocked_user_id: { type: new GraphQLNonNull(GraphQLInt) }
+        blocking_user_id: { type: new GraphQLNonNull(GraphQLID) },
+        blocked_user_id: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: IBlockUser, context: IContext) {
         const { blocking_user_id, blocked_user_id } = args;

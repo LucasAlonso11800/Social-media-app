@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 import { IContext, IFollowUser } from "../../Interfaces";
 import { FollowerType } from "../Types/FollowerType";
@@ -7,8 +7,8 @@ export const FOLLOW_USER = {
     name: 'FOLLOW_USER',
     type: new GraphQLList(FollowerType),
     args: {
-        follower_id: { type: new GraphQLNonNull(GraphQLInt) },
-        followee_id: { type: new GraphQLNonNull(GraphQLInt) }
+        follower_id: { type: new GraphQLNonNull(GraphQLID) },
+        followee_id: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: IFollowUser, context: IContext) {
         const { follower_id, followee_id } = args;

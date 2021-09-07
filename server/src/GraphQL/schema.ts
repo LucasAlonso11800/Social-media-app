@@ -1,19 +1,12 @@
-// import { ADD_PROFILE, EDIT_PROFILE } from "./Mutations/Profile";
-// import { BLOCK_USER, DELETE_USER, EDIT_USER_IMAGE, FOLLOW_USER } from "./Mutations/User";
+const { GraphQLSchema, GraphQLObjectType } = require('graphql');
+
 import { BLOCK_USER } from "./Mutations/Blocks";
 import { FOLLOW_USER } from "./Mutations/Follows";
-// import { GET_POSTS_BY_SEARCH, GET_POSTS_FROM_USER } from "./Queries/Posts";
-// import { GET_PROFILE } from "./Queries/Profile";
-// import { GET_USERS_BY_SEARCH, GET_USER } from './Queries/Users';
+import { EDIT_USER_IMAGE } from "./Mutations/Images";
+import { EDIT_PROFILE } from "./Mutations/Profile";
+import { ADD_USER, DELETE_USER, LOGIN_USER } from "./Mutations/User";
 
-import { DELETE_USER } from "./Mutations/User";
-
-const { GraphQLSchema, GraphQLObjectType } = require('graphql');
-const { ADD_USER, LOGIN_USER } = require('./Mutations/User');
-const { GET_ALL_POSTS, GET_SINGLE_POST } = require('./Queries/Posts');
-// const { CREATE_POST, DELETE_POST } = require('./Mutations/Posts');
-// const { ADD_COMMENT, DELETE_COMMENT } = require('./Mutations/Comments');
-// const { LIKE_POST, LIKE_COMMENT } = require('./Mutations/Likes');
+import { GET_ALL_POSTS } from "./Queries/Posts";
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -32,20 +25,24 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutations',
     fields: {
+        // Users
         add_user: ADD_USER,
         login_user: LOGIN_USER,
-        // edit_user_image: EDIT_USER_IMAGE,
+        delete_user: DELETE_USER,
+        // Profile
+        edit_profile: EDIT_PROFILE,
+        // Follows
         follow_user: FOLLOW_USER,
+        // Images
+        edit_user_image: EDIT_USER_IMAGE,
+        // Blocks
         block_user: BLOCK_USER,
-        delete_user: DELETE_USER
         // create_post: CREATE_POST,
         // delete_post: DELETE_POST,
         // add_comment: ADD_COMMENT,
         // delete_comment: DELETE_COMMENT,
         // like_post: LIKE_POST,
         // like_comment: LIKE_COMMENT,
-        // add_profile: ADD_PROFILE,
-        // edit_profile: EDIT_PROFILE
     }
 });
 

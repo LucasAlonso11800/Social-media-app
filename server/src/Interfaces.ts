@@ -50,6 +50,7 @@ export interface ILoginUser {
 };
 
 export interface IEditUserImage {
+    userId: number
     image: string
 };
 
@@ -155,10 +156,11 @@ export interface IAddProfile {
 };
 
 export interface IEditProfile {
-    userId: string
+    profileId: number
+    userId: number
     profileName: string
+    profileImage: string | null
     bio: string
-    profileImage: string
 };
 
 // Follower

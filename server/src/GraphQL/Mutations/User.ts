@@ -1,28 +1,12 @@
-import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import checkAuth from '../../Helpers/CheckAuth';
-import User from '../../Models/User';
 import { UserType } from '../Types/UserType';
-import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IBlockUser, IDeleteUser, IMySQLQuery, IFollower, IBlocked } from '../../Interfaces';
+import { IAddUser, IEditUserImage, IFollowUser, ILoginUser, IUser, IContext, IDeleteUser, IMySQLQuery } from '../../Interfaces';
 import validateUser from '../../Helpers/AddUserValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { FollowerType } from '../Types/FollowerType';
-import { BlockedType } from '../Types/BlockedType';
-
-function generateToken(user: IUser) {
-    return jwt.sign({
-        id: user.user_id,
-        email: user.user_email,
-        username: user.user_username,
-        country: user.user_country,
-        city: user.user_city,
-        birthDate: user.user_birth_date,
-        followers: user.user_followers ? user.user_followers : [],
-        following: user.user_following ? user.user_following : [],
-        blockedUsers: user.user_blocked_users ? user.user_blocked_users : []
-    }, process.env.JWT_SECRET_KEY as string, { expiresIn: '1h' })
-};
+import { generateToken } from '../../Helpers/GenerateToken';
 
 export const ADD_USER = {
     name: 'ADD_USER',
@@ -62,7 +46,20 @@ export const ADD_USER = {
 
             const queryResult: IMySQLQuery = await mysqlQuery(insertUserQuery, context.connection);
             const user: IUser[] = await mysqlQuery(`SELECT * FROM users WHERE user_id = ${queryResult.insertId}`, context.connection);
+            
+            // Initial user image
+            const insertUserImageQuery = `INSERT INTO images(
+                image_type,
+                image_user_id,
+                image_image
+            ) VALUES (
+                "U",
+                ${user[0].user_id},
+                null
+            )`;
+            await mysqlQuery(insertUserImageQuery, context.connection)
 
+            // Initial profile
             const insertProfileQuery = `INSERT INTO profiles(
                 profile_user_id,
                 profile_profile_name
@@ -70,8 +67,20 @@ export const ADD_USER = {
                 ${user[0].user_id},
                 "${user[0].user_username}"
             )`;
+            const profileQueryResult: IMySQLQuery = await mysqlQuery(insertProfileQuery, context.connection);
+            
+            // Initial profile image
+            const insertProfileImageQuery = `INSERT INTO images(
+                image_type,
+                image_profile_id,
+                image_image
+            ) VALUES (
+                "P",
+                ${profileQueryResult.insertId},
+                null
+            )`;
+            await mysqlQuery(insertProfileImageQuery, context.connection);
 
-            await mysqlQuery(insertProfileQuery, context.connection);
             const token = generateToken(user[0]);
 
             return {
@@ -87,7 +96,7 @@ export const ADD_USER = {
             }
         }
         catch (err: any) {
-            if (err.sqlMessage.startsWith('Duplicate entry')) {
+            if (err.sqlMessage && err.sqlMessage.startsWith('Duplicate entry')) {
                 if (/users.user_username/.test(err.sqlMessage)) throw new Error("Username already registered");
                 if (/users.user_email/.test(err.sqlMessage)) throw new Error("Email already registered");
             }
@@ -150,26 +159,6 @@ export const LOGIN_USER = {
         }
     }
 };
-
-// export const EDIT_USER_IMAGE = {
-//     name: 'EDIT_USER_IMAGE',
-//     type: UserType,
-//     args: {
-//         image: { type: GraphQLString }
-//     },
-//     async resolve(_: any, args: IEditUserImage, context: IContext) {
-//         const user = checkAuth(context) as JwtPayload;
-
-//         const userToEdit: IUser = await User.findOne({ username: user.username });
-//         if (!userToEdit) throw new Error('User not found');
-
-//         const newUser = await User.findOneAndUpdate({ username: user.username }, {
-//             image: args.image
-//         }, { new: true });
-
-//         return newUser
-//     }
-// };
 
 export const DELETE_USER = {
     name: 'DELETE_USER',
