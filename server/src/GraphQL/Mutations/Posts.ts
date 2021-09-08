@@ -1,8 +1,7 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
 import { PostType } from "../Types/PostType";
-import Post from "../../Models/Post";
 import checkAuth from "../../Helpers/CheckAuth";
-import { IContext, ICreatePost, IDeletePost, IMySQLQuery, IPost, IProfile } from '../../Interfaces';
+import { IContext, ICreatePost, IDeletePost, IMySQLQuery, IPost } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
 import validatePost from '../../Helpers/CreatePostValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
@@ -21,10 +20,11 @@ export const CREATE_POST = {
         try {
             const insertPostQuery = `
                 INSERT INTO posts(post_user_id, post_body, post_created_at)
-                VALUES(10, "${args.body}", "${new Date()}")
+                VALUES(10, "${args.body}", "${new Date().toISOString().substring(0, 10)}"
+                )
             `;
             const queryResult: IMySQLQuery = await mysqlQuery(insertPostQuery, context.connection);
-            
+
             const getPostQuery = `
                 SELECT post_id AS postId, 
                 post_body AS body,
@@ -36,7 +36,7 @@ export const CREATE_POST = {
                 ON users.user_id = post_user_id
                 WHERE post_id = ${queryResult.insertId}
             `;
-            const response: IPost[] = await mysqlQuery(getPostQuery, context.connection); 
+            const response: IPost[] = await mysqlQuery(getPostQuery, context.connection);
             return response[0]
         }
         catch (err: any) {
@@ -54,7 +54,7 @@ export const DELETE_POST = {
     },
     async resolve(_: any, args: IDeletePost, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if(user.username !== args.username) throw new Error("Action not allowed");
+        if (user.username !== args.username) throw new Error("Action not allowed");
         try {
             const deletePostQuery = `DELETE FROM posts WHERE post_id = ${args.postId}`;
             await mysqlQuery(deletePostQuery, context.connection);

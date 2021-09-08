@@ -1,33 +1,51 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
-import { PostType } from '../Types/PostType';
-import Post from '../../Models/Post';
 import checkAuth from '../../Helpers/CheckAuth';
-import { IAddComment, IComment, IContext, IDeleteComment, IPost } from '../../Interfaces';
+import { IAddComment, IContext, IDeleteComment, IMySQLQuery} from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+import { CommentType } from '../Types/CommentType';
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const ADD_COMMENT = {
     name: 'ADD_COMMENT',
-    type: PostType,
+    type: CommentType,
     args: {
         postId: { type: new GraphQLNonNull(GraphQLID) },
         body: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(_: any, args: IAddComment, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if (args.body.trim() === '') throw new Error('Empty comment')
+        const { postId, body } = args;
+
+        if (args.body.trim() === '') throw new Error('Empty comment');
         try {
-            const post: IPost = await Post.findOne({ _id: args.postId });
-            if (!post) throw new Error('Post not found');
+            const insertCommentQuery = `
+                INSERT INTO comments (
+                    comment_post_id,
+                    comment_user_id,
+                    comment_created_at,
+                    comment_body
+                ) VALUES (
+                    ${postId},
+                    ${user.id},
+                    "${new Date().toISOString().substring(0, 10)}",
+                    "${body}"
+                )
+            `;
+            const queryResult: IMySQLQuery = await mysqlQuery(insertCommentQuery, context.connection);
+            
+            const getCommentQuery = `SELECT 
+                comment_id AS id,
+                comment_body AS body,
+                comment_created_at AS createdAt,
+                user_username AS username
+                FROM comments
+                JOIN users
+                ON comment_user_id = users.user_id
+                WHERE comment_id = ${queryResult.insertId}
+            `;
 
-            const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                comments: [{
-                    body: args.body,
-                    username: user.username,
-                    createdAt: new Date().toISOString()
-                }, ...post.comments]
-            }, { new: true });
-
-            return newPost
+            const response = await mysqlQuery(getCommentQuery, context.connection);
+            return response[0]
         }
         catch (err: any) {
             throw new Error(err)
@@ -37,27 +55,18 @@ export const ADD_COMMENT = {
 
 export const DELETE_COMMENT = {
     name: 'DELETE_COMMENT',
-    type: PostType,
+    type: GraphQLString,
     args: {
         commentId: { type: new GraphQLNonNull(GraphQLID) },
-        postId: { type: new GraphQLNonNull(GraphQLID) }
+        username: { type: new GraphQLNonNull(GraphQLString) }
     },
     async resolve(_: any, args: IDeleteComment, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
+        if(args.username !== user.username) throw new Error("Action not allowed");
         try {
-            const post: IPost = await Post.findOne({ _id: args.postId });
-            if (!post) throw new Error('Post not found');
-
-            const comment = post.comments.filter(c => c._id == args.commentId);
-
-            if (comment.length === 0) throw new Error('Comment not found');
-            if (comment[0].username !== user.username) throw new Error('Action not allowed');
-
-            const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                comments: post.comments.filter(c => c._id !== comment[0]._id),
-            }, { new: true });
-
-            return newPost
+            const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${args.commentId}`;
+            await mysqlQuery(deleteCommentQuery, context.connection);
+            return "Comment deleted"
         }
         catch (err: any) {
             throw new Error(err)

@@ -109,8 +109,8 @@ export interface IAddComment {
 };
 
 export interface IDeleteComment {
-    postId: string
-    commentId: string
+    commentId: number
+    username: string
 };
 
 // Likes

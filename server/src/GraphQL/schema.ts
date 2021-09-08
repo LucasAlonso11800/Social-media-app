@@ -1,6 +1,7 @@
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
 
 import { BLOCK_USER } from "./Mutations/Blocks";
+import { ADD_COMMENT, DELETE_COMMENT } from "./Mutations/Comments";
 import { FOLLOW_USER } from "./Mutations/Follows";
 import { EDIT_USER_IMAGE } from "./Mutations/Images";
 import { CREATE_POST, DELETE_POST } from "./Mutations/Posts";
@@ -38,10 +39,12 @@ const Mutation = new GraphQLObjectType({
         edit_user_image: EDIT_USER_IMAGE,
         // Blocks
         block_user: BLOCK_USER,
+        // Posts
         create_post: CREATE_POST,
         delete_post: DELETE_POST,
-        // add_comment: ADD_COMMENT,
-        // delete_comment: DELETE_COMMENT,
+        // Comments
+        add_comment: ADD_COMMENT,
+        delete_comment: DELETE_COMMENT,
         // like_post: LIKE_POST,
         // like_comment: LIKE_COMMENT,
     }
