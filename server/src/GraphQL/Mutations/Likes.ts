@@ -1,9 +1,11 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInt } from 'graphql';
-import checkAuth from '../../Helpers/CheckAuth';
-import { IContext, ILike, ILikePostOrComment } from '../../Interfaces';
+import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 import { JwtPayload } from 'jsonwebtoken';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
 import { LikeStatusType } from '../Types/LikeStatusType';
+import { IContext, ILike, ILikePostOrComment } from '../../Interfaces';
+// Helpers
+import checkAuth from '../../Helpers/CheckAuth';
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const LIKE_POST_OR_COMMENT = {
     name: 'LIKE_POST_OR_COMMENT',

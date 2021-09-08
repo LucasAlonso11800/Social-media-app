@@ -1,8 +1,10 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
-import { PostType } from "../Types/PostType";
-import checkAuth from "../../Helpers/CheckAuth";
-import { IContext, ICreatePost, IDeletePost, IMySQLQuery, IPost } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+// Types
+import { PostType } from "../Types/PostType";
+import { IContext, ICreatePost, IDeletePost, IMySQLQuery, IPost } from '../../Interfaces';
+// Helpers
+import checkAuth from "../../Helpers/CheckAuth";
 import validatePost from '../../Helpers/CreatePostValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 

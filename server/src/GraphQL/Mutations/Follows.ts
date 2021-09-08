@@ -1,7 +1,9 @@
 import { GraphQLID, GraphQLNonNull } from "graphql";
-import { mysqlQuery } from "../../Helpers/MySQLPromise";
-import { IContext, IFollower, IFollowUser } from "../../Interfaces";
+// Types
 import { FollowStatusType } from "../Types/FollowStatusType";
+import { IContext, IFollower, IFollowUser } from "../../Interfaces";
+// Helpers
+import { mysqlQuery } from "../../Helpers/MySQLPromise";
 
 export const FOLLOW_USER = {
     name: 'FOLLOW_USER',

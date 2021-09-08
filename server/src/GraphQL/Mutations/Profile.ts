@@ -1,8 +1,10 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-import { IContext, IEditProfile, IProfile } from '../../Interfaces';
-import { ProfileType } from '../Types/ProfileType';
-import checkAuth from "../../Helpers/CheckAuth";
 import { JwtPayload } from 'jsonwebtoken';
+// Types
+import { ProfileType } from '../Types/ProfileType';
+import { IContext, IEditProfile, IProfile } from '../../Interfaces';
+// Helpers
+import checkAuth from "../../Helpers/CheckAuth";
 import validateProfile from '../../Helpers/EditProfileValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 

@@ -1,8 +1,10 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
-import checkAuth from '../../Helpers/CheckAuth';
-import { IAddComment, IContext, IDeleteComment, IMySQLQuery} from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+// Types
 import { CommentType } from '../Types/CommentType';
+import { IAddComment, IContext, IDeleteComment, IMySQLQuery} from '../../Interfaces';
+// Helpers
+import checkAuth from '../../Helpers/CheckAuth';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const ADD_COMMENT = {

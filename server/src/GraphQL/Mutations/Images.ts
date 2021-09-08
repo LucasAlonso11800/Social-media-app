@@ -1,8 +1,10 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
 import { JwtPayload } from "jsonwebtoken";
+// Types
+import { IContext, IEditUserImage, IImage } from "../../Interfaces";
+// Helpers
 import checkAuth from "../../Helpers/CheckAuth";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
-import { IContext, IEditUserImage, IImage } from "../../Interfaces";
 
 export const EDIT_USER_IMAGE = {
     name: 'EDIT_USER_IMAGE',

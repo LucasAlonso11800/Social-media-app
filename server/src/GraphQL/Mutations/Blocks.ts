@@ -1,7 +1,9 @@
 import { GraphQLID, GraphQLNonNull } from "graphql";
-import { mysqlQuery } from "../../Helpers/MySQLPromise";
-import { IBlockUser, IContext } from "../../Interfaces";
+// Types
 import { BlockStatusType } from "../Types/BlockStatusType";
+import { IBlockUser, IContext } from "../../Interfaces";
+// Helpers
+import { mysqlQuery } from "../../Helpers/MySQLPromise";
 
 export const BLOCK_USER = {
     name: 'BLOCK_USER',

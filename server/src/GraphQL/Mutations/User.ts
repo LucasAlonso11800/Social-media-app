@@ -1,9 +1,11 @@
 import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
 import { JwtPayload } from 'jsonwebtoken';
-import checkAuth from '../../Helpers/CheckAuth';
+// Types
 import { UserType } from '../Types/UserType';
 import { IAddUser, ILoginUser, IUser, IContext, IDeleteUser, IMySQLQuery } from '../../Interfaces';
+// Helpers
+import checkAuth from '../../Helpers/CheckAuth';
 import validateUser from '../../Helpers/AddUserValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 import { generateToken } from '../../Helpers/GenerateToken';
