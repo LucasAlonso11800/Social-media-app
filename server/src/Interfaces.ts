@@ -115,18 +115,17 @@ export interface IDeleteComment {
 
 // Likes
 export interface ILike {
-    id: string
-    username: string
-    createdAt: string
+    like_id: number
+    like_user_id: number
+    like_post_id: number | null
+    like_comment_id: number | null
+    like_type: string
 };
 
-export interface ILikePost {
-    postId: string
-};
-
-export interface ILikeComment {
-    postId: string
-    commentId: string
+export interface ILikePostOrComment {
+    postId: number
+    commentId: number
+    type: string
 };
 
 // Profile
@@ -164,8 +163,8 @@ export interface IFollower {
 };
 
 export interface IFollowUser {
-    follower_id: number
-    followee_id: number
+    followerId: number
+    followeeId: number
 };
 
 // Blocked
@@ -176,8 +175,8 @@ export interface IBlocked {
 };
 
 export interface IBlockUser {
-    blocking_user_id: number
-    blocked_user_id: number
+    blockingUserId: number
+    blockedUserId: number
 };
 
 // Images

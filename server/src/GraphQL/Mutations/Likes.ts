@@ -1,39 +1,26 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql';
-import { PostType } from '../Types/PostType';
-import Post from '../../Models/Post';
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInt } from 'graphql';
 import checkAuth from '../../Helpers/CheckAuth';
-import { IContext, ILikeComment, ILikePost, IPost } from '../../Interfaces';
+import { IContext, ILike, ILikePostOrComment } from '../../Interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { LikeStatusType } from '../Types/LikeStatusType';
 
-export const LIKE_POST = {
-    name: 'LIKE_POST',
-    type: PostType,
+export const LIKE_POST_OR_COMMENT = {
+    name: 'LIKE_POST_OR_COMMENT',
+    type: LikeStatusType,
     args: {
-        postId: { type: new GraphQLNonNull(GraphQLID) }
+        postId: { type: GraphQLID },
+        commentId: { type: GraphQLID },
+        type: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: ILikePost, context: IContext) {
+    async resolve(_: any, args: ILikePostOrComment, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
+        const { postId, commentId, type } = args;
         try {
-            const post: IPost = await Post.findOne({ _id: args.postId });
-            if (!post) throw new Error('Post not found');
-
-            const postAlreadyLiked = post.likes.find(like => like.username === user.username);
-
-            if (postAlreadyLiked) {
-                const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                    likes: post.likes.filter(like => like.username !== user.username)
-                }, { new: true })
-                return newPost
-            };
-
-            if (!postAlreadyLiked) {
-                const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                    likes: [...post.likes, {
-                        username: user.username,
-                        createdAt: new Date().toISOString()
-                    }]
-                }, { new: true })
-                return newPost
+            switch (type) {
+                case "P": return await likePost(user, postId, context)
+                case "C": return await likeComment(user, commentId, context)
+                default: return
             }
         }
         catch (err: any) {
@@ -42,58 +29,40 @@ export const LIKE_POST = {
     }
 };
 
-export const LIKE_COMMENT = {
-    name: 'LIKE_COMMENT',
-    type: PostType,
-    args: {
-        commentId: { type: new GraphQLNonNull(GraphQLID) },
-        postId: { type: new GraphQLNonNull(GraphQLID) }
-    },
-    async resolve(_: any, args: ILikeComment, context: IContext) {
-        const user = checkAuth(context) as JwtPayload;
-        try {
-            const post: IPost = await Post.findOne({ _id: args.postId });
-            if (!post) throw new Error('Post not found');
+async function likePost(user: JwtPayload, postId: number, context: IContext) {
+    const checkRelationQuery = `SELECT * FROM likes WHERE like_post_id = ${postId} && like_user_id = ${user.id}`;
+    const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
 
-            const { comments } = post;
-            const comment = comments.find(c => c._id == args.commentId);
-            if (!comment) throw new Error('Comment not found');
+    const query = response[0] ?
+        `DELETE FROM likes WHERE like_id = ${response[0].like_id}` :
+        `INSERT INTO likes (like_type, like_user_id, like_post_id) VALUES("P", ${user.id}, ${postId})`
+    ;
+    await mysqlQuery(query, context.connection);
+    
+    const getLikeList = `SELECT * FROM likes WHERE like_post_id = ${postId}`;
+    const likeList: ILike[] = await mysqlQuery(getLikeList, context.connection);
+    
+    return {
+        liked: response[0] ? false : true,
+        count: likeList.length,
+    }
+};
 
-            const commentAlreadyLiked = comment.likes.find(like => like.username === user.username)
+async function likeComment(user: JwtPayload, commentId: number, context: IContext) {
+    const checkRelationQuery = `SELECT * FROM likes WHERE like_comment_id = ${commentId} && like_user_id = ${user.id}`;
+    const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
 
-            if (commentAlreadyLiked) {
-                const newComment = {
-                    _id: comment._id,
-                    body: comment.body,
-                    username: comment.username,
-                    createdAt: comment.createdAt,
-                    likes: [...comment.likes.filter(like => like.username !== user.username)]
-                };
-                const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                    comments: [...comments.filter(c => c._id.toString() !== args.commentId), newComment],
-                }, { new: true })
-                return newPost
-            };
-
-            if (!commentAlreadyLiked) {
-                const newComment = {
-                    _id: comment._id,
-                    body: comment.body,
-                    username: comment.username,
-                    createdAt: comment.createdAt,
-                    likes: [...comment.likes, {
-                        username: user.username,
-                        createdAt: new Date().toISOString()
-                    }]
-                };
-                const newPost = await Post.findOneAndUpdate({ _id: args.postId }, {
-                    comments: [...comments.filter(c => c._id.toString() !== args.commentId), newComment],
-                }, { new: true })
-                return newPost
-            }
-        }
-        catch (err: any) {
-            throw new Error(err)
-        }
+    const query = response[0] ?
+        `DELETE FROM likes WHERE like_id = ${response[0].like_id}` :
+        `INSERT INTO likes (like_type, like_user_id, like_comment_id) VALUES("C", ${user.id}, ${commentId})`
+    ;
+    await mysqlQuery(query, context.connection);
+    
+    const getLikeList = `SELECT * FROM likes WHERE like_comment_id = ${commentId}`;
+    const likeList: ILike[] = await mysqlQuery(getLikeList, context.connection);
+    
+    return {
+        liked: response[0] ? false : true,
+        count: likeList.length,
     }
 };

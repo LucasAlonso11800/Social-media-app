@@ -1,37 +1,29 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLNonNull } from "graphql";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 import { IBlockUser, IContext } from "../../Interfaces";
-import { BlockedType } from "../Types/BlockedType";
+import { BlockStatusType } from "../Types/BlockStatusType";
 
 export const BLOCK_USER = {
     name: 'BLOCK_USER',
-    type: new GraphQLList(BlockedType),
+    type: BlockStatusType,
     args: {
-        blocking_user_id: { type: new GraphQLNonNull(GraphQLID) },
-        blocked_user_id: { type: new GraphQLNonNull(GraphQLID) }
+        blockingUserId: { type: new GraphQLNonNull(GraphQLID) },
+        blockedUserId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: IBlockUser, context: IContext) {
-        const { blocking_user_id, blocked_user_id } = args;
+        const { blockingUserId, blockedUserId } = args;
         try {
-            const checkRelationQuery = `
-                SELECT * FROM blocks WHERE blocking_user_id = ${blocking_user_id} AND blocked_user_id = ${blocked_user_id}
-            `;
+            const checkRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}`;
             const response: IBlockUser[] = await mysqlQuery(checkRelationQuery, context.connection);
 
             const query = response[0] ?
-                `DELETE FROM blocks WHERE blocking_user_id = ${blocking_user_id} AND blocked_user_id = ${blocked_user_id}` :
-                `INSERT INTO blocks (blocking_user_id, blocked_user_id) VALUES (${blocking_user_id}, ${blocked_user_id}) `
-            ;
+                `DELETE FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}` :
+                `INSERT INTO blocks (blocking_user_id, blocked_user_id) VALUES (${blockingUserId}, ${blockedUserId}) `
+                ;
 
             await mysqlQuery(query, context.connection);
 
-            const getBlockedUsersQuery = `
-                SELECT user_id AS id, user_username AS username FROM blocks
-                JOIN users ON users.user_id = blocked_user_id
-                WHERE blocking_user_id = ${blocking_user_id}
-            `;
-
-            return await mysqlQuery(getBlockedUsersQuery, context.connection);
+            return { blocked: response[0] ? false : true }
         }
         catch (err: any) {
             throw new Error(err)

@@ -1,37 +1,35 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLNonNull } from "graphql";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
-import { IContext, IFollowUser } from "../../Interfaces";
-import { FollowerType } from "../Types/FollowerType";
+import { IContext, IFollower, IFollowUser } from "../../Interfaces";
+import { FollowStatusType } from "../Types/FollowStatusType";
 
 export const FOLLOW_USER = {
     name: 'FOLLOW_USER',
-    type: new GraphQLList(FollowerType),
+    type: FollowStatusType,
     args: {
-        follower_id: { type: new GraphQLNonNull(GraphQLID) },
-        followee_id: { type: new GraphQLNonNull(GraphQLID) }
+        followerId: { type: new GraphQLNonNull(GraphQLID) },
+        followeeId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: IFollowUser, context: IContext) {
-        const { follower_id, followee_id } = args;
+        const { followerId, followeeId } = args;
         try {
-            const checkRelationQuery = `
-                SELECT * FROM follows WHERE follower_id = ${follower_id} AND followee_id = ${followee_id}
-            `;
+            const checkRelationQuery = `SELECT * FROM follows WHERE follower_id = ${followerId} AND followee_id = ${followeeId}`;
             const response: IFollowUser[] = await mysqlQuery(checkRelationQuery, context.connection);
 
             const query = response[0] ?
-                `DELETE FROM follows WHERE follower_id = ${follower_id} AND followee_id =  ${followee_id}` :
-                `INSERT INTO follows (follower_id, followee_id) VALUES (${follower_id}, ${followee_id}) `
+                `DELETE FROM follows WHERE follower_id = ${followerId} AND followee_id =  ${followeeId}` :
+                `INSERT INTO follows (follower_id, followee_id) VALUES (${followerId}, ${followeeId}) `
             ;
 
             await mysqlQuery(query, context.connection);
 
-            const getFollowingsQuery = `
-                SELECT user_id AS id, user_username AS username FROM follows
-                JOIN users ON users.user_id = followee_id
-                WHERE follower_id = ${follower_id}
-            `;
+            const getFollowersListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
+            const followerList: IFollower[] = await mysqlQuery(getFollowersListQuery, context.connection);
 
-            return await mysqlQuery(getFollowingsQuery, context.connection);
+            return {
+                follows: response[0] ? false : true,
+                count: followerList.length
+            }
         }
         catch (err: any) {
             throw new Error(err)
