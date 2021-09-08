@@ -84,14 +84,8 @@ export const ADD_USER = {
             const token = generateToken(user[0]);
 
             return {
+                id: user[0].user_id,
                 username: user[0].user_username,
-                email: user[0].user_email,
-                country: user[0].user_country,
-                city: user[0].user_city,
-                birthDate: user[0].user_birth_date,
-                followers: [],
-                following: [],
-                blockedUsers: [],
                 token
             }
         }
@@ -123,39 +117,12 @@ export const LOGIN_USER = {
         const match = await bcrypt.compare(password, user.user_password);
         if (!match) throw new Error('Wrong username or password');
 
-        const getFollowersQuery = `
-            SELECT user_id AS id, user_username AS username FROM follows
-            JOIN users ON users.user_id = follower_id
-            WHERE followee_id = ${user.user_id}
-        `;
-        const getFollowingQuery = `
-            SELECT user_id AS id, user_username AS username FROM follows
-            JOIN users ON users.user_id = followee_id
-            WHERE follower_id = ${user.user_id}
-        `;
-        const getBlockedUsersQuery = `
-            SELECT user_id AS id, user_username AS username FROM blocks
-            JOIN users ON users.user_id = blocked_user_id
-            WHERE blocking_user_id =  ${user.user_id}
-        `;
-
-        const followers = await mysqlQuery(getFollowersQuery, context.connection);
-        const following = await mysqlQuery(getFollowingQuery, context.connection);
-        const blockedUsers = await mysqlQuery(getBlockedUsersQuery, context.connection);
-
         const token = generateToken(user);
 
         return {
             id: user.user_id,
             username: user.user_username,
-            email: user.user_email,
-            token,
-            country: user.user_country,
-            city: user.user_city,
-            birthDate: user.user_birth_date,
-            followers,
-            following,
-            blockedUsers
+            token
         }
     }
 };
