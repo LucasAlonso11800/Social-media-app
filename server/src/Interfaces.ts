@@ -54,10 +54,6 @@ export interface IEditUserImage {
     image: string
 };
 
-export interface IGetUser {
-    username: string
-};
-
 export interface IGetUsersBySearch {
     query: string
 };
@@ -207,3 +203,7 @@ export interface IImage {
     image_profile_id: number
     image_image: string
 }
+
+export interface IGetUserImage {
+    userId: number
+};
