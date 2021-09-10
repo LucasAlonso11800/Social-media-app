@@ -163,14 +163,20 @@ export interface IEditProfile {
 
 // Follower
 
-export interface IFollower {
-    id: string
-    username: string
+export interface IFollowRelation {
+    follower_id: number
+    followee_id: number
 };
 
 export interface IFollowUser {
-    followerId: number
-    followeeId: number
+    followerId: string
+    followeeId: string
+};
+
+export interface IGetFollowStatus extends IFollowUser {};
+
+export interface IGetFollowList {
+    followeeId: string
 };
 
 // Blocked
@@ -180,10 +186,17 @@ export interface IBlocked {
     username: string
 };
 
+export interface IBlockRelation {
+    blocking_user_id: number
+    blocked_user_id: number
+};
+
 export interface IBlockUser {
     blockingUserId: number
     blockedUserId: number
 };
+
+export interface IGetBlockStatus extends IBlockUser {};
 
 // Images
 

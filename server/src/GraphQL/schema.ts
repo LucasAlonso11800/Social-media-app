@@ -19,6 +19,8 @@ import {
     LIKE_POST_OR_COMMENT
 } from "./Mutations/Index";
 import { GET_LIKE_LIST, GET_LIKE_STATUS } from "./Queries/Likes";
+import { GET_FOLLOW_LIST, GET_FOLLOW_STATUS } from "./Queries/Follows";
+import { GET_BLOCK_STATUS } from "./Queries/Blocks";
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -32,9 +34,9 @@ const RootQuery = new GraphQLObjectType({
         // profile: GET_PROFILE
         // user_image: GET_USER_IMAGE,
 
-        // blocked_status
-        // follow_status
-        // follow_list
+        blocked_status: GET_BLOCK_STATUS,
+        follow_status: GET_FOLLOW_STATUS,
+        follow_list: GET_FOLLOW_LIST,
         like_status: GET_LIKE_STATUS,
         like_list: GET_LIKE_LIST
     }

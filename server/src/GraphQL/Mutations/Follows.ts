@@ -1,7 +1,7 @@
 import { GraphQLID, GraphQLNonNull } from "graphql";
 // Types
 import { FollowStatusType } from "../Types/FollowStatusType";
-import { IContext, IFollower, IFollowUser } from "../../Interfaces";
+import { IContext, IFollowRelation, IFollowUser } from "../../Interfaces";
 // Helpers
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 
@@ -26,7 +26,7 @@ export const FOLLOW_USER = {
             await mysqlQuery(query, context.connection);
 
             const getFollowersListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
-            const followerList: IFollower[] = await mysqlQuery(getFollowersListQuery, context.connection);
+            const followerList: IFollowRelation[] = await mysqlQuery(getFollowersListQuery, context.connection);
 
             return {
                 follows: response[0] ? false : true,
