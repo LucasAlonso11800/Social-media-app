@@ -71,11 +71,15 @@ export interface IPost {
 };
 
 export interface IGetSinglePost {
-    id: string
+    id: number
 };
 
 export interface IGetPostsFromUser {
-    username: string
+    userId: number
+};
+
+export interface IGetHomePagePosts {
+    userId: number | null
 };
 
 export interface IGetPostsBySearch {

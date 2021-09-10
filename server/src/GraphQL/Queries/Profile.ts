@@ -37,11 +37,12 @@ export const GET_PROFILE = {
             const getFollowingCountQuery = `SELECT COUNT(*) AS following FROM follows WHERE follower_id = ${userId}`;
             const followingCount = await mysqlQuery(getFollowingCountQuery, context.connection);
 
-            return {
+            if(response[0]) return {
                 ...response[0],
                 followerCount: followerCount[0].followers,
                 followingCount: followingCount[0].following,
             } 
+            throw new Error("User not found");
         }
         catch (err: any) {
             throw new Error(err)
