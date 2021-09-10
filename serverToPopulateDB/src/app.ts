@@ -33,7 +33,7 @@ app.post('/', async (req, res) => {
         await followsGenerator(connection, 0);
         await blocksGenerator(connection, 0);
         await profilesGenerator(connection);
-        // await imagesGenerator(connection);
+        await imagesGenerator(connection);
         res.send("Everything's working");
     }
     catch (err) {
