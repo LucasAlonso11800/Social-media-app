@@ -12,6 +12,9 @@ export const CommentType = new GraphQLObjectType({
         username: {
             type: new GraphQLNonNull(GraphQLString)
         },
+        profileName: { 
+            type: new GraphQLNonNull(GraphQLString) 
+        },
         createdAt: {
             type: new GraphQLNonNull(GraphQLString)
         }

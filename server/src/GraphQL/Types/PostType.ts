@@ -17,6 +17,9 @@ export const PostType = new GraphQLObjectType({
         },
         username: {
             type: new GraphQLNonNull(GraphQLString)
+        },
+        profileName: {
+            type: new GraphQLNonNull(GraphQLString) 
         }
     })
 });

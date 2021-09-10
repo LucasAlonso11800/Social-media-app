@@ -46,10 +46,13 @@ export const GET_POSTS_FROM_USER = {
                     post_id AS postId,
                     post_body AS body,
                     post_user_id AS userId,
-                    user_username AS username
+                    user_username AS username,
+                    profile_profile_name AS profileName
                     FROM posts
                     JOIN users
                     ON users.user_id = post_user_id
+                    JOIN profiles
+                    ON profiles.user_id = post_user_id
                     WHERE post_user_id = ${args.userId}
             `;
             return await mysqlQuery(getPostsQuery, context.connection)
