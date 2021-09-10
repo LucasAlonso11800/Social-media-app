@@ -99,18 +99,30 @@ export const GET_HOME_PAGE_POSTS = {
     }
 };
 
-// export const GET_POSTS_BY_SEARCH = {
-//     type: GraphQLList(PostType),
-//     args: {
-//         query: { type: new GraphQLNonNull(GraphQLString) }
-//     },
-//     async resolve(_: any, args: IGetPostsBySearch) {
-//         try {
-//             const posts = await Post.find({ body: { '$regex': args.query, '$options': 'i' } }).sort({ createdAt: -1 });
-//             return posts
-//         }
-//         catch (err: any) {
-//             throw new Error(err);
-//         }
-//     }
-// };
+export const GET_POSTS_BY_SEARCH = {
+    type: GraphQLList(PostType),
+    args: {
+        query: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(_: any, args: IGetPostsBySearch, context: IContext) {
+        try {
+            const getPostsBySearchQuery = `
+                SELECT
+                    post_id AS postId,
+                    post_body AS body,
+                    post_user_id AS userId,
+                    post_created_at AS createdAt,
+                    user_username AS username
+                    FROM posts
+                    JOIN users
+                    ON users.user_id = post_user_id
+                    WHERE post_body LIKE "%${args.query}%"
+                    ORDER BY post_created_at
+            `;
+            return await mysqlQuery(getPostsBySearchQuery, context.connection);
+        }
+        catch (err: any) {
+            throw new Error(err);
+        }
+    }
+};

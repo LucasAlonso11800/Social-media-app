@@ -1,7 +1,7 @@
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
 
 // Queries
-import { GET_HOME_PAGE_POSTS, GET_POSTS_FROM_USER, GET_SINGLE_POST } from "./Queries/Posts";
+import { GET_HOME_PAGE_POSTS, GET_POSTS_BY_SEARCH, GET_POSTS_FROM_USER, GET_SINGLE_POST } from "./Queries/Posts";
 
 // Mutations
 import { 
@@ -31,7 +31,7 @@ const RootQuery = new GraphQLObjectType({
         single_post: GET_SINGLE_POST,
         posts_from_user: GET_POSTS_FROM_USER,
         home_page_posts: GET_HOME_PAGE_POSTS,
-        // posts_by_search: GET_POSTS_BY_SEARCH,
+        posts_by_search: GET_POSTS_BY_SEARCH,
         profile: GET_PROFILE,
         users_by_search: GET_USERS_BY_SEARCH,
         user_image: GET_USER_IMAGE,
