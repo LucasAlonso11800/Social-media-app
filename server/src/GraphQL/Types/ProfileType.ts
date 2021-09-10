@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLInt } from 'graphql';
 import { UserType } from './UserType';
 
 export const ProfileType = new GraphQLObjectType({
@@ -10,14 +10,29 @@ export const ProfileType = new GraphQLObjectType({
         profileName: {
             type: new GraphQLNonNull(GraphQLString)
         },
-        bio: {
-            type: GraphQLString
-        },
         profileImage: {
             type: GraphQLString
         },
-        user: {
-            type: new GraphQLNonNull(UserType)
+        bio: {
+            type: GraphQLString
+        },
+        username: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        city: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        country: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        birthDate: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        followerCount: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        followingCount: {
+            type: new GraphQLNonNull(GraphQLInt)
         }
     })
 });

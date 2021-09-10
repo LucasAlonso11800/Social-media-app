@@ -1,36 +1,50 @@
-// import { GraphQLNonNull, GraphQLString } from 'graphql';
-// import { IGetProfile, IProfile, IUser } from '../../Interfaces';
-// import Profile from '../../Models/Profile';
-// import User from '../../Models/User';
-// import { ProfileType } from '../Types/ProfileType';
+import { GraphQLID, GraphQLNonNull } from 'graphql';
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { IContext, IGetProfile, IProfile } from '../../Interfaces';
+import { ProfileType } from '../Types/ProfileType';
 
-// export const GET_PROFILE = {
-//     type: ProfileType,
-//     args: {
-//         username: { type: new GraphQLNonNull(GraphQLString) }
-//     },
-//     async resolve(_: any, args: IGetProfile) {
-//         const { username } = args
+export const GET_PROFILE = {
+    type: ProfileType,
+    args: {
+        userId: { type: new GraphQLNonNull(GraphQLID) }
+    },
+    async resolve(_: any, args: IGetProfile, context: IContext) {
+        const { userId } = args
 
-//         try {
-//             const user: IUser = await User.findOne({ username });
-//             if (!user) throw new Error('User not found');
+        try {
+            const getProfileQuery = `
+                SELECT 
+                    profile_id AS id,
+                    profile_profile_name AS profileName,
+                    profile_profile_description AS bio,
+                    image_image AS profileImage,
+                    user_username AS username,
+                    user_city AS city,
+                    user_country AS country,
+                    user_birth_date AS birthDate
+                    FROM profiles 
+                    JOIN images 
+                    ON images.image_profile_id = profile_id
+                    JOIN users
+                    ON users.user_id = profile_user_id
+                    WHERE profile_user_id = ${userId}
+            `;
+            const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection)
 
-//             const profile: IProfile = await Profile.findOne({ user: user._id }).populate('user')
-//             if (!profile) throw new Error('Profile not found');
+            const getFollowerCountQuery = `SELECT COUNT(*) AS followers FROM follows WHERE followee_id = ${userId}`;
+            const followerCount = await mysqlQuery(getFollowerCountQuery, context.connection);
 
-//             const { _id, profileName, profileImage, bio } = profile;
+            const getFollowingCountQuery = `SELECT COUNT(*) AS following FROM follows WHERE follower_id = ${userId}`;
+            const followingCount = await mysqlQuery(getFollowingCountQuery, context.connection);
 
-//             return {
-//                 id: _id,
-//                 profileName,
-//                 profileImage,
-//                 bio,
-//                 user: profile.user
-//             }
-//         }
-//         catch (err: any) {
-//             throw new Error(err)
-//         }
-//     }
-// };
+            return {
+                ...response[0],
+                followerCount: followerCount[0].followers,
+                followingCount: followingCount[0].following,
+            } 
+        }
+        catch (err: any) {
+            throw new Error(err)
+        }
+    }
+};

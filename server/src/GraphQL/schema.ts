@@ -22,6 +22,7 @@ import { GET_LIKE_LIST, GET_LIKE_STATUS } from "./Queries/Likes";
 import { GET_FOLLOW_LIST, GET_FOLLOW_STATUS } from "./Queries/Follows";
 import { GET_BLOCK_STATUS } from "./Queries/Blocks";
 import { GET_USER_IMAGE } from "./Queries/Images";
+import { GET_PROFILE } from "./Queries/Profile";
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -32,7 +33,7 @@ const RootQuery = new GraphQLObjectType({
         // posts_by_search: GET_POSTS_BY_SEARCH,
         // users_by_search: GET_USERS_BY_SEARCH,
         
-        // profile: GET_PROFILE
+        profile: GET_PROFILE,
         user_image: GET_USER_IMAGE,
         blocked_status: GET_BLOCK_STATUS,
         follow_status: GET_FOLLOW_STATUS,

@@ -124,24 +124,27 @@ export interface ILikePostOrComment {
     type: "P" | "C"
 };
 
-export interface IGetLikeStatus extends ILikePostOrComment{
+export interface IGetLikeStatus extends ILikePostOrComment {
     userId: string
 };
 
-export interface IGetLikeList extends ILikePostOrComment {}
+export interface IGetLikeList extends ILikePostOrComment { }
 
 // Profile
 
 export interface IProfile {
-    _id: string
+    id: string
     profileName: string
-    bio: string
     profileImage: string
-    user: string
+    bio: string
+    username: string
+    city: string
+    country: string
+    birthDate: string
 };
 
 export interface IGetProfile {
-    username: string
+    userId: string
 };
 
 export interface IAddProfile {
@@ -169,7 +172,7 @@ export interface IFollowUser {
     followeeId: string
 };
 
-export interface IGetFollowStatus extends IFollowUser {};
+export interface IGetFollowStatus extends IFollowUser { };
 
 export interface IGetFollowList {
     followeeId: string
@@ -192,7 +195,7 @@ export interface IBlockUser {
     blockedUserId: number
 };
 
-export interface IGetBlockStatus extends IBlockUser {};
+export interface IGetBlockStatus extends IBlockUser { };
 
 // Images
 
