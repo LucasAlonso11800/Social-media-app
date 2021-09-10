@@ -31,17 +31,7 @@ export const GET_PROFILE = {
             `;
             const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection)
 
-            const getFollowerCountQuery = `SELECT COUNT(*) AS followers FROM follows WHERE followee_id = ${userId}`;
-            const followerCount = await mysqlQuery(getFollowerCountQuery, context.connection);
-
-            const getFollowingCountQuery = `SELECT COUNT(*) AS following FROM follows WHERE follower_id = ${userId}`;
-            const followingCount = await mysqlQuery(getFollowingCountQuery, context.connection);
-
-            if(response[0]) return {
-                ...response[0],
-                followerCount: followerCount[0].followers,
-                followingCount: followingCount[0].following,
-            } 
+            if(response[0]) return response[0];
             throw new Error("User not found");
         }
         catch (err: any) {

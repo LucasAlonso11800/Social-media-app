@@ -58,6 +58,10 @@ export interface IGetUsersBySearch {
     query: string
 };
 
+export interface IGetUserFollowCount {
+    userId: number
+};
+
 export interface IDeleteUser {
     id: number
 };

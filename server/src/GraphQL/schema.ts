@@ -23,7 +23,7 @@ import { GET_FOLLOW_LIST, GET_FOLLOW_STATUS } from "./Queries/Follows";
 import { GET_BLOCK_STATUS } from "./Queries/Blocks";
 import { GET_USER_IMAGE } from "./Queries/Images";
 import { GET_PROFILE } from "./Queries/Profile";
-import { GET_USERS_BY_SEARCH } from "./Queries/Users";
+import { GET_USERS_BY_SEARCH, GET_USER_FOLLOW_COUNT } from "./Queries/Users";
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -32,9 +32,10 @@ const RootQuery = new GraphQLObjectType({
         posts_from_user: GET_POSTS_FROM_USER,
         home_page_posts: GET_HOME_PAGE_POSTS,
         // posts_by_search: GET_POSTS_BY_SEARCH,
-        users_by_search: GET_USERS_BY_SEARCH,
         profile: GET_PROFILE,
+        users_by_search: GET_USERS_BY_SEARCH,
         user_image: GET_USER_IMAGE,
+        user_follow_count: GET_USER_FOLLOW_COUNT,
         blocked_status: GET_BLOCK_STATUS,
         follow_status: GET_FOLLOW_STATUS,
         follow_list: GET_FOLLOW_LIST,

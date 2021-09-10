@@ -27,12 +27,6 @@ export const ProfileType = new GraphQLObjectType({
         },
         birthDate: {
             type: new GraphQLNonNull(GraphQLString)
-        },
-        followerCount: {
-            type: new GraphQLNonNull(GraphQLInt)
-        },
-        followingCount: {
-            type: new GraphQLNonNull(GraphQLInt)
         }
     })
 });
