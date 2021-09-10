@@ -22,26 +22,17 @@ export interface IMySQLError {
 
 // Users
 export interface IUser {
-    user_id: number
-    user_email: string
-    user_username: string
-    user_password: string
-    user_country: string
-    user_city: string
-    user_birth_date: string
-    user_followers: any
-    user_following: any
-    user_blocked_users: any
-};
-
-export interface IAddUser {
+    id: number
+    email: string
     username: string
     password: string
     country: string
     city: string
     birthDate: string
+};
+
+export interface IAddUser extends IUser {
     confirmPassword: string
-    email: string
 };
 
 export interface ILoginUser {
@@ -100,12 +91,6 @@ export interface IDeletePost {
 };
 
 // Comments
-export interface IComment {
-    _id: string
-    body: string
-    username: string
-    createdAt: string
-};
 
 export interface IAddComment {
     postId: string
@@ -115,6 +100,10 @@ export interface IAddComment {
 export interface IDeleteComment {
     commentId: number
     username: string
+};
+
+export interface IGetCommentsFromPost {
+    postId: number
 };
 
 // Likes
@@ -155,15 +144,12 @@ export interface IGetProfile {
     userId: string
 };
 
-export interface IAddProfile {
+export interface IAddProfile extends IGetProfile {
     profileName: string
-    userId: string
 };
 
-export interface IEditProfile {
+export interface IEditProfile extends IAddProfile {
     profileId: number
-    userId: number
-    profileName: string
     profileImage: string | null
     bio: string
 };

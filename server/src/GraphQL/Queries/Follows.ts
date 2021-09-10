@@ -1,8 +1,10 @@
 import { GraphQLNonNull, GraphQLID, GraphQLList } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { IContext, IFollowRelation, IGetFollowList, IGetFollowStatus } from '../../Interfaces';
+// Types
 import { FollowerType } from '../Types/FollowerType';
 import { FollowStatusType } from '../Types/FollowStatusType';
+import { IContext, IFollowRelation, IGetFollowList, IGetFollowStatus } from '../../Interfaces';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_FOLLOW_STATUS = {
     type: FollowStatusType,

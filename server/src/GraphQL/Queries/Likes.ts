@@ -1,8 +1,10 @@
 import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { IContext, IGetLikeList, IGetLikeStatus, ILike } from '../../Interfaces';
+// Types
 import { LikeStatusType } from '../Types/LikeStatusType';
 import { LikeType } from '../Types/LikeType';
+import { IContext, IGetLikeList, IGetLikeStatus, ILike } from '../../Interfaces';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_LIKE_STATUS = {
     type: LikeStatusType,

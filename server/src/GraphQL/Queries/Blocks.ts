@@ -1,7 +1,9 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { IBlockRelation, IContext, IFollowRelation, IGetBlockStatus } from '../../Interfaces';
+// Types
 import { BlockStatusType } from '../Types/BlockStatusType';
+import { IBlockRelation, IContext, IGetBlockStatus } from '../../Interfaces';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_BLOCK_STATUS = {
     type: BlockStatusType,

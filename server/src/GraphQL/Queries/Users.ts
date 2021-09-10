@@ -1,8 +1,10 @@
 import { GraphQLNonNull, GraphQLString, GraphQLList, GraphQLID } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { IContext, IGetUserFollowCount, IGetUsersBySearch } from '../../Interfaces';
+// Types
 import { UserFollowCountType } from '../Types/UserFollowCountType';
 import { UserType } from '../Types/UserType';
+import { IContext, IGetUserFollowCount, IGetUsersBySearch } from '../../Interfaces';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_USERS_BY_SEARCH = {
     type: GraphQLList(UserType),

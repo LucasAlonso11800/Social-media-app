@@ -47,7 +47,15 @@ export const ADD_USER = {
             )`;
 
             const queryResult: IMySQLQuery = await mysqlQuery(insertUserQuery, context.connection);
-            const user: IUser[] = await mysqlQuery(`SELECT * FROM users WHERE user_id = ${queryResult.insertId}`, context.connection);
+
+            const getUserQuery = `
+                SELECT
+                    user_id AS id,
+                    user_username AS username
+                    FROM users 
+                    WHERE user_id = ${queryResult.insertId}
+            `;
+            const user: IUser[] = await mysqlQuery(getUserQuery, context.connection);
             
             // Initial user image
             const insertUserImageQuery = `INSERT INTO images(
@@ -56,7 +64,7 @@ export const ADD_USER = {
                 image_image
             ) VALUES (
                 "U",
-                ${user[0].user_id},
+                ${user[0].id},
                 null
             )`;
             await mysqlQuery(insertUserImageQuery, context.connection)
@@ -66,8 +74,8 @@ export const ADD_USER = {
                 profile_user_id,
                 profile_profile_name
             ) VALUES (
-                ${user[0].user_id},
-                "${user[0].user_username}"
+                ${user[0].id},
+                "${user[0].username}"
             )`;
             const profileQueryResult: IMySQLQuery = await mysqlQuery(insertProfileQuery, context.connection);
             
@@ -86,8 +94,8 @@ export const ADD_USER = {
             const token = generateToken(user[0]);
 
             return {
-                id: user[0].user_id,
-                username: user[0].user_username,
+                id: user[0].id,
+                username: user[0].username,
                 token
             }
         }
@@ -111,19 +119,25 @@ export const LOGIN_USER = {
     async resolve(_: any, args: ILoginUser, context: IContext) {
         const { username, password } = args
 
-        const getUserQuery = `SELECT * FROM users WHERE user_username = "${username}"`;
+        const getUserQuery = `
+            SELECT
+                user_id AS id,
+                user_username AS username,
+                user_password AS password
+                FROM users 
+                WHERE user_username = "${username}"`;
         const response: IUser[] = await mysqlQuery(getUserQuery, context.connection);
         const user = response[0];
 
         if (!user) throw new Error('User not found');
-        const match = await bcrypt.compare(password, user.user_password);
+        const match = await bcrypt.compare(password, user.password);
         if (!match) throw new Error('Wrong username or password');
 
         const token = generateToken(user);
 
         return {
-            id: user.user_id,
-            username: user.user_username,
+            id: user.id,
+            username: user.username,
             token
         }
     }

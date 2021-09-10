@@ -1,7 +1,9 @@
 import { GraphQLList, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
 import { IContext, IGetHomePagePosts, IGetPostsBySearch, IGetPostsFromUser, IGetSinglePost, IPost } from '../../Interfaces';
 import { PostType } from '../Types/PostType';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_SINGLE_POST = {
     type: PostType,

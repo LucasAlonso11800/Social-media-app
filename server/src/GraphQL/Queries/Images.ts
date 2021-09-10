@@ -1,6 +1,8 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
-import { mysqlQuery } from "../../Helpers/MySQLPromise";
+// Types
 import { IContext, IGetUserImage, IImage } from "../../Interfaces";
+// Helpers
+import { mysqlQuery } from "../../Helpers/MySQLPromise";
 
 export const GET_USER_IMAGE = {
     type: GraphQLString,

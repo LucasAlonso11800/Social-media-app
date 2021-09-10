@@ -1,7 +1,9 @@
 import { GraphQLID, GraphQLNonNull } from 'graphql';
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
-import { IContext, IGetProfile, IProfile } from '../../Interfaces';
+// Types
 import { ProfileType } from '../Types/ProfileType';
+import { IContext, IGetProfile, IProfile } from '../../Interfaces';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 
 export const GET_PROFILE = {
     type: ProfileType,
