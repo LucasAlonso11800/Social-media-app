@@ -8,9 +8,6 @@ export const LikeType = new GraphQLObjectType({
         },
         username: {
             type: new GraphQLNonNull(GraphQLString)
-        },
-        createdAt: {
-            type: new GraphQLNonNull(GraphQLString)
         }
     })
 });

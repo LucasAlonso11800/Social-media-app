@@ -18,6 +18,7 @@ import {
     DELETE_COMMENT,
     LIKE_POST_OR_COMMENT
 } from "./Mutations/Index";
+import { GET_LIKE_LIST, GET_LIKE_STATUS } from "./Queries/Likes";
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -34,8 +35,8 @@ const RootQuery = new GraphQLObjectType({
         // blocked_status
         // follow_status
         // follow_list
-        // like_status
-        // like_list
+        like_status: GET_LIKE_STATUS,
+        like_list: GET_LIKE_LIST
     }
 });
 

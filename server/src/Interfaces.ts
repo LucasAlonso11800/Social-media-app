@@ -119,14 +119,20 @@ export interface ILike {
     like_user_id: number
     like_post_id: number | null
     like_comment_id: number | null
-    like_type: string
+    like_type: "P" | "C"
 };
 
 export interface ILikePostOrComment {
     postId: number
     commentId: number
-    type: string
+    type: "P" | "C"
 };
+
+export interface IGetLikeStatus extends ILikePostOrComment{
+    userId: string
+};
+
+export interface IGetLikeList extends ILikePostOrComment {}
 
 // Profile
 
@@ -183,7 +189,7 @@ export interface IBlockUser {
 
 export interface IImage {
     image_id: number
-    image_type: string
+    image_type: "U" | "P"
     image_user_id: number
     image_profile_id: number
     image_image: string
