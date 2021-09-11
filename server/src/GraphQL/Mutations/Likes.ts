@@ -1,11 +1,17 @@
 import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 import { JwtPayload } from 'jsonwebtoken';
-// Types
-import { LikeStatusType } from '../Types/LikeStatusType';
-import { IContext, ILike, ILikePostOrComment } from '../../Interfaces';
 // Helpers
 import checkAuth from '../../Helpers/CheckAuth';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { LikeStatusType } from '../Types/LikeStatusType';
+import { IContext, ILike } from '../../Interfaces';
+
+type Args = {
+    postId: string,
+    commentId: string,
+    type: "P" | "C"
+};
 
 export const LIKE_POST_OR_COMMENT = {
     name: 'LIKE_POST_OR_COMMENT',
@@ -15,7 +21,7 @@ export const LIKE_POST_OR_COMMENT = {
         commentId: { type: GraphQLID },
         type: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: ILikePostOrComment, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         const { postId, commentId, type } = args;
         try {
@@ -31,7 +37,7 @@ export const LIKE_POST_OR_COMMENT = {
     }
 };
 
-async function likePost(user: JwtPayload, postId: number, context: IContext) {
+async function likePost(user: JwtPayload, postId: string, context: IContext) {
     const checkRelationQuery = `SELECT * FROM likes WHERE like_post_id = ${postId} && like_user_id = ${user.id}`;
     const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
 
@@ -50,7 +56,7 @@ async function likePost(user: JwtPayload, postId: number, context: IContext) {
     }
 };
 
-async function likeComment(user: JwtPayload, commentId: number, context: IContext) {
+async function likeComment(user: JwtPayload, commentId: string, context: IContext) {
     const checkRelationQuery = `SELECT * FROM likes WHERE like_comment_id = ${commentId} && like_user_id = ${user.id}`;
     const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
 

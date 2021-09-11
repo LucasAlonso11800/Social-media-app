@@ -1,16 +1,16 @@
 import { GraphQLID, GraphQLNonNull } from 'graphql';
-// Types
-import { ProfileType } from '../Types/ProfileType';
-import { IContext, IGetProfile, IProfile } from '../../Interfaces';
 // Helpers
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { ProfileType } from '../Types/ProfileType';
+import { IContext, IProfile } from '../../Interfaces';
 
 export const GET_PROFILE = {
     type: ProfileType,
     args: {
         userId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetProfile, context: IContext) {
+    async resolve(_: any, args: { userId: string }, context: IContext) {
         const { userId } = args
 
         try {
@@ -33,7 +33,7 @@ export const GET_PROFILE = {
             `;
             const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection)
 
-            if(response[0]) return response[0];
+            if (response[0]) return response[0];
             throw new Error("User not found");
         }
         catch (err: any) {

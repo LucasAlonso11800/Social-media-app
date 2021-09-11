@@ -1,10 +1,17 @@
 import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 // Types
 import { LikeStatusType } from '../Types/LikeStatusType';
 import { LikeType } from '../Types/LikeType';
-import { IContext, IGetLikeList, IGetLikeStatus, ILike } from '../../Interfaces';
-// Helpers
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { IContext, ILike } from '../../Interfaces';
+
+type Args = {
+    commentId: string,
+    postId: string,
+    userId: string,
+    type: string
+};
 
 export const GET_LIKE_STATUS = {
     type: LikeStatusType,
@@ -14,7 +21,7 @@ export const GET_LIKE_STATUS = {
         userId: { type: GraphQLID },
         type: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IGetLikeStatus, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const { commentId, postId, type, userId } = args;
 
         try {
@@ -43,7 +50,7 @@ export const GET_LIKE_LIST = {
         postId: { type: GraphQLID },
         type: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IGetLikeList, context: IContext) {
+    async resolve(_: any, args: Omit<Args, "userId">, context: IContext) {
         const { commentId, postId, type } = args;
 
         try {

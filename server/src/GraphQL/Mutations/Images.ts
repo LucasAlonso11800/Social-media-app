@@ -1,10 +1,15 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
 import { JwtPayload } from "jsonwebtoken";
-// Types
-import { IContext, IEditUserImage, IImage } from "../../Interfaces";
 // Helpers
 import checkAuth from "../../Helpers/CheckAuth";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
+// Types
+import { IContext, IImage } from "../../Interfaces";
+
+type Args = {
+    userId: string,
+    image: string
+};
 
 export const EDIT_USER_IMAGE = {
     name: 'EDIT_USER_IMAGE',
@@ -13,7 +18,7 @@ export const EDIT_USER_IMAGE = {
         userId: { type: new GraphQLNonNull(GraphQLID) },
         image: { type: GraphQLString }
     },
-    async resolve(_: any, args: IEditUserImage, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         if(args.userId !== user.id) throw new Error("Action not allowed");
         

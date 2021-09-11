@@ -1,9 +1,14 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql';
-// Types
-import { BlockStatusType } from '../Types/BlockStatusType';
-import { IBlockRelation, IContext, IGetBlockStatus } from '../../Interfaces';
 // Helpers
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { BlockStatusType } from '../Types/BlockStatusType';
+import { IBlockRelation, IContext } from '../../Interfaces';
+
+type Args = {
+    blockingUserId: string
+    blockedUserId: string
+};
 
 export const GET_BLOCK_STATUS = {
     type: BlockStatusType,
@@ -11,7 +16,7 @@ export const GET_BLOCK_STATUS = {
         blockingUserId: { type: new GraphQLNonNull(GraphQLID) },
         blockedUserId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetBlockStatus, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const { blockingUserId, blockedUserId } = args;
 
         try {

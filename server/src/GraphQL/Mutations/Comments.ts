@@ -1,11 +1,18 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
 import { JwtPayload } from 'jsonwebtoken';
-// Types
-import { CommentType } from '../Types/CommentType';
-import { IAddComment, IContext, IDeleteComment, IMySQLQuery} from '../../Interfaces';
 // Helpers
 import checkAuth from '../../Helpers/CheckAuth';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { CommentType } from '../Types/CommentType';
+import { IContext, IMySQLQuery } from '../../Interfaces';
+
+type Args = {
+    postId: string,
+    body: string,
+    commentId: string,
+    username: string
+};
 
 export const ADD_COMMENT = {
     name: 'ADD_COMMENT',
@@ -14,7 +21,7 @@ export const ADD_COMMENT = {
         postId: { type: new GraphQLNonNull(GraphQLID) },
         body: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IAddComment, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "postId" | "body">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         const { postId, body } = args;
 
@@ -34,7 +41,7 @@ export const ADD_COMMENT = {
                 )
             `;
             const queryResult: IMySQLQuery = await mysqlQuery(insertCommentQuery, context.connection);
-            
+
             const getCommentQuery = `SELECT 
                 comment_id AS id,
                 comment_body AS body,
@@ -62,9 +69,9 @@ export const DELETE_COMMENT = {
         commentId: { type: new GraphQLNonNull(GraphQLID) },
         username: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IDeleteComment, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "commentId" | "username">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if(args.username !== user.username) throw new Error("Action not allowed");
+        if (args.username !== user.username) throw new Error("Action not allowed");
         try {
             const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${args.commentId}`;
             await mysqlQuery(deleteCommentQuery, context.connection);

@@ -1,16 +1,16 @@
 import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
-// Types
-import { CommentType } from "../Types/CommentType";
-import { IContext, IGetCommentsFromPost } from "../../Interfaces";
 // Helpers
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
+// Types
+import { CommentType } from "../Types/CommentType";
+import { IContext } from "../../Interfaces";
 
 export const GET_COMMENTS_FROM_POSTS = {
     type: GraphQLList(CommentType),
     args: {
         postId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetCommentsFromPost, context: IContext) {
+    async resolve(_: any, args: { postId: string }, context: IContext) {
         try {
             const getCommentsQuery = `
                 SELECT

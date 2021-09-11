@@ -1,17 +1,17 @@
 import { GraphQLNonNull, GraphQLString, GraphQLList, GraphQLID } from 'graphql';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 // Types
 import { UserFollowCountType } from '../Types/UserFollowCountType';
 import { UserType } from '../Types/UserType';
-import { IContext, IGetUserFollowCount, IGetUsersBySearch } from '../../Interfaces';
-// Helpers
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { IContext } from '../../Interfaces';
 
 export const GET_USERS_BY_SEARCH = {
     type: GraphQLList(UserType),
     args: {
         query: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IGetUsersBySearch, context: IContext) {
+    async resolve(_: any, args: { query: string }, context: IContext) {
         try {
             const getUsersBySearchQuery = `
                 SELECT
@@ -39,7 +39,7 @@ export const GET_USER_FOLLOW_COUNT = {
     args: {
         userId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetUserFollowCount, context: IContext) {
+    async resolve(_: any, args: { userId: string }, context: IContext) {
         const { userId } = args;
 
         try {

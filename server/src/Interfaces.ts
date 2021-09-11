@@ -31,79 +31,12 @@ export interface IUser {
     birthDate: string
 };
 
-export interface IAddUser extends IUser {
-    confirmPassword: string
-};
-
-export interface ILoginUser {
-    username: string
-    password: string
-};
-
-export interface IEditUserImage {
-    userId: number
-    image: string
-};
-
-export interface IGetUsersBySearch {
-    query: string
-};
-
-export interface IGetUserFollowCount {
-    userId: number
-};
-
-export interface IDeleteUser {
-    id: number
-};
-
 // Posts
 export interface IPost {
     body: string
     user: string
     username: string
     createdAt: string
-};
-
-export interface IGetSinglePost {
-    id: number
-};
-
-export interface IGetPostsFromUser {
-    userId: number
-};
-
-export interface IGetHomePagePosts {
-    userId: number | null
-};
-
-export interface IGetPostsBySearch {
-    query: string
-};
-
-export interface ICreatePost {
-    body: string
-};
-
-export interface IDeletePost {
-    postId: string
-    username: string
-};
-
-// Comments
-
-export interface IAddComment {
-    postId: string
-    body: string
-};
-
-export interface IDeleteComment {
-    commentId: number
-    username: string
-};
-
-export interface IGetCommentsFromPost {
-    postId: number
 };
 
 // Likes
@@ -114,18 +47,6 @@ export interface ILike {
     like_comment_id: number | null
     like_type: "P" | "C"
 };
-
-export interface ILikePostOrComment {
-    postId: number
-    commentId: number
-    type: "P" | "C"
-};
-
-export interface IGetLikeStatus extends ILikePostOrComment {
-    userId: string
-};
-
-export interface IGetLikeList extends ILikePostOrComment { }
 
 // Profile
 
@@ -140,18 +61,9 @@ export interface IProfile {
     birthDate: string
 };
 
-export interface IGetProfile {
+export interface IAddProfile {
     userId: string
-};
-
-export interface IAddProfile extends IGetProfile {
     profileName: string
-};
-
-export interface IEditProfile extends IAddProfile {
-    profileId: number
-    profileImage: string | null
-    bio: string
 };
 
 // Follower
@@ -159,17 +71,6 @@ export interface IEditProfile extends IAddProfile {
 export interface IFollowRelation {
     follower_id: number
     followee_id: number
-};
-
-export interface IFollowUser {
-    followerId: string
-    followeeId: string
-};
-
-export interface IGetFollowStatus extends IFollowUser { };
-
-export interface IGetFollowList {
-    followeeId: string
 };
 
 // Blocked
@@ -184,13 +85,6 @@ export interface IBlockRelation {
     blocked_user_id: number
 };
 
-export interface IBlockUser {
-    blockingUserId: number
-    blockedUserId: number
-};
-
-export interface IGetBlockStatus extends IBlockUser { };
-
 // Images
 
 export interface IImage {
@@ -199,8 +93,4 @@ export interface IImage {
     image_user_id: number
     image_profile_id: number
     image_image: string
-}
-
-export interface IGetUserImage {
-    userId: number
 };

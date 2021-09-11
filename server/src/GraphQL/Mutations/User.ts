@@ -1,14 +1,24 @@
-import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql';
 import bcrypt from 'bcryptjs';
 import { JwtPayload } from 'jsonwebtoken';
 // Types
 import { UserType } from '../Types/UserType';
-import { IAddUser, ILoginUser, IUser, IContext, IDeleteUser, IMySQLQuery } from '../../Interfaces';
+import { IUser, IContext, IMySQLQuery } from '../../Interfaces';
 // Helpers
 import checkAuth from '../../Helpers/CheckAuth';
 import validateUser from '../../Helpers/AddUserValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 import { generateToken } from '../../Helpers/GenerateToken';
+
+type Args = {
+    username: string,
+    password: string,
+    confirmPassword: string,
+    email: string,
+    country: string,
+    city: string,
+    birthDate: string
+};
 
 export const ADD_USER = {
     name: 'ADD_USER',
@@ -22,7 +32,7 @@ export const ADD_USER = {
         city: { type: new GraphQLNonNull(GraphQLString) },
         birthDate: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IAddUser, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const { username, password, confirmPassword, email, country, city, birthDate } = args;
 
         validateUser(username, password);
@@ -56,7 +66,7 @@ export const ADD_USER = {
                     WHERE user_id = ${queryResult.insertId}
             `;
             const user: IUser[] = await mysqlQuery(getUserQuery, context.connection);
-            
+
             // Initial user image
             const insertUserImageQuery = `INSERT INTO images(
                 image_type,
@@ -78,7 +88,7 @@ export const ADD_USER = {
                 "${user[0].username}"
             )`;
             const profileQueryResult: IMySQLQuery = await mysqlQuery(insertProfileQuery, context.connection);
-            
+
             // Initial profile image
             const insertProfileImageQuery = `INSERT INTO images(
                 image_type,
@@ -116,7 +126,7 @@ export const LOGIN_USER = {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(_: any, args: ILoginUser, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "username" | "password">, context: IContext) {
         const { username, password } = args
 
         const getUserQuery = `
@@ -147,9 +157,9 @@ export const DELETE_USER = {
     name: 'DELETE_USER',
     type: GraphQLString,
     args: {
-        id: { type: new GraphQLNonNull(GraphQLInt) }
+        id: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IDeleteUser, context: IContext) {
+    async resolve(_: any, args: { id: string }, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         if (args.id !== user.id) throw new Error("Action not allowed");
 

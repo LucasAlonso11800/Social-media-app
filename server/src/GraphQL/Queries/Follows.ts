@@ -1,10 +1,15 @@
 import { GraphQLNonNull, GraphQLID, GraphQLList } from 'graphql';
+// Helpers
+import { mysqlQuery } from '../../Helpers/MySQLPromise';
 // Types
 import { FollowerType } from '../Types/FollowerType';
 import { FollowStatusType } from '../Types/FollowStatusType';
-import { IContext, IFollowRelation, IGetFollowList, IGetFollowStatus } from '../../Interfaces';
-// Helpers
-import { mysqlQuery } from '../../Helpers/MySQLPromise';
+import { IContext, IFollowRelation } from '../../Interfaces';
+
+type Args = {
+    followerId: string,
+    followeeId: string
+};
 
 export const GET_FOLLOW_STATUS = {
     type: FollowStatusType,
@@ -12,7 +17,7 @@ export const GET_FOLLOW_STATUS = {
         followerId: { type: new GraphQLNonNull(GraphQLID) },
         followeeId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetFollowStatus, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const { followerId, followeeId } = args;
 
         try {
@@ -37,7 +42,7 @@ export const GET_FOLLOW_LIST = {
     args: {
         followeeId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetFollowList, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "followeeId">, context: IContext) {
         const { followeeId } = args;
 
         try {

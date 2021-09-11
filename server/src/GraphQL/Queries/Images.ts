@@ -1,15 +1,15 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
-// Types
-import { IContext, IGetUserImage, IImage } from "../../Interfaces";
 // Helpers
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
+// Types
+import { IContext, IImage } from "../../Interfaces";
 
 export const GET_USER_IMAGE = {
     type: GraphQLString,
     args: {
         userId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetUserImage, context: IContext) {
+    async resolve(_: any, args: { userId: string }, context: IContext) {
         const { userId } = args
         try {
             const getUserImageQuery = `SELECT image_image FROM images WHERE image_user_id = ${userId}`;

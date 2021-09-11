@@ -1,16 +1,16 @@
 import { GraphQLList, GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
-// Types
-import { IContext, IGetHomePagePosts, IGetPostsBySearch, IGetPostsFromUser, IGetSinglePost, IPost } from '../../Interfaces';
-import { PostType } from '../Types/PostType';
 // Helpers
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { IContext, IPost } from '../../Interfaces';
+import { PostType } from '../Types/PostType';
 
 export const GET_SINGLE_POST = {
     type: PostType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetSinglePost, context: IContext) {
+    async resolve(_: any, args: { id: string }, context: IContext) {
         try {
             const getPostQuery = `
                 SELECT
@@ -25,7 +25,7 @@ export const GET_SINGLE_POST = {
                     WHERE post_id = ${args.id}
             `;
             const response: IPost[] = await mysqlQuery(getPostQuery, context.connection);
-            if(response[0]) return response[0];
+            if (response[0]) return response[0];
             throw new Error("Post not found");
         }
         catch (err: any) {
@@ -39,7 +39,7 @@ export const GET_POSTS_FROM_USER = {
     args: {
         userId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IGetPostsFromUser, context: IContext) {
+    async resolve(_: any, args: { userId: string }, context: IContext) {
         try {
             const getPostsQuery = `
                 SELECT
@@ -68,11 +68,11 @@ export const GET_HOME_PAGE_POSTS = {
     args: {
         userId: { type: GraphQLID }
     },
-    async resolve(_: any, args: IGetHomePagePosts, context: IContext) {
+    async resolve(_: any, args: { userId: string }, context: IContext) {
         const { userId } = args;
         try {
-            const getPostsQuery = userId ? 
-            `SELECT 
+            const getPostsQuery = userId ?
+                `SELECT 
                 post_id AS postId,
                 post_body AS body,
                 post_user_id AS userId,
@@ -85,8 +85,8 @@ export const GET_HOME_PAGE_POSTS = {
                 ON user_id = followee_id
                 WHERE follower_id = ${args.userId}
             `
-            :
-            `SELECT
+                :
+                `SELECT
                 post_id AS postId,
                 post_body AS body,
                 post_user_id AS userId,
@@ -109,7 +109,7 @@ export const GET_POSTS_BY_SEARCH = {
     args: {
         query: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IGetPostsBySearch, context: IContext) {
+    async resolve(_: any, args: { query: string }, context: IContext) {
         try {
             const getPostsBySearchQuery = `
                 SELECT

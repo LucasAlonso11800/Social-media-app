@@ -1,12 +1,18 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
 import { JwtPayload } from 'jsonwebtoken';
-// Types
-import { PostType } from "../Types/PostType";
-import { IContext, ICreatePost, IDeletePost, IMySQLQuery, IPost } from '../../Interfaces';
 // Helpers
 import checkAuth from "../../Helpers/CheckAuth";
 import validatePost from '../../Helpers/CreatePostValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { PostType } from "../Types/PostType";
+import { IContext, IMySQLQuery, IPost } from '../../Interfaces';
+
+type Args = {
+    body: string,
+    postId: string,
+    username: string
+};
 
 export const CREATE_POST = {
     name: 'CREATE_POST',
@@ -14,7 +20,7 @@ export const CREATE_POST = {
     args: {
         body: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: ICreatePost, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "body">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
 
         validatePost(args.body);
@@ -22,7 +28,7 @@ export const CREATE_POST = {
         try {
             const insertPostQuery = `
                 INSERT INTO posts(post_user_id, post_body, post_created_at)
-                VALUES(10, "${args.body}", "${new Date().toISOString().substring(0, 10)}"
+                VALUES(${user.id}, "${args.body}", "${new Date().toISOString().substring(0, 10)}"
                 )
             `;
             const queryResult: IMySQLQuery = await mysqlQuery(insertPostQuery, context.connection);
@@ -54,7 +60,7 @@ export const DELETE_POST = {
         postId: { type: new GraphQLNonNull(GraphQLID) },
         username: { type: new GraphQLNonNull(GraphQLString) }
     },
-    async resolve(_: any, args: IDeletePost, context: IContext) {
+    async resolve(_: any, args: Omit<Args, "body">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         if (user.username !== args.username) throw new Error("Action not allowed");
         try {

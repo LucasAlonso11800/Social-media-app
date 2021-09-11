@@ -1,9 +1,14 @@
 import { GraphQLID, GraphQLNonNull } from "graphql";
-// Types
-import { BlockStatusType } from "../Types/BlockStatusType";
-import { IBlockUser, IContext } from "../../Interfaces";
 // Helpers
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
+// Types
+import { BlockStatusType } from "../Types/BlockStatusType";
+import { IBlockRelation, IContext } from "../../Interfaces";
+
+type Args = {
+    blockingUserId: string,
+    blockedUserId: string
+};
 
 export const BLOCK_USER = {
     name: 'BLOCK_USER',
@@ -12,11 +17,11 @@ export const BLOCK_USER = {
         blockingUserId: { type: new GraphQLNonNull(GraphQLID) },
         blockedUserId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: IBlockUser, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const { blockingUserId, blockedUserId } = args;
         try {
             const checkRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}`;
-            const response: IBlockUser[] = await mysqlQuery(checkRelationQuery, context.connection);
+            const response: IBlockRelation[] = await mysqlQuery(checkRelationQuery, context.connection);
 
             const query = response[0] ?
                 `DELETE FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}` :

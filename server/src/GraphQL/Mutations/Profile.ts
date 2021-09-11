@@ -1,12 +1,20 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { JwtPayload } from 'jsonwebtoken';
-// Types
-import { ProfileType } from '../Types/ProfileType';
-import { IContext, IEditProfile, IProfile } from '../../Interfaces';
 // Helpers
 import checkAuth from "../../Helpers/CheckAuth";
 import validateProfile from '../../Helpers/EditProfileValidation';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
+// Types
+import { ProfileType } from '../Types/ProfileType';
+import { IContext, IProfile } from '../../Interfaces';
+
+type Args = {
+    profileId: string,
+    userId: string,
+    profileName: string,
+    profileImage: string | null,
+    bio: string,
+};
 
 export const EDIT_PROFILE = {
     type: ProfileType,
@@ -17,7 +25,7 @@ export const EDIT_PROFILE = {
         profileImage: { type: GraphQLString },
         bio: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(_: any, args: IEditProfile, context: IContext) {
+    async resolve(_: any, args: Args, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
         const { profileId, userId, profileName, profileImage, bio } = args;
 
