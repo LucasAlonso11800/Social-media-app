@@ -1,10 +1,9 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom';
 // GraphQL
 import { useQuery } from '@apollo/client';
 import { GET_USER_IMAGE } from '../graphql/Queries';
 // Semantic
-import { Card, Icon, Label, Button, Image, Popup } from 'semantic-ui-react';
+import { Card, Image } from 'semantic-ui-react';
 import moment from 'moment';
 // Context
 import { GlobalContext } from '../context/GlobalContext';

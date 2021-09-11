@@ -107,7 +107,7 @@ export const LIKE_POST_OR_COMMENT = gql`
     mutation like_post_or_comment(
         $postId: ID,
         $commentId: ID,
-        $type: string
+        $type: String!
         ){
         like_post_or_comment(
             postId: $postId,
