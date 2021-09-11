@@ -1,38 +1,44 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 // GraphQL
-import { useMutation } from '@apollo/client';
-import { LIKE_POST } from '../graphql/Mutations';
+import { useMutation, useQuery } from '@apollo/client';
+import { LIKE_POST_OR_COMMENT } from '../graphql/Mutations';
+import { GET_LIKE_STATUS } from '../graphql/Queries';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // Semantic
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
-import { ILike } from '../Interfaces';
+import { ILikeStatusQuery } from '../Interfaces';
 
 type Props = {
-    likes: ILike[],
-    id: string;
+    postId?: string
+    commentId?: string
 }
 
-function LikeButton(props: Props) {
-    const [liked, setLiked] = useState<boolean>(false)
+export default function LikeButton(props: Props) {
+    const { postId, commentId } = props;
     const { state } = useContext(GlobalContext);
-    const { likes, id } = props;
 
-    const [likeCount, setLikeCount] = useState(likes.length)
-
-    useEffect(() => {
-        const userHasLikedThePost = state !== null && likes.find(like => like.username === state.username)
-        userHasLikedThePost ? setLiked(true) : setLiked(false)
-    }, [state, likes]);
-
-    const [likePost] = useMutation(LIKE_POST, {
-        onCompleted: () => {
-            liked ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
-            setLiked(!liked)
+    const { error, data } = useQuery<ILikeStatusQuery>(GET_LIKE_STATUS, {
+        variables: {
+            postId,
+            commentId,
+            userId: state !== null ? state.id : null,
+            type: postId ? "P" : "C" 
         },
-        variables: { postId: id }
+        onError: (): any => console.log(JSON.stringify(error, null, 2))
+    });
+
+    const [likePost] = useMutation(LIKE_POST_OR_COMMENT, {
+        onCompleted: (data) => {
+            console.log(data)
+        },
+        variables: {
+            postId,
+            commentId,
+            type: postId ? "P" : "C"         
+        }
     });
 
     return (
@@ -41,16 +47,14 @@ function LikeButton(props: Props) {
             inverted
             trigger={
                 <Button as="div" labelPosition="right" onClick={state !== null ? () => likePost() : () => { }}>
-                    <Button color='twitter' basic={!liked} as={state !== null ? "div" : Link} to="/login">
+                    <Button color='twitter' basic={!data?.like_status.liked} as={state !== null ? "div" : Link} to="/login">
                         <Icon name="heart" />
                     </Button>
                     <Label basic color="teal" pointing="left">
-                        {likeCount}
+                        {data?.like_status.count}
                     </Label>
                 </Button >
             }
         />
     )
 }
-
-export default LikeButton

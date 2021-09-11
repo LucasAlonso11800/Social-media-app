@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 // GraphQL
 import { useQuery } from '@apollo/client';
+import { GET_USER_IMAGE } from '../graphql/Queries';
 // Semantic
 import { Card, Icon, Label, Button, Image, Popup } from 'semantic-ui-react';
 import moment from 'moment';
@@ -12,19 +13,20 @@ import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 // Interfaces
-import { IPost, IUserImageQuery } from '../Interfaces';
-import { GET_USER_IMAGE } from '../graphql/Queries';
+import { IPost } from '../Interfaces';
+import CommentButton from './CommentButton';
 
-interface Props {
+type Props = {
     post: IPost;
-}
+};
 
-function PostCard(props: Props) {
+export default function PostCard(props: Props) {
     const { state } = useContext(GlobalContext);
-    const { body, createdAt, id, username, comments, likes } = props.post;
+    const { body, createdAt, postId, username, userId, profileName } = props.post;
 
-    const { error, loading, data } = useQuery<IUserImageQuery>(GET_USER_IMAGE, {
-        variables: { username }
+    const { error: imageError, data: image } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
+        variables: { userId },
+        onError: (): any => console.log(JSON.stringify(imageError, null, 2))
     });
 
     return (
@@ -33,35 +35,20 @@ function PostCard(props: Props) {
                 <Image
                     floated="right"
                     className="post__user-image"
-                    src={data?.user_image.image ? `data:image/png;base64,${data?.user_image.image}` : ProfilePlaceholder}
-                    onClick={() => window.location.href = `/user/${username}`}
+                    src={image?.user_image ? `data:image/png;base64,${image?.user_image}` : ProfilePlaceholder}
+                    onClick={() => window.location.href = `/user/${userId}`}
                 />
-                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${username}`} >{username}</Card.Header>
+                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${userId}`} >{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
-                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${username}/${id}`} >
+                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${username}/${postId}`} >
                     {body}
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <LikeButton likes={likes} id={id}/>
-                <Popup
-                    content="Comment"
-                    inverted
-                    trigger={
-                        <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
-                            <Button basic as="div" color='twitter'>
-                                <Icon name="comment" />
-                            </Button>
-                            <Label basic color="blue" pointing="left">
-                                {comments.length}
-                            </Label>
-                        </Button >
-                    }
-                />
-                {state !== null && state.username === username && window.location.pathname.startsWith('/user/') && <DeleteButton postId={id} />}
+                <LikeButton postId={postId} />
+                <CommentButton postId={postId} username={username}/>
+                {state !== null && state.username === username && window.location.pathname.startsWith('/user/') && <DeleteButton postId={postId} />}
             </Card.Content>
         </Card>
     )
 };
-
-export default PostCard;

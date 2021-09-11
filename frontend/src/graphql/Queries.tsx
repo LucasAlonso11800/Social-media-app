@@ -1,22 +1,16 @@
 import { gql } from '@apollo/client';
 
 // Posts
-export const GET_POSTS = gql`
-    {
-        all_posts {
-            id
+
+export const GET_HOME_PAGE_POSTS = gql`
+    query($userId: ID){
+        home_page_posts(userId: $userId){
+            postId
             body
-            username
             createdAt
-            likes {
-                username
-            }
-            comments {
-                id
-                body
-                username
-                createdAt
-            }
+            username
+            profileName
+            userId
         }
     }
 `;
@@ -86,10 +80,8 @@ export const GET_POSTS_BY_SEARCH = gql`
 
 // Users
 export const GET_USER_IMAGE = gql`
-    query($username: String!){
-        user_image(username: $username){
-            image
-        }
+    query($userId: ID){
+        user_image(userId: $userId)
     }
 `;
 
@@ -145,5 +137,34 @@ export const GET_USERS_BY_SEARCH = gql`
                 username
             }
         }
+    }
+`;
+
+// Likes
+
+export const GET_LIKE_STATUS = gql`
+    query(
+        $commentId: ID,
+        $postId: ID,
+        $userId: ID,
+        $type: String!
+        ){
+        like_status(
+            commentId: $commentId,
+            postId: $postId,
+            userId: $userId,
+            type: $type
+            ){
+                count
+                liked
+            }
+        }
+`;
+
+// Comments
+
+export const GET_COMMENT_COUNT = gql`
+    query($postId: ID!){
+        comment_count(postId: $postId)
     }
 `;

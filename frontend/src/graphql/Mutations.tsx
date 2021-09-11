@@ -133,14 +133,19 @@ export const DELETE_POST = gql`
     }
 `;
 
-export const LIKE_POST = gql`
-    mutation like_post($postId: ID!){
-        like_post(postId: $postId){
-            id
-            likes{
-                id
-                username
-            }
+export const LIKE_POST_OR_COMMENT = gql`
+    mutation like_post_or_comment(
+        $postId: ID,
+        $commentId: ID,
+        $type: string
+        ){
+        like_post_or_comment(
+            postId: $postId,
+            commentId: $commentId,
+            type: $type
+            ){
+            liked
+            count
         }
     }
 `;

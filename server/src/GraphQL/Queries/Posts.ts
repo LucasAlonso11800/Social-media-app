@@ -68,7 +68,7 @@ export const GET_HOME_PAGE_POSTS = {
     args: {
         userId: { type: GraphQLID }
     },
-    async resolve(_: any, args: { userId: string }, context: IContext) {
+    async resolve(_: any, args: { userId: string | null }, context: IContext) {
         const { userId } = args;
         try {
             const getPostsQuery = userId ?
@@ -77,25 +77,36 @@ export const GET_HOME_PAGE_POSTS = {
                 post_body AS body,
                 post_user_id AS userId,
                 post_created_at AS createdAt,
-                user_username AS username
+                user_username AS username,
+                profile_profile_name AS profileName
                 FROM follows
                 JOIN posts
                 ON post_user_id = followee_id
                 JOIN users
-                ON user_id = followee_id
+                ON users.user_id = followee_id
+                JOIN profiles
+                ON profiles.profile_user_id = followee_id
                 WHERE follower_id = ${args.userId}
+                ORDER BY posts.post_created_at DESC
+                LIMIT 200
             `
                 :
                 `SELECT
-                post_id AS postId,
-                post_body AS body,
-                post_user_id AS userId,
-                post_created_at AS createdAt,
-                user_username AS username
-                FROM posts
-                ORDER BY post_created_at
-                LIMIT 200
+                    post_id AS postId,
+                    post_body AS body,
+                    post_user_id AS userId,
+                    post_created_at AS createdAt,
+                    user_username AS username,
+                    profile_profile_name AS profileName
+                    FROM posts
+                    JOIN users
+                    ON users.user_id = post_user_id
+                    JOIN profiles
+                    ON profiles.profile_user_id = post_user_id
+                    ORDER BY post_created_at DESC
+                    LIMIT 200
             `;
+
             return await mysqlQuery(getPostsQuery, context.connection)
         }
         catch (err: any) {

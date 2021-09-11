@@ -53,13 +53,6 @@ export interface IBlockedUsersQuery{
     }[]
 };
 
-export interface IUserImageQuery{
-    user_image: {
-        image: string
-    }
-};
-
-
 // Posts
 
 export interface IPostQuery{
@@ -78,14 +71,23 @@ export interface IPostsFromUserQuery{
     posts_from_user: IPost[]
 };
 
-export interface IPost {
-    body: string
-    comments: IComment[]
-    createdAt: string
-    id: string
-    likes: ILike[]
-    username: string
+export interface IHomePagePostsQuery{
+    home_page_posts: IPost[]
 };
+
+export interface IPost {
+    id: string
+    postId: string
+    body: string
+    createdAt: string
+    userId: string
+    username: string
+    profileName: string
+    comments: IComment[],
+    likes: ILike[]
+};
+
+// Comments
 
 export interface IComment {
     body: string
@@ -94,10 +96,25 @@ export interface IComment {
     username: string
 };
 
+export interface ICommentCountQuery {
+    comment_count: number
+}
+
+// Likes
+
 export interface ILike {
     createdAt: string
     id: string
     username: string
+};
+
+export interface ILikeStatus {
+    count: number,
+    liked: boolean
+};
+
+export interface ILikeStatusQuery {
+    like_status: ILikeStatus
 };
 
 // Forms

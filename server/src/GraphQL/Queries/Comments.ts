@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
 // Helpers
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 // Types
@@ -27,6 +27,23 @@ export const GET_COMMENTS_FROM_POSTS = {
                     WHERE comment_post_id = ${args.postId}
             `;
             return await mysqlQuery(getCommentsQuery, context.connection)
+        }
+        catch (err: any) {
+            throw new Error(err)
+        }
+    }
+};
+
+export const GET_COMMENT_COUNT = {
+    type: GraphQLInt,
+    args: {
+        postId: { type: new GraphQLNonNull(GraphQLID) }
+    },
+    async resolve(_: any, args: { postId: string }, context: IContext) {
+        try {
+            const getCommentCountQuery = `SELECT COUNT(*) AS count FROM comments WHERE comment_post_id = ${args.postId}`;
+            const response = await mysqlQuery(getCommentCountQuery, context.connection)
+            return response[0].count
         }
         catch (err: any) {
             throw new Error(err)

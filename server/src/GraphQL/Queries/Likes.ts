@@ -30,7 +30,7 @@ export const GET_LIKE_STATUS = {
                 `SELECT * FROM likes WHERE like_post_id = ${postId}`;
 
             const likesList: ILike[] = await mysqlQuery(getLikesListQuery, context.connection);
-            const userHasLiked = likesList.find(like => like.like_user_id.toString() === userId);
+            const userHasLiked = userId !== null ? likesList.find(like => like.like_user_id.toString() === userId) : false;
 
             return {
                 liked: userHasLiked ? true : false,

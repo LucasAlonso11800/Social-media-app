@@ -8,7 +8,7 @@ import {
     GET_USER_IMAGE, 
     GET_BLOCK_STATUS,
     GET_HOME_PAGE_POSTS, GET_POSTS_BY_SEARCH, GET_POSTS_FROM_USER, GET_SINGLE_POST,
-    GET_COMMENTS_FROM_POSTS,
+    GET_COMMENTS_FROM_POSTS, GET_COMMENT_COUNT,
     GET_LIKE_LIST, GET_LIKE_STATUS
 } from './Queries/Index';
 
@@ -46,6 +46,7 @@ const RootQuery = new GraphQLObjectType({
         single_post: GET_SINGLE_POST,
         // Comments
         comments_from_posts: GET_COMMENTS_FROM_POSTS,
+        comment_count: GET_COMMENT_COUNT,
         // Likes
         like_status: GET_LIKE_STATUS,
         like_list: GET_LIKE_LIST
