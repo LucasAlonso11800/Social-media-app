@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalContext';
 import { RouteComponentProps } from 'react-router';
 // GraphQL
 import { useMutation } from '@apollo/client';
-import { ADD_PROFILE, ADD_USER } from '../graphql/Mutations';
+import { ADD_USER } from '../graphql/Mutations';
 // Semantic
 import { Form, Button, Container, Select } from 'semantic-ui-react';
 // Form
@@ -49,15 +49,19 @@ export default function RegisterPage(props: RouteComponentProps) {
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
     const [selectedCountry, setSelectedCountry] = useState('Argentina');
 
-    const [addUser, { loading, error: addUserError, data }] = useMutation(ADD_USER, {
+    const [addUser, { loading, error }] = useMutation(ADD_USER, {
         update(proxy, result) {
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.add_user
             })
+            window.location.assign(`/user/${result.data.add_user.username}`)
         },
-        variables: queryVariables,
-        onError: (): any => console.log(JSON.stringify(addUserError, null, 2))
+        variables: {
+            ...queryVariables,
+            country: selectedCountry
+        },
+        onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
     const formik = useFormik({
@@ -71,30 +75,14 @@ export default function RegisterPage(props: RouteComponentProps) {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            if(addUserError !== undefined) return addUser();
-            setQueryVariables({
-                ...values,
-                country: selectedCountry
-            });
+            if (error !== undefined && queryVariables === values) return addUser();
+            setQueryVariables(values);
         }
-    });
-
-    const [addProfile, { error: addProfileError }] = useMutation(ADD_PROFILE, {
-        onCompleted: () => props.history.push(`/user/${data?.add_user.username}`),
-        variables: {
-            userId: data?.add_user.id,
-            profileName: data?.add_user.username
-        },
-        onError: (): any => console.log(JSON.stringify(addProfileError, null, 2))
     });
 
     useEffect(() => {
         if (queryVariables !== undefined) addUser();
     }, [queryVariables]);
-
-    useEffect(() => {
-        if (data !== undefined) addProfile(data)
-    }, [data]);
 
     return (
         <Container>
@@ -213,10 +201,10 @@ export default function RegisterPage(props: RouteComponentProps) {
                 <Button type="submit" color="twitter" disabled={loading} className="form__submit-button">
                     Register
                 </Button>
-                {addUserError !== undefined ?
+                {error !== undefined ?
                     <div className="ui red message form__submit-button">
                         <ul className="list">
-                            <li>{addUserError.message}</li>
+                            <li>{error.message}</li>
                         </ul>
                     </div>
                     : null}

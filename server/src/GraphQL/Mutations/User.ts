@@ -35,10 +35,9 @@ export const ADD_USER = {
     async resolve(_: any, args: Args, context: IContext) {
         const { username, password, confirmPassword, email, country, city, birthDate } = args;
 
-        validateUser(username, password);
+        validateUser(username, password, confirmPassword);
 
         try {
-            if (password !== confirmPassword) throw new Error("Passwords don't match");
             const hash = await bcrypt.hash(password, 10);
             const insertUserQuery = `INSERT INTO users (
                 user_username,

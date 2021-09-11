@@ -48,7 +48,7 @@ function LoginPage(props: RouteComponentProps) {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            if(error !== undefined) loginUser()
+            if(error !== undefined && queryVariables === values) return loginUser()
             setQueryVariables(values)
         }
     });

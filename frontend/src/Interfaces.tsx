@@ -124,7 +124,6 @@ export interface IAddUser {
     email: string
     password: string
     confirmPassword: string
-    country: string
     city: string
     birthDate: string
 };

@@ -20,23 +20,8 @@ export const ADD_USER = gql`
             birthDate: $birthDate,
         ){
             id
-            email
             username
             token
-            country
-            city
-            birthDate
-            followers{
-                username
-                image
-            }
-            following{
-                username
-                image
-            }
-            blockedUsers{
-                username
-            }
         }
     }
 `;
@@ -51,23 +36,8 @@ export const LOGIN_USER = gql`
             password: $password
         ){
             id
-            email
             username
             token
-            country
-            city
-            birthDate
-            followers{
-                username
-                image
-            }
-            following{
-                username
-                image
-            }
-            blockedUsers{
-                username
-            }
         }
     }
 `;
@@ -191,14 +161,6 @@ export const DELETE_COMMENT = gql`
 `;
 
 // Profiles
-
-export const ADD_PROFILE = gql`
-    mutation add_profile($userId: String!, $profileName: String!){
-        add_profile(userId: $userId, profileName: $profileName){
-            profileName
-        }
-    }
-`;
 
 export const EDIT_PROFILE = gql`
     mutation edit_profile(
