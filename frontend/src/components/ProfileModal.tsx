@@ -9,7 +9,7 @@ import { EDIT_PROFILE } from '../graphql/Mutations';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IEditProfile, IProfile, IProfileQuery } from '../Interfaces';
+import { IEditProfile, IProfile } from '../Interfaces';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 import { GET_PROFILE } from '../graphql/Queries';
@@ -19,6 +19,10 @@ type Props = {
     setOpen: Function,
     profile: IProfile,
     username: string
+};
+
+type QueryResult = {
+    profile: IProfile
 };
 
 const validationSchema = yup.object({
@@ -39,17 +43,16 @@ function ProfileModal(props: Props) {
 
     const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
         update: (proxy, result) => {
-            const data: IProfileQuery = proxy.readQuery({
+            const data: QueryResult = proxy.readQuery({
                 query: GET_PROFILE,
                 variables: { username }
-            }) as IProfileQuery;
+            }) as QueryResult;
 
             proxy.writeQuery({
                 query: GET_PROFILE,
                 variables: { username },
                 data: {
                     profile: {
-                        user: data.profile.user,
                         bio: result.data.edit_profile.bio,
                         id: result.data.edit_profile.id,
                         profileImage: result.data.edit_profile.profileImage,

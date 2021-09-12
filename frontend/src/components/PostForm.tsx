@@ -9,23 +9,27 @@ import { GET_POSTS_FROM_USER } from '../graphql/Queries';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Interfaces
-import { ICreatePost, IPostsFromUserQuery } from '../Interfaces';
+import { ICreatePost, IPost } from '../Interfaces';
+
+type QueryResult = {
+    posts_from_user: IPost[]
+}
 
 const validationSchema = yup.object({
     body: yup.string().max(140, 'It can not be longer than 140 characters').required()
 });
 
-function PostForm() {
+export default function PostForm() {
     const [queryVariables, setQueryVariables] = useState<ICreatePost>();
 
     const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
 
     const [createPost, { error, loading }] = useMutation(CREATE_POST, {
         update(proxy, result) {
-            const data: IPostsFromUserQuery = proxy.readQuery({
+            const data: QueryResult = proxy.readQuery({
                 query: GET_POSTS_FROM_USER,
                 variables: { username }
-            }) as IPostsFromUserQuery;
+            }) as QueryResult;
 
             proxy.writeQuery({
                 query: GET_POSTS_FROM_USER,
@@ -82,5 +86,3 @@ function PostForm() {
         </Form>
     )
 };
-
-export default PostForm;

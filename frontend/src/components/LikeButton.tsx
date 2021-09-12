@@ -9,12 +9,16 @@ import { GlobalContext } from '../context/GlobalContext';
 // Semantic
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
-import { ILikeStatus, ILikeStatusQuery } from '../Interfaces';
+import { ILikeStatus } from '../Interfaces';
 
 type Props = {
     postId?: string
     commentId?: string
-}
+};
+
+type QueryResult = {
+    like_status: ILikeStatus
+};
 
 export default function LikeButton(props: Props) {
     const { postId, commentId } = props;
@@ -22,7 +26,7 @@ export default function LikeButton(props: Props) {
     const [likeStatus, setLikeStatus] = useState<ILikeStatus>();
 
     const { error } = useQuery(GET_LIKE_STATUS, {
-        onCompleted: (data: ILikeStatusQuery) => {
+        onCompleted: (data: QueryResult) => {
             setLikeStatus(data.like_status)
         },
         variables: {

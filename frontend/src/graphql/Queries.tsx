@@ -37,22 +37,14 @@ export const GET_SINGLE_POST = gql`
 `;
 
 export const GET_POSTS_FROM_USER = gql`
-    query($username: String!){
-        posts_from_user(username: $username){
-            id
+    query($userId: ID!){
+        posts_from_user(userId: $userId){
+            postId
             body
             createdAt
             username
-            comments{
-                id
-                body
-                username
-                createdAt
-            }
-            likes {
-                id
-                username
-            }
+            profileName
+            userId
         }
     }
 `;
@@ -85,39 +77,17 @@ export const GET_USER_IMAGE = gql`
     }
 `;
 
-export const GET_BLOCKED_USERS = gql`
-    query($username: String!){
-        blocked_users(username: $username){
-            blockedUsers{
-                username
-            }
-        }
-    }
-`;
-
 export const GET_PROFILE = gql`
-    query($username: String!){
-        profile(username: $username){
+    query($userId: ID!){
+        profile(userId: $userId){
             profileName
             profileImage
             bio
-            user{
-                id
-                username
-                country
-                city
-                birthDate
-                followers{
-                    username
-                }
-                following{
-                    username
-                }
-                image
-                blockedUsers{
-                    username
-                }
-            }
+            username
+            city
+            country
+            birthDate
+            id
         }
     }
 `;
@@ -159,6 +129,16 @@ export const GET_LIKE_STATUS = gql`
                 liked
             }
         }
+`;
+
+// Followers 
+export const GET_USER_FOLLOW_COUNT = gql`
+    query($userId: ID!){
+        user_follow_count(userId: $userId){
+            followerCount
+            followingCount
+        }
+    }  
 `;
 
 // Comments

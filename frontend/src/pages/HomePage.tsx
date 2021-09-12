@@ -5,15 +5,19 @@ import { GlobalContext } from '../context/GlobalContext';
 import { useQuery } from '@apollo/client';
 import { GET_HOME_PAGE_POSTS } from '../graphql/Queries';
 // Interfaces
-import { IHomePagePostsQuery, IPost, IUserData } from '../Interfaces';
+import { IPost } from '../Interfaces';
 // Components
 import { Grid, Container, CardGroup, Dimmer, Loader } from 'semantic-ui-react';
 import PostCard from '../components/PostCard';
 
+type QueryResult = {
+    home_page_posts: IPost[]
+};
+
 export default function HomePage() {
     const { state } = useContext(GlobalContext);
 
-    const { error, loading, data } = useQuery<IHomePagePostsQuery>(GET_HOME_PAGE_POSTS, {
+    const { error, loading, data } = useQuery<QueryResult>(GET_HOME_PAGE_POSTS, {
         variables: { id: state !== null ? state.id : null },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });

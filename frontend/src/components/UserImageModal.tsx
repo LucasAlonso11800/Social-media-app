@@ -17,7 +17,7 @@ type Props = {
 export default function UserImageModal(props: Props) {
     const { open, setOpen, profile } = props;
     const [image, setImage] = useState({
-        src: profile.user.image,
+        src: profile.profileImage,
         alt: 'User image'
     });
     const [newImage, setNewImage] = useState('');
@@ -28,7 +28,7 @@ export default function UserImageModal(props: Props) {
             window.location.reload()
         },
         variables: {
-            image: image.src === profile.user.image ? image.src : newImage
+            image: image.src === profile.profileImage ? image.src : newImage
         },
         onError: (): any => console.log(JSON.stringify(error, null, 2)),
     });

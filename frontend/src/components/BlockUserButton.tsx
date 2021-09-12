@@ -18,10 +18,10 @@ export default function BlockUserButton(props: Props) {
 
     const [blockUser, { error, loading }] = useMutation(BLOCK_USER, {
         onCompleted: (data: IBlockUserQuery) => {
-            const isBlockedNow = data.block_user.blockedUsers.find(u => u.username === profile.user.username)
+            const isBlockedNow = data.block_user.blockedUsers.find(u => u.username === profile.username)
             setIsBlocked(isBlockedNow ? true : false);
         },
-        variables: { blockedUsername: profile.user.username },
+        variables: { blockedUsername: profile.username },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 

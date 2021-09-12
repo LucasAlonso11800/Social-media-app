@@ -47,17 +47,7 @@ export interface IUsersBySearchQuery{
     users_by_search: IUserData[]
 };
 
-export interface IBlockedUsersQuery{
-    blocked_users: {
-        username: string
-    }[]
-};
-
 // Posts
-
-export interface IPostQuery{
-    all_posts: IPost[]
-};
 
 export interface IPostsBySearchQuery{
     posts_by_search: IPost[]
@@ -65,14 +55,6 @@ export interface IPostsBySearchQuery{
 
 export interface ISinglePostQuery{
     single_post: IPost
-};
-
-export interface IPostsFromUserQuery{
-    posts_from_user: IPost[]
-};
-
-export interface IHomePagePostsQuery{
-    home_page_posts: IPost[]
 };
 
 export interface IPost {
@@ -96,10 +78,6 @@ export interface IComment {
     username: string
 };
 
-export interface ICommentCountQuery {
-    comment_count: number
-}
-
 // Likes
 
 export interface ILike {
@@ -113,8 +91,39 @@ export interface ILikeStatus {
     liked: boolean
 };
 
-export interface ILikeStatusQuery {
-    like_status: ILikeStatus
+// Profiles
+
+export interface IProfile {
+    profileName: string
+    profileImage: string
+    bio: string
+    city: string
+    country: string
+    birthDate: string
+    username: string
+    id: string
+};
+
+export interface IEditProfile {
+    profileName: string
+    bio: string
+};
+
+// Followers
+
+export interface IFollower {
+    username: string
+};
+
+export interface IFollowUserQuery {
+    follow_user: {
+        following: IFollower[]
+    }
+};
+
+export interface IFollowCount {
+    followerCount: number
+    followingCount: number
 };
 
 // Forms
@@ -139,35 +148,4 @@ export interface ICreatePost {
 
 export interface IAddComment {
     body: string
-};
-
-
-// Profiles
-
-export interface IProfile {
-    profileName: string
-    profileImage: string
-    bio: string
-    user: IUserData
-};
-
-export interface IProfileQuery {
-    profile: IProfile
-};
-
-export interface IEditProfile {
-    profileName: string
-    bio: string
-};
-
-// Followers
-
-export interface IFollower {
-    username: string
-};
-
-export interface IFollowUserQuery {
-    follow_user: {
-        following: IFollower[]
-    }
 };

@@ -7,8 +7,7 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import { Button } from 'semantic-ui-react';
 // Interfaces
-import { IFollower, IFollowUserQuery, IProfileQuery } from '../Interfaces';
-import { GET_PROFILE } from '../graphql/Queries';
+import { IFollower, IFollowUserQuery } from '../Interfaces';
 
 type Props = {
     followsUser: IFollower | undefined
