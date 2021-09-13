@@ -14,21 +14,24 @@ type Args = {
 export const GET_FOLLOW_STATUS = {
     type: FollowStatusType,
     args: {
-        followerId: { type: new GraphQLNonNull(GraphQLID) },
+        followerId: { type: GraphQLID },
         followeeId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: Args, context: IContext) {
         const { followerId, followeeId } = args;
-
+        
         try {
-            const getFollowListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
+            const getFollowerListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
+            const getFolloweeListQuery = `SELECT * FROM follows WHERE follower_id = ${followeeId}`;
 
-            const followList: IFollowRelation[] = await mysqlQuery(getFollowListQuery, context.connection);
-            const userHasFollowed = followList.find(follow => follow.follower_id.toString() === followerId);
+            const followerList: IFollowRelation[] = await mysqlQuery(getFollowerListQuery, context.connection);
+            const followeeList: IFollowRelation[] = await mysqlQuery(getFolloweeListQuery, context.connection);
 
+            const userHasFollowed = followerList.find(follow => follow.follower_id.toString() === followerId);
             return {
                 follows: userHasFollowed ? true : false,
-                count: followList.length
+                followerCount: followerList.length,
+                followeeCount: followeeList.length
             }
         }
         catch (err: any) {

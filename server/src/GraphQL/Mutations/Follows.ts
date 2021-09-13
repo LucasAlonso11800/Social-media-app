@@ -19,23 +19,27 @@ export const FOLLOW_USER = {
     },
     async resolve(_: any, args: Args, context: IContext) {
         const { followerId, followeeId } = args;
+
         try {
             const checkRelationQuery = `SELECT * FROM follows WHERE follower_id = ${followerId} AND followee_id = ${followeeId}`;
             const response: IFollowRelation[] = await mysqlQuery(checkRelationQuery, context.connection);
-
             const query = response[0] ?
                 `DELETE FROM follows WHERE follower_id = ${followerId} AND followee_id =  ${followeeId}` :
                 `INSERT INTO follows (follower_id, followee_id) VALUES (${followerId}, ${followeeId}) `
                 ;
-
             await mysqlQuery(query, context.connection);
 
             const getFollowersListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
+            const getFolloweeListQuery = `SELECT * FROM follows WHERE follower_id = ${followeeId}`;
+
+            
             const followerList: IFollowRelation[] = await mysqlQuery(getFollowersListQuery, context.connection);
+            const followeeList: IFollowRelation[] = await mysqlQuery(getFolloweeListQuery, context.connection);
 
             return {
                 follows: response[0] ? false : true,
-                count: followerList.length
+                followerCount: followerList.length,
+                followeeCount: followeeList.length
             }
         }
         catch (err: any) {

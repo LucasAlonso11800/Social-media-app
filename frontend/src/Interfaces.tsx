@@ -115,15 +115,10 @@ export interface IFollower {
     username: string
 };
 
-export interface IFollowUserQuery {
-    follow_user: {
-        following: IFollower[]
-    }
-};
-
-export interface IFollowCount {
+export interface IFollowStatus {
+    followeeCount: number
     followerCount: number
-    followingCount: number
+    follows: boolean
 };
 
 // Forms

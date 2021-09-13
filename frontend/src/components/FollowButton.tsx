@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { FOLLOW_USER } from '../graphql/Mutations';
@@ -7,27 +7,27 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import { Button } from 'semantic-ui-react';
 // Interfaces
-import { IFollower, IFollowUserQuery } from '../Interfaces';
+import { IFollowStatus } from '../Interfaces';
 
 type Props = {
-    followsUser: IFollower | undefined
-    followedUser: {
-        username: string
-    }
+    followeeId: string
+    followStatus: IFollowStatus | undefined
+    setFollowStatus: Function
+};
+
+type MutationResult = {
+    follow_user: IFollowStatus
 };
 
 export default function FollowButton(props: Props) {
     const { state } = useContext(GlobalContext);
-    const { followsUser, followedUser } = props;
-    const [follows, setFollows] = useState(followsUser ? true : false);
+    const { followeeId, followStatus, setFollowStatus } = props;
 
-    const [followUser, { error, loading }] = useMutation(FOLLOW_USER, {
-        onCompleted: (data: IFollowUserQuery) => {
-            data.follow_user.following.find(f => f.username === followedUser.username) ? setFollows(true) : setFollows(false)
-        },
+    const [followUser, { error, loading }] = useMutation<MutationResult>(FOLLOW_USER, {
+        onCompleted: (data) => setFollowStatus(data.follow_user),
         variables: {
-            followingUsername: state?.username,
-            followedUsername: followedUser.username
+            followerId: state?.id,
+            followeeId,
         },
         onError: (): any => console.log(error, JSON.stringify(error, null, 2))
     });
@@ -42,7 +42,7 @@ export default function FollowButton(props: Props) {
                 return window.location.href = '/login'
             }}
         >
-            {follows ? 'Unfollow' : 'Follow'}
+            {followStatus?.follows ? 'Unfollow' : 'Follow'}
         </Button>
     )
 };

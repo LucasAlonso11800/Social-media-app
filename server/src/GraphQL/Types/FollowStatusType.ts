@@ -6,8 +6,11 @@ export const FollowStatusType = new GraphQLObjectType({
         follows: {
             type: new GraphQLNonNull(GraphQLBoolean)
         },
-        count: {
+        followerCount: {
             type: new GraphQLNonNull(GraphQLInt)
-        }
+        },
+        followeeCount: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
     })
 });

@@ -1,9 +1,6 @@
 import React, { useContext } from 'react';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
-// GraphQL
-import { useQuery } from '@apollo/client';
-import { GET_USER_IMAGE } from '../graphql/Queries';
 // Components
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import { Image } from 'semantic-ui-react';

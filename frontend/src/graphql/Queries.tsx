@@ -132,11 +132,12 @@ export const GET_LIKE_STATUS = gql`
 `;
 
 // Followers 
-export const GET_USER_FOLLOW_COUNT = gql`
-    query($userId: ID!){
-        user_follow_count(userId: $userId){
+export const GET_FOLLOW_STATUS = gql`
+    query($followerId: ID, $followeeId: ID!){
+        follow_status(followerId: $followerId, followeeId: $followeeId){
+            follows
             followerCount
-            followingCount
+            followeeCount
         }
     }  
 `;

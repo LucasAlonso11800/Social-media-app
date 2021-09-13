@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import moment from 'moment';
 // GraphQL
 import { useQuery } from '@apollo/client';
-import { GET_PROFILE, GET_USER_IMAGE } from '../graphql/Queries';
+import { GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from '../graphql/Queries';
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
@@ -16,7 +16,7 @@ import DeleteUserButton from './DeleteUserButton';
 import FollowerInfo from './FollowerInfo';
 import ProfileUserImage from './ProfileUserImage';
 // Interfaces
-import { IProfile } from '../Interfaces';
+import { IFollowStatus, IProfile } from '../Interfaces';
 
 type Props = {
     userId: string;
@@ -24,6 +24,7 @@ type Props = {
 
 type QueryResult = {
     profile: IProfile
+    follow_status: IFollowStatus
 };
 
 export default function Profile(props: Props) {
@@ -33,8 +34,9 @@ export default function Profile(props: Props) {
     const [userImageModalOpen, setUserImageModalOpen] = useState(false);
     const [profile, setProfile] = useState<IProfile>();
     const [userImage, setUserImage] = useState('');
+    const [followStatus, setFollowStatus] = useState<IFollowStatus>();
 
-    const { error, loading } = useQuery<QueryResult>(GET_PROFILE, {
+    const { error, loading } = useQuery<Pick<QueryResult, 'profile'>>(GET_PROFILE, {
         onCompleted: (data) => setProfile(data.profile),
         variables: { userId },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
@@ -44,6 +46,15 @@ export default function Profile(props: Props) {
         onCompleted: (data) => setUserImage(data.user_image),
         variables: { userId },
         onError: (): any => console.log(JSON.stringify(userImageError, null, 2))
+    });
+
+    const { error: followStatusError } = useQuery<Pick<QueryResult, 'follow_status'>>(GET_FOLLOW_STATUS, {
+        onCompleted: (data) => setFollowStatus(data.follow_status),
+        variables: {
+            followerId: state?.id,
+            followeeId: userId
+        },
+        onError: (): any => console.log(JSON.stringify(followStatusError, null, 2))
     });
 
     if (profile) {
@@ -63,7 +74,8 @@ export default function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2>{profileName}</h2>
                         <div>
-                            {/* {!state || state.username !== username ? <FollowButton followsUser={followsUser} followedUser={user} /> : null} */}
+                            {!state || state.username !== username ? 
+                            <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus}/> : null}
                             {state && state.username === username &&
                                 <>
                                     <Popup
@@ -94,10 +106,10 @@ export default function Profile(props: Props) {
                             content="Age"
                             trigger={<Icon name="calendar times" className="profile__icon" />}
                         />{moment(birthDate).fromNow(true)}</Card.Meta>
-                    <FollowerInfo profileName={profileName} bio={bio} userId={userId} />
+                    <FollowerInfo profileName={profileName} bio={bio} followStatus={followStatus} />
                 </Card.Content>
                 <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={profile} userId={userId} setProfile={setProfile} />
-                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} userImage={userImage} setUserImage={setUserImage} userId={userId}/>
+                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} userImage={userImage} setUserImage={setUserImage} userId={userId} />
             </Card>
         )
     }
