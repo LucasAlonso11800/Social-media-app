@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // Components
 import { Modal, Container, Form, Button, Image } from 'semantic-ui-react';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
@@ -10,19 +10,17 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
 import { IEditProfile, IProfile } from '../Interfaces';
-// Context
-import { GlobalContext } from '../context/GlobalContext';
-import { GET_PROFILE } from '../graphql/Queries';
 
 type Props = {
-    open: boolean,
-    setOpen: Function,
-    profile: IProfile,
-    username: string
+    open: boolean
+    setOpen: Function
+    profile: IProfile
+    userId: string
+    setProfile: Function
 };
 
 type QueryResult = {
-    profile: IProfile
+    edit_profile: IProfile
 };
 
 const validationSchema = yup.object({
@@ -30,9 +28,8 @@ const validationSchema = yup.object({
     bio: yup.string().max(140, "Description can't be longer than 140 characters").required("Profile description can't be empty"),
 });
 
-function ProfileModal(props: Props) {
-    const { open, setOpen, profile, username } = props;
-    const { state } = useContext(GlobalContext)
+export default function ProfileModal(props: Props) {
+    const { open, setOpen, profile, userId, setProfile } = props;
     const [image, setImage] = useState({
         alt: 'Profile image',
         src: profile.profileImage
@@ -41,31 +38,16 @@ function ProfileModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { error, loading }] = useMutation(EDIT_PROFILE, {
-        update: (proxy, result) => {
-            const data: QueryResult = proxy.readQuery({
-                query: GET_PROFILE,
-                variables: { username }
-            }) as QueryResult;
-
-            proxy.writeQuery({
-                query: GET_PROFILE,
-                variables: { username },
-                data: {
-                    profile: {
-                        bio: result.data.edit_profile.bio,
-                        id: result.data.edit_profile.id,
-                        profileImage: result.data.edit_profile.profileImage,
-                        profileName: result.data.edit_profile.profileName
-                    }
-                }
-            });
+    const [editProfile, { error, loading }] = useMutation<QueryResult>(EDIT_PROFILE, {
+        onCompleted: (data) => {
+            setProfile(data.edit_profile)
             setOpen(false);
         },
         variables: {
             ...queryVariables,
             profileImage: image.src === profile.profileImage ? image.src : newImage,
-            userId: state?.id
+            profileId: profile.id,
+            userId
         },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
@@ -77,7 +59,10 @@ function ProfileModal(props: Props) {
         },
         validationSchema,
         onSubmit: (values) => {
-            if(queryVariables?.bio === values.bio && queryVariables?.profileName === values.profileName && image.src !== profile.profileImage) return editProfile()
+            if (queryVariables?.bio === values.bio &&
+                queryVariables?.profileName === values.profileName &&
+                image.src !== profile.profileImage
+            ) return editProfile()
             setQueryVariables(values)
         }
     });
@@ -190,5 +175,3 @@ function ProfileModal(props: Props) {
         </Modal>
     )
 };
-
-export default ProfileModal;

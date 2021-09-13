@@ -29,8 +29,7 @@ export const EDIT_PROFILE = {
         const user = checkAuth(context) as JwtPayload;
         const { profileId, userId, profileName, profileImage, bio } = args;
 
-        if (userId !== user.id) throw new Error("Action not allowed");
-
+        if (userId !== user.id.toString()) throw new Error("Action not allowed");
         validateProfile(profileName, bio);
 
         try {
@@ -47,16 +46,23 @@ export const EDIT_PROFILE = {
                     WHERE image_profile_id = ${profileId}
                 `;
                 await mysqlQuery(updateProfileImageQuery, context.connection);
-            }
+            };
+
             const getProfileQuery = `SELECT 
                 profile_id AS id, 
                 profile_user_id AS userId, 
                 profile_profile_name AS profileName, 
                 profile_profile_description AS bio,
-                image_image AS profileImage
+                image_image AS profileImage,
+                user_username AS username,
+                user_city AS city,
+                user_country AS country,
+                user_birth_date AS birthDate
                 FROM profiles
                 JOIN images
                 ON profile_id = images.image_profile_id
+                JOIN users
+                ON profile_user_id = users.user_id
                 WHERE profile_id = ${profileId}
             `;
             

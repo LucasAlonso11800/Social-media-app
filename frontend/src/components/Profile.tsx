@@ -31,14 +31,16 @@ export default function Profile(props: Props) {
     const { userId } = props;
     const [modalOpen, setModalOpen] = useState(false);
     const [userImageModalOpen, setUserImageModalOpen] = useState(false);
+    const [profile, setProfile] = useState<IProfile>();
 
-    const { error, loading, data } = useQuery<QueryResult>(GET_PROFILE, {
+    const { error, loading } = useQuery<QueryResult>(GET_PROFILE, {
+        onCompleted: (data) => setProfile(data.profile),
         variables: { userId },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
-    if (data) {
-        const { profile: { profileName, profileImage, bio, username, city, country, birthDate } } = data as QueryResult;
+    if (profile) {
+        const { profileName, profileImage, bio, username, city, country, birthDate } = profile;
 
         return (
             <Card fluid className={loading ? 'loading' : ''}>
@@ -87,8 +89,8 @@ export default function Profile(props: Props) {
                         />{moment(birthDate).fromNow(true)}</Card.Meta>
                     <FollowerInfo profileName={profileName} bio={bio} userId={userId} />
                 </Card.Content>
-                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={data.profile} username={username} />
-                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} profile={data.profile} />
+                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={profile} userId={userId} setProfile={setProfile}/>
+                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} profile={profile} />
             </Card>
         )
     }

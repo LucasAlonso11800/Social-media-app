@@ -5,6 +5,7 @@ import { Menu } from 'semantic-ui-react';
 import { GlobalContext } from '../context/GlobalContext';
 // Interfaces
 import { EActionType } from '../Interfaces';
+
 export default function NavBar() {
     const { state, dispatch } = useContext(GlobalContext);
     
@@ -25,7 +26,7 @@ export default function NavBar() {
                 name={state.username}
                 active={activeItem === 'user'}
                 as={Link}
-                to={`/user/${state.username}`}
+                to={`/user/${state.id}`}
                 onClick={() => setActiveItem('user')}
             />
             <Menu.Menu position='right'>

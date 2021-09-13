@@ -1,1 +1,1 @@
-export const serverURL = 'http://localhost:5000/graphql';
+export const serverURL = 'http://localhost:7000/graphql';

@@ -164,12 +164,14 @@ export const DELETE_COMMENT = gql`
 
 export const EDIT_PROFILE = gql`
     mutation edit_profile(
-        $userId: String!, 
+        $profileId: ID!,
+        $userId: ID!, 
         $profileName: String!, 
         $profileImage: String, 
         $bio: String!
     ){
         edit_profile(
+            profileId: $profileId,
             userId: $userId, 
             profileName: $profileName, 
             profileImage: $profileImage, 
@@ -179,6 +181,10 @@ export const EDIT_PROFILE = gql`
             profileName
             profileImage
             bio
+            username
+            city
+            country
+            birthDate
         }
     }
 `;

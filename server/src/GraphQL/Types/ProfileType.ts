@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLInt } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { UserType } from './UserType';
 
 export const ProfileType = new GraphQLObjectType({
