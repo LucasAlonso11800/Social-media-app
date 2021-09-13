@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import moment from 'moment';
 // GraphQL
 import { useQuery } from '@apollo/client';
-import { GET_PROFILE } from '../graphql/Queries';
+import { GET_PROFILE, GET_USER_IMAGE } from '../graphql/Queries';
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
@@ -32,11 +32,18 @@ export default function Profile(props: Props) {
     const [modalOpen, setModalOpen] = useState(false);
     const [userImageModalOpen, setUserImageModalOpen] = useState(false);
     const [profile, setProfile] = useState<IProfile>();
+    const [userImage, setUserImage] = useState('');
 
     const { error, loading } = useQuery<QueryResult>(GET_PROFILE, {
         onCompleted: (data) => setProfile(data.profile),
         variables: { userId },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
+    });
+
+    const { error: userImageError, loading: userImageLoading } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
+        onCompleted: (data) => setUserImage(data.user_image),
+        variables: { userId },
+        onError: (): any => console.log(JSON.stringify(userImageError, null, 2))
     });
 
     if (profile) {
@@ -49,7 +56,7 @@ export default function Profile(props: Props) {
                         <Grid.Column width="16">
                             <Image fluid className="profile__profile-image" src={profileImage ? `data:image/png;base64,${profileImage}` : ProfilePlaceholder} />
                         </Grid.Column>
-                        <ProfileUserImage username={username} userId={userId} setUserImageModalOpen={setUserImageModalOpen} />
+                        <ProfileUserImage userImage={userImage} username={username} loading={userImageLoading} setUserImageModalOpen={setUserImageModalOpen} />
                     </Grid.Row>
                 </Grid>
                 <Card.Content>
@@ -89,8 +96,8 @@ export default function Profile(props: Props) {
                         />{moment(birthDate).fromNow(true)}</Card.Meta>
                     <FollowerInfo profileName={profileName} bio={bio} userId={userId} />
                 </Card.Content>
-                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={profile} userId={userId} setProfile={setProfile}/>
-                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} profile={profile} />
+                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={profile} userId={userId} setProfile={setProfile} />
+                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} userImage={userImage} setUserImage={setUserImage} userId={userId}/>
             </Card>
         )
     }

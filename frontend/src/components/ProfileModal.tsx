@@ -19,10 +19,6 @@ type Props = {
     setProfile: Function
 };
 
-type QueryResult = {
-    edit_profile: IProfile
-};
-
 const validationSchema = yup.object({
     profileName: yup.string().max(40, "Profile name can't be longer than 40 characters").required("Profile name can't be empty"),
     bio: yup.string().max(140, "Description can't be longer than 140 characters").required("Profile description can't be empty"),
@@ -38,7 +34,7 @@ export default function ProfileModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { error, loading }] = useMutation<QueryResult>(EDIT_PROFILE, {
+    const [editProfile, { error, loading }] = useMutation<{ edit_profile: IProfile }>(EDIT_PROFILE, {
         onCompleted: (data) => {
             setProfile(data.edit_profile)
             setOpen(false);

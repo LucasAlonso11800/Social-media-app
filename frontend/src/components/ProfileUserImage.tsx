@@ -9,26 +9,22 @@ import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import { Image } from 'semantic-ui-react';
 
 type Props = {
+    userImage: string
     username: string
-    userId: string
+    loading: boolean
     setUserImageModalOpen: Function
 };
 
 export default function ProfileUserImage(props: Props) {
     const { state } = useContext(GlobalContext);
-    const { username, userId, setUserImageModalOpen } = props;
-
-    const { error, loading, data } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
-        variables: { userId },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
-    });
+    const { userImage, username, loading, setUserImageModalOpen } = props;
 
     return (
         <div className="profile__user-image-container">
             <Image
                 fluid
                 className={loading ? "loading profile__user-image" : "profile__user-image"}
-                src={data?.user_image ? `data:image/png;base64,${data?.user_image}` : ProfilePlaceholder}
+                src={userImage ? `data:image/png;base64,${userImage}` : ProfilePlaceholder}
             />
             {state?.username === username ?
                 <div className="profile__actual-change-user-image" onClick={() => setUserImageModalOpen(true)}>

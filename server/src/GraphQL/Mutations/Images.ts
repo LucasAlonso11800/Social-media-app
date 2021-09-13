@@ -4,7 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import checkAuth from "../../Helpers/CheckAuth";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 // Types
-import { IContext, IImage } from "../../Interfaces";
+import { IContext } from "../../Interfaces";
 
 type Args = {
     userId: string,
@@ -20,16 +20,14 @@ export const EDIT_USER_IMAGE = {
     },
     async resolve(_: any, args: Args, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if(args.userId !== user.id) throw new Error("Action not allowed");
-        
+        const { image, userId } = args
+        if (userId !== user.id.toString()) throw new Error("Action not allowed");
+
         try {
-            const updateUserImageQuery = `UPDATE images SET image_image = "${args.image}" WHERE image_user_id = ${args.userId}`;
+            const updateUserImageQuery = `UPDATE images SET image_image = "${image}" WHERE image_user_id = ${userId}`;
             await mysqlQuery(updateUserImageQuery, context.connection)
-    
-            const getUserImageQuery = `SELECT image_image FROM images WHERE image_user_id = ${args.userId}`;
-            const response: IImage[] = await mysqlQuery(getUserImageQuery, context.connection)
-            
-            return response[0].image_image
+
+            return image;
         }
         catch (err: any) {
             throw new Error(err)

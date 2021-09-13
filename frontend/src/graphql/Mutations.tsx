@@ -43,10 +43,8 @@ export const LOGIN_USER = gql`
 `;
 
 export const EDIT_USER_IMAGE = gql`
-    mutation edit_user_image($image: String){
-        edit_user_image(image: $image){
-            username
-        }
+    mutation edit_user_image($image: String, $userId: ID!){
+        edit_user_image(image: $image, userId: $userId)
     }
 `;
 
