@@ -49,11 +49,9 @@ export const EDIT_USER_IMAGE = gql`
 `;
 
 export const BLOCK_USER = gql`
-    mutation block_user($blockedUsername: String!){
-        block_user(blockedUsername: $blockedUsername){
-            blockedUsers{
-                username
-            }
+    mutation block_user($blockingUserId: ID!, $blockedUserId: ID!){
+        block_user(blockingUserId: $blockingUserId, blockedUserId: $blockedUserId){
+            isBlocking
         }
     }
 `;

@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import moment from 'moment';
 // GraphQL
 import { useQuery } from '@apollo/client';
-import { GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from '../graphql/Queries';
+import { GET_BLOCK_STATUS, GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from '../graphql/Queries';
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
@@ -16,7 +16,7 @@ import DeleteUserButton from './DeleteUserButton';
 import FollowerInfo from './FollowerInfo';
 import ProfileUserImage from './ProfileUserImage';
 // Interfaces
-import { IFollowStatus, IProfile } from '../Interfaces';
+import { IBlockStatus, IFollowStatus, IProfile } from '../Interfaces';
 
 type Props = {
     userId: string;
@@ -25,21 +25,26 @@ type Props = {
 type QueryResult = {
     profile: IProfile
     follow_status: IFollowStatus
+    block_status: IBlockStatus
 };
 
 export default function Profile(props: Props) {
     const { state } = useContext(GlobalContext);
     const { userId } = props;
-    const [modalOpen, setModalOpen] = useState(false);
-    const [userImageModalOpen, setUserImageModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [userImageModalOpen, setUserImageModalOpen] = useState<boolean>(false);
     const [profile, setProfile] = useState<IProfile>();
-    const [userImage, setUserImage] = useState('');
+    const [userImage, setUserImage] = useState<string>('');
     const [followStatus, setFollowStatus] = useState<IFollowStatus>();
+    const [isBlocking, setIsBlocking] = useState<boolean>(false);
 
     const { error, loading } = useQuery<Pick<QueryResult, 'profile'>>(GET_PROFILE, {
         onCompleted: (data) => setProfile(data.profile),
         variables: { userId },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (): any => {
+            if(error?.message === "Error: User not found") return window.location.assign('/404');
+            console.log(JSON.stringify(error, null, 2))
+        } 
     });
 
     const { error: userImageError, loading: userImageLoading } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
@@ -55,6 +60,18 @@ export default function Profile(props: Props) {
             followeeId: userId
         },
         onError: (): any => console.log(JSON.stringify(followStatusError, null, 2))
+    });
+
+    const { error: blockStatusError } = useQuery<Pick<QueryResult, 'block_status'>>(GET_BLOCK_STATUS, {
+        onCompleted: (data) => {
+            if (data.block_status.isBlocked) window.location.assign('/404');
+            setIsBlocking(data.block_status.isBlocking);
+        },
+        variables: {
+            blockingUserId: state?.id,
+            blockedUserId: userId
+        },
+        onError: (): any => console.log(JSON.stringify(blockStatusError, null, 2))
     });
 
     if (profile) {
@@ -74,8 +91,8 @@ export default function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2>{profileName}</h2>
                         <div>
-                            {!state || state.username !== username ? 
-                            <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus}/> : null}
+                            {!state || state.username !== username ?
+                                <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} /> : null}
                             {state && state.username === username &&
                                 <>
                                     <Popup
@@ -90,7 +107,8 @@ export default function Profile(props: Props) {
                                     <DeleteUserButton username={username} />
                                 </>
                             }
-                            {/* {state && state.username !== username ? <BlockUserButton profile={data.profile} userIsBlocked={userIsBlocked ? true : false} /> : null} */}
+                            {state && state.username !== username ?
+                                <BlockUserButton blockingUserId={state.id} blockedUserId={userId} isBlocking={isBlocking} setIsBlocking={setIsBlocking} /> : null}
                         </div>
                     </div>
                     <Card.Meta><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>

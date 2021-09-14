@@ -55,6 +55,7 @@ export const GET_POSTS_FROM_USER = {
                     JOIN profiles
                     ON profiles.profile_user_id = post_user_id
                     WHERE post_user_id = ${args.userId}
+                    ORDER BY post_created_at DESC
             `;
             return await mysqlQuery(getPostsQuery, context.connection)
         }

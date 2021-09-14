@@ -13,7 +13,7 @@ type Args = {
 export const GET_BLOCK_STATUS = {
     type: BlockStatusType,
     args: {
-        blockingUserId: { type: new GraphQLNonNull(GraphQLID) },
+        blockingUserId: { type: GraphQLID },
         blockedUserId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: Args, context: IContext) {

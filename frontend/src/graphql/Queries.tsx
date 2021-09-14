@@ -149,3 +149,17 @@ export const GET_COMMENT_COUNT = gql`
         comment_count(postId: $postId)
     }
 `;
+
+// Blocks
+
+export const GET_BLOCK_STATUS = gql`
+    query($blockingUserId: ID, $blockedUserId: ID!){
+        block_status(
+            blockingUserId: $blockingUserId,
+            blockedUserId: $blockedUserId
+        ){
+            isBlocking
+            isBlocked
+        }
+    }
+`;

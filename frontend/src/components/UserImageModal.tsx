@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 // GraphQL
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { EDIT_USER_IMAGE } from '../graphql/Mutations';
 // Components
 import { Modal, Image, Button } from 'semantic-ui-react';

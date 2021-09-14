@@ -39,10 +39,6 @@ export type GlobalState = IUserData | null;
 
 // Users
 
-export interface IBlockUserQuery{
-    block_user: IUserData
-};
-
 export interface IUsersBySearchQuery{
     users_by_search: IUserData[]
 };
@@ -104,11 +100,6 @@ export interface IProfile {
     id: string
 };
 
-export interface IEditProfile {
-    profileName: string
-    bio: string
-};
-
 // Followers
 
 export interface IFollower {
@@ -119,6 +110,13 @@ export interface IFollowStatus {
     followeeCount: number
     followerCount: number
     follows: boolean
+};
+
+// Blocks
+
+export interface IBlockStatus {
+    isBlocking: boolean
+    isBlocked: boolean
 };
 
 // Forms
@@ -143,4 +141,9 @@ export interface ICreatePost {
 
 export interface IAddComment {
     body: string
+};
+
+export interface IEditProfile {
+    profileName: string
+    bio: string
 };

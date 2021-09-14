@@ -30,7 +30,7 @@ export const BLOCK_USER = {
 
             await mysqlQuery(query, context.connection);
 
-            return { blocked: response[0] ? false : true }
+            return { isBlocking: response[0] ? false : true }
         }
         catch (err: any) {
             throw new Error(err)
