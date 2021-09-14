@@ -104,7 +104,7 @@ export default function Profile(props: Props) {
                                             </Button>
                                         }
                                     />
-                                    <DeleteUserButton username={username} />
+                                    <DeleteUserButton userId={state.id} />
                                 </>
                             }
                             {state && state.username !== username ?

@@ -6,10 +6,11 @@ import { DELETE_USER } from '../graphql/Mutations';
 import { Button, Confirm, Icon, Popup } from 'semantic-ui-react';
 
 type Props = {
-    username: string
+    userId: string
 };
 
 export default function DeleteUserButton(props: Props) {
+    const { userId } = props;
     const [open, setOpen] = useState(false);
 
     const [deleteUser, { error, loading }] = useMutation(DELETE_USER, {
@@ -17,7 +18,7 @@ export default function DeleteUserButton(props: Props) {
             localStorage.removeItem('token');
             window.location.assign('/');
         },
-        variables: { username: props.username },
+        variables: { id: userId },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 

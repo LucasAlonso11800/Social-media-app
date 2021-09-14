@@ -160,7 +160,7 @@ export const DELETE_USER = {
     },
     async resolve(_: any, args: { id: string }, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if (args.id !== user.id) throw new Error("Action not allowed");
+        if (args.id !== user.id.toString()) throw new Error("Action not allowed");
 
         try {
             const deleteUserQuery = `DELETE FROM users WHERE user_id = ${args.id}`;

@@ -57,10 +57,8 @@ export const BLOCK_USER = gql`
 `;
 
 export const DELETE_USER = gql`
-    mutation delete_user($username: String!){
-        delete_user(username: $username){
-            username
-        }
+    mutation delete_user($id: ID!){
+        delete_user(id: $id)
     }
 `;
 
