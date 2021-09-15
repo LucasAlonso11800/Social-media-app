@@ -11,7 +11,7 @@ import { IContext, IMySQLQuery, IPost } from '../../Interfaces';
 type Args = {
     body: string,
     postId: string,
-    username: string
+    userId: string
 };
 
 export const CREATE_POST = {
@@ -58,13 +58,16 @@ export const DELETE_POST = {
     type: GraphQLString,
     args: {
         postId: { type: new GraphQLNonNull(GraphQLID) },
-        username: { type: new GraphQLNonNull(GraphQLString) }
+        userId: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(_: any, args: Omit<Args, "body">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if (user.username !== args.username) throw new Error("Action not allowed");
+
+        const { postId, userId } = args;
+        if (userId !== user.id.toString()) throw new Error("Action not allowed");
+
         try {
-            const deletePostQuery = `DELETE FROM posts WHERE post_id = ${args.postId}`;
+            const deletePostQuery = `DELETE FROM posts WHERE post_id = ${postId}`;
             await mysqlQuery(deletePostQuery, context.connection);
             return 'Post deleted'
         }

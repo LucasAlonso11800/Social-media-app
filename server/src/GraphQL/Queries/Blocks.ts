@@ -18,6 +18,11 @@ export const GET_BLOCK_STATUS = {
     },
     async resolve(_: any, args: Args, context: IContext) {
         const { blockingUserId, blockedUserId } = args;
+        
+        if (blockingUserId === null) return { 
+            isBlocking: false,
+            isBlocked: false
+        };
 
         try {
             const blockingRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id`;

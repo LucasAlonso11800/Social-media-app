@@ -92,8 +92,8 @@ export const CREATE_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-    mutation delete_post($postId: ID!){
-        delete_post(postId: $postId)
+    mutation delete_post($postId: ID!, $userId: ID!) {
+        delete_post(postId: $postId, userId: $userId)
     }
 `;
 
@@ -136,21 +136,8 @@ export const ADD_COMMENT = gql`
 `;
 
 export const DELETE_COMMENT = gql`
-    mutation delete_comment($commentId: ID!, $postId: ID!){
-        delete_comment(commentId: $commentId, postId: $postId) {
-            id
-            comments{
-                id
-                username
-                createdAt
-                body
-                likes {
-                    id
-                    username
-                    createdAt
-                }
-            }
-        }   
+    mutation delete_comment($commentId: ID!, $userId: ID!){
+        delete_comment(commentId: $commentId, userId: $userId)   
     }  
 `;
 

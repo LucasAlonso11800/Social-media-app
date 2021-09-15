@@ -1,48 +1,62 @@
-import React, { useState } from 'react';
-// Semantic
-import { Button, Icon, Confirm, Popup } from 'semantic-ui-react';
+import React, { useContext } from 'react';
+// Context
+import { GlobalContext } from '../context/GlobalContext';
+// Components
+import { Button, Icon, Popup } from 'semantic-ui-react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { DELETE_POST, DELETE_COMMENT } from '../graphql/Mutations';
-import { GET_POSTS_FROM_USER } from '../graphql/Queries';
-import { IPost } from '../Interfaces';
+import { GET_COMMENTS_FROM_POSTS, GET_POSTS_FROM_USER } from '../graphql/Queries';
+// Interfaces
+import { IComment, IPost } from '../Interfaces';
 
 type Props = {
-    postId: string,
+    postId?: string,
     commentId?: string,
 };
 
 type QueryResult = {
-    posts_from_user: IPost[]
+    posts_from_user: IPost[],
+    comments_from_posts: IComment[]
 }
 
-function DeleteButton(props: Props) {
-    const [open, setOpen] = useState<boolean>(false);
+export default function DeleteButton(props: Props) {
+    const { state } = useContext(GlobalContext);
     const { postId, commentId } = props;
 
     const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
 
-    const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
-
     const [deleteMutation, { error }] = useMutation(mutation, {
         update(proxy) {
             if (!commentId) {
-                const data: QueryResult = proxy.readQuery({
+                const data: Pick<QueryResult, 'posts_from_user'> = proxy.readQuery({
                     query: GET_POSTS_FROM_USER,
-                    variables: { username }
-                }) as QueryResult;
+                    variables: { userId: state?.id }
+                }) as Pick<QueryResult, 'posts_from_user'>;
 
                 proxy.writeQuery({
                     query: GET_POSTS_FROM_USER,
-                    variables: { username },
+                    variables: { userId: state?.id },
                     data: { posts_from_user: data.posts_from_user.filter(p => p.postId !== postId) }
                 });
             }
-            setOpen(false);
+            else {
+                const data: Pick<QueryResult, 'comments_from_posts'> = proxy.readQuery({
+                    query: GET_COMMENTS_FROM_POSTS,
+                    variables: { postId }
+                }) as Pick<QueryResult, 'comments_from_posts'>;
+
+                proxy.writeQuery({
+                    query: GET_COMMENTS_FROM_POSTS,
+                    variables: { postId },
+                    data: { comments_from_posts: data.comments_from_posts.filter(c => c.id !== commentId) }
+                });
+            }
         },
         variables: {
             postId,
-            commentId
+            commentId,
+            userId: state?.id
         },
         onError: (): any => console.log(JSON.stringify(error, null, 2)),
     });
@@ -57,19 +71,12 @@ function DeleteButton(props: Props) {
                         as="div"
                         color='red'
                         floated="right"
-                        onClick={() => setOpen(true)}
+                        onClick={() => deleteMutation()}
                     >
                         <Icon name="trash alternate" />
                     </Button>
                 }
             />
-            <Confirm
-                open={open}
-                onCancel={() => setOpen(false)}
-                onConfirm={() => deleteMutation()}
-            />
         </>
     )
 };
-
-export default DeleteButton;

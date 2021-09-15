@@ -11,7 +11,7 @@ type Args = {
     postId: string,
     body: string,
     commentId: string,
-    username: string
+    userId: string
 };
 
 export const ADD_COMMENT = {
@@ -67,13 +67,16 @@ export const DELETE_COMMENT = {
     type: GraphQLString,
     args: {
         commentId: { type: new GraphQLNonNull(GraphQLID) },
-        username: { type: new GraphQLNonNull(GraphQLString) }
+        userId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: Pick<Args, "commentId" | "username">, context: IContext) {
+    async resolve(_: any, args: Pick<Args, "commentId" | "userId">, context: IContext) {
         const user = checkAuth(context) as JwtPayload;
-        if (args.username !== user.username) throw new Error("Action not allowed");
+
+        const { commentId, userId } = args;
+        if (userId !== user.id.toString()) throw new Error("Action not allowed");
+
         try {
-            const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${args.commentId}`;
+            const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${commentId}`;
             await mysqlQuery(deleteCommentQuery, context.connection);
             return "Comment deleted"
         }
