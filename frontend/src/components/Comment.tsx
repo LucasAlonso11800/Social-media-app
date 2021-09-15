@@ -8,26 +8,28 @@ import moment from 'moment';
 import { GlobalContext } from '../context/GlobalContext';
 // Components
 import DeleteButton from './DeleteButton';
+import LikeButton from './LikeButton';
 
 type Props = {
     comment: IComment;
     postId: string;
 }
 
-function Comment(props: Props) {
+export default function Comment(props: Props) {
     const { comment, postId } = props;
     const { state } = useContext(GlobalContext);
 
     return (
         <Card fluid>
             <Card.Content>
-                {state && state.username === comment.username && <DeleteButton postId={postId} commentId={comment.id}/>}
+                {state && state.username === comment.username && <DeleteButton postId={postId} commentId={comment.id} />}
                 <Card.Header>{comment.username}</Card.Header>
                 <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{comment.body}</Card.Description>
             </Card.Content>
+            <Card.Content extra>
+                <LikeButton commentId={comment.id} />
+            </Card.Content>
         </Card>
     )
 };
-
-export default Comment;

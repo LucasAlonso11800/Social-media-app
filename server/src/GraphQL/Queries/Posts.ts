@@ -75,8 +75,9 @@ export const GET_HOME_PAGE_POSTS = {
     },
     async resolve(_: any, args: { userId: string | null }, context: IContext) {
         const { userId } = args;
+
         try {
-            const getPostsQuery = userId ?
+            const getPostsQuery =
                 `SELECT 
                 post_id AS postId,
                 post_body AS body,
@@ -93,10 +94,13 @@ export const GET_HOME_PAGE_POSTS = {
                 ON profiles.profile_user_id = followee_id
                 WHERE follower_id = ${args.userId}
                 ORDER BY posts.post_created_at DESC
-                LIMIT 200
-            `
-                :
-                `SELECT
+                LIMIT 100
+            `;
+            const postsFromFollowings = await mysqlQuery(getPostsQuery, context.connection)
+            if(postsFromFollowings.length === 100) return postsFromFollowings
+
+            const fillingPostsQuery = `
+                SELECT
                     post_id AS postId,
                     post_body AS body,
                     post_user_id AS userId,
@@ -109,10 +113,12 @@ export const GET_HOME_PAGE_POSTS = {
                     JOIN profiles
                     ON profiles.profile_user_id = post_user_id
                     ORDER BY post_created_at DESC
-                    LIMIT 200
+                    LIMIT ${100 - postsFromFollowings.length}
             `;
 
-            return await mysqlQuery(getPostsQuery, context.connection)
+            const fillingPosts = await mysqlQuery(fillingPostsQuery, context.connection);
+            const response = [...postsFromFollowings, ...fillingPosts].sort((a, b) => a.post_created_at - b.post_created_at)
+            return response
         }
         catch (err: any) {
             throw new Error(err)

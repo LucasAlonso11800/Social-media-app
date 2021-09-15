@@ -18,7 +18,7 @@ export default function HomePage() {
     const { state } = useContext(GlobalContext);
 
     const { error, loading, data } = useQuery<QueryResult>(GET_HOME_PAGE_POSTS, {
-        variables: { id: state !== null ? state.id : null },
+        variables: { userId: state?.id },
         onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
