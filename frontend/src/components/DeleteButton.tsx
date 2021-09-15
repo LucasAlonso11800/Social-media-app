@@ -4,11 +4,11 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import { Button, Icon, Popup } from 'semantic-ui-react';
 // GraphQL
-import { useMutation } from '@apollo/client';
+import { ApolloCache, useMutation } from '@apollo/client';
 import { DELETE_POST, DELETE_COMMENT } from '../graphql/Mutations';
 import { GET_COMMENTS_FROM_POSTS, GET_POSTS_FROM_USER } from '../graphql/Queries';
 // Interfaces
-import { IComment, IPost } from '../Interfaces';
+import { GlobalState, IComment, IPost } from '../Interfaces';
 
 type Props = {
     postId?: string,
@@ -28,30 +28,7 @@ export default function DeleteButton(props: Props) {
 
     const [deleteMutation, { error }] = useMutation(mutation, {
         update(proxy) {
-            if (!commentId) {
-                const data: Pick<QueryResult, 'posts_from_user'> = proxy.readQuery({
-                    query: GET_POSTS_FROM_USER,
-                    variables: { userId: state?.id }
-                }) as Pick<QueryResult, 'posts_from_user'>;
-
-                proxy.writeQuery({
-                    query: GET_POSTS_FROM_USER,
-                    variables: { userId: state?.id },
-                    data: { posts_from_user: data.posts_from_user.filter(p => p.postId !== postId) }
-                });
-            }
-            else {
-                const data: Pick<QueryResult, 'comments_from_posts'> = proxy.readQuery({
-                    query: GET_COMMENTS_FROM_POSTS,
-                    variables: { postId }
-                }) as Pick<QueryResult, 'comments_from_posts'>;
-
-                proxy.writeQuery({
-                    query: GET_COMMENTS_FROM_POSTS,
-                    variables: { postId },
-                    data: { comments_from_posts: data.comments_from_posts.filter(c => c.id !== commentId) }
-                });
-            }
+            return commentId ? deleteComment(proxy, postId, commentId) : deletePost(proxy, postId, state);
         },
         variables: {
             postId,
@@ -79,4 +56,30 @@ export default function DeleteButton(props: Props) {
             />
         </>
     )
+};
+
+function deletePost(proxy: ApolloCache<any>, postId: string | undefined, state: GlobalState){
+    const data: Pick<QueryResult, 'posts_from_user'> = proxy.readQuery({
+        query: GET_POSTS_FROM_USER,
+        variables: { userId: state?.id }
+    }) as Pick<QueryResult, 'posts_from_user'>;
+
+    proxy.writeQuery({
+        query: GET_POSTS_FROM_USER,
+        variables: { userId: state?.id },
+        data: { posts_from_user: data.posts_from_user.filter(p => p.postId !== postId) }
+    });
+};
+
+function deleteComment(proxy: ApolloCache<any>, postId: string | undefined, commentId: string | undefined): void{
+    const data: Pick<QueryResult, 'comments_from_posts'> = proxy.readQuery({
+        query: GET_COMMENTS_FROM_POSTS,
+        variables: { postId }
+    }) as Pick<QueryResult, 'comments_from_posts'>;
+
+    proxy.writeQuery({
+        query: GET_COMMENTS_FROM_POSTS,
+        variables: { postId },
+        data: { comments_from_posts: data.comments_from_posts.filter(c => c.id !== commentId) }
+    });
 };

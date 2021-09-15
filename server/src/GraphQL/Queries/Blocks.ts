@@ -19,7 +19,7 @@ export const GET_BLOCK_STATUS = {
     async resolve(_: any, args: Args, context: IContext) {
         const { blockingUserId, blockedUserId } = args;
         
-        if (blockingUserId === null) return { 
+        if (blockingUserId === undefined) return { 
             isBlocking: false,
             isBlocked: false
         };

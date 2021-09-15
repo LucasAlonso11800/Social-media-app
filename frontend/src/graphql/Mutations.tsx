@@ -67,26 +67,12 @@ export const DELETE_USER = gql`
 export const CREATE_POST = gql`
     mutation create_post($body: String!){
         create_post(body: $body){
-            id
+            postId
             body
-            username
             createdAt
-            comments{
-                id
-                username
-                body
-                createdAt
-                likes {
-                    id
-                    username
-                    createdAt
-                }
-            }
-            likes {
-                id
-                username
-                createdAt
-            }
+            userId
+            username
+            profileName
         }
     }
 `;
@@ -120,17 +106,10 @@ export const ADD_COMMENT = gql`
     mutation add_comment($postId: ID!, $body: String!){
         add_comment(postId: $postId, body: $body){
             id
-            comments{
-                id
-                body
-                createdAt
-                username
-                likes {
-                    id
-                    username
-                    createdAt
-                }
-            }
+            body
+            username
+            profileName
+            createdAt
         }
     }
 `;

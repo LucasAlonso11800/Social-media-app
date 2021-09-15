@@ -5,42 +5,59 @@ import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client'
 import { ADD_COMMENT } from '../graphql/Mutations';
 // Interfaces
-import { IAddComment } from '../Interfaces';
+import { IAddComment, IComment } from '../Interfaces';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { GET_COMMENTS_FROM_POSTS } from '../graphql/Queries';
 
 type Props = {
     postId: string
+};
+
+type MutationResult = {
+    add_comment: IComment
+};
+
+type QueryResult = {
+    comments_from_posts: IComment[]
 };
 
 const validationSchema = yup.object({
     body: yup.string().max(140, 'It can not be longer than 140 characters').required("Comment must have a body")
 });
 
-function CommentForm(props: Props) {
+export default function CommentForm(props: Props) {
+    const { postId } = props
     const [queryVariables, setQueryVariables] = useState<IAddComment>();
 
     const formik = useFormik({
-        initialValues: {
-            body: ''
-        },
+        initialValues: { body: '' },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            addComment()
-            setQueryVariables(values)
-        } 
+        onSubmit: (values) => setQueryVariables(values)
     });
 
-    const [addComment, { error }] = useMutation(ADD_COMMENT, {
-        update() {
-            formik.values.body = ""
+    const [addComment, { error }] = useMutation<MutationResult>(ADD_COMMENT, {
+        update(proxy, result) {
+            const data: QueryResult = proxy.readQuery({
+                query: GET_COMMENTS_FROM_POSTS,
+                variables: { postId }
+            }) as QueryResult;
+
+            proxy.writeQuery({
+                query: GET_COMMENTS_FROM_POSTS,
+                variables: { postId },
+                data: { comments_from_posts: [result.data?.add_comment, ...data.comments_from_posts] }
+            });
+
+            formik.setFieldValue('body', '');
+            formik.setTouched({ body: false });
         },
         variables: {
             body: queryVariables?.body,
-            postId: props.postId
+            postId
         },
-        onError: () => console.log("Error")
+        onError: (): any => console.log(JSON.stringify(error, null, 2))
     });
 
     useEffect(() => {
@@ -71,6 +88,13 @@ function CommentForm(props: Props) {
                     Comment
                 </Button>
             </Form.Group>
+            {formik.touched.body && formik.errors.body &&
+                <div className="ui red message">
+                    <ul className="list">
+                        <li>{formik.errors.body}</li>
+                    </ul>
+                </div>
+            }
             {error !== undefined ?
                 <div className="ui red message">
                     <ul className="list">
@@ -80,6 +104,4 @@ function CommentForm(props: Props) {
                 : null}
         </Form>
     )
-}
-
-export default CommentForm
+};

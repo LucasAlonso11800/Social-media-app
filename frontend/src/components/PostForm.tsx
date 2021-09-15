@@ -11,47 +11,46 @@ import * as yup from 'yup';
 // Interfaces
 import { ICreatePost, IPost } from '../Interfaces';
 
+type Props = {
+    userId: string
+};
+
 type QueryResult = {
     posts_from_user: IPost[]
-}
+};
 
 const validationSchema = yup.object({
-    body: yup.string().max(140, 'It can not be longer than 140 characters').required()
+    body: yup.string().max(140, 'It can not be longer than 140 characters').required("Post can't be empty")
 });
 
-export default function PostForm() {
+export default function PostForm(props: Props) {
+    const { userId } = props;
     const [queryVariables, setQueryVariables] = useState<ICreatePost>();
 
-    const username = window.location.pathname.substring(6).replaceAll('%20', ' ');
+    const formik = useFormik({
+        initialValues: { body: '' },
+        validationSchema: validationSchema,
+        onSubmit: (values) => setQueryVariables(values)
+    });
 
     const [createPost, { error, loading }] = useMutation(CREATE_POST, {
         update(proxy, result) {
             const data: QueryResult = proxy.readQuery({
                 query: GET_POSTS_FROM_USER,
-                variables: { username }
+                variables: { userId }
             }) as QueryResult;
 
             proxy.writeQuery({
                 query: GET_POSTS_FROM_USER,
-                variables: { username },
+                variables: { userId },
                 data: { posts_from_user: [result.data.create_post, ...data.posts_from_user] }
             });
 
-            formik.values.body = ''
+            formik.setFieldValue('body', '');
+            formik.setTouched({ body: false });
         },
         variables: queryVariables,
         onError: (): any => console.log(JSON.stringify(error, null, 2)),
-    });
-
-    const formik = useFormik({
-        initialValues: {
-            body: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            if(error !== undefined) createPost()
-            setQueryVariables(values)
-        }
     });
 
     useEffect(() => {
@@ -76,6 +75,13 @@ export default function PostForm() {
                     Post
                 </Button>
             </Form.Group>
+            {formik.touched.body && formik.errors.body &&
+                    <div className="ui red message">
+                        <ul className="list">
+                            <li>{formik.errors.body}</li>
+                        </ul>
+                    </div>
+                }
             {error !== undefined ?
                 <div className="ui red message">
                     <ul className="list">

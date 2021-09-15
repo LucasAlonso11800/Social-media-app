@@ -26,7 +26,7 @@ export default function UserPage() {
     });
 
     if(error && error.message === "Error: User not found") window.location.assign('/404');
-
+    console.log(userId, state?.id, state?.id === userId, typeof userId, typeof state?.id)
     return (
         <Container>
             <Grid>
@@ -39,9 +39,9 @@ export default function UserPage() {
                         <Profile userId={userId} />
                     }
                 </Grid.Row>
-                {state && state.id === userId &&
+                {state && state.id.toString() === userId &&
                     <Grid.Row>
-                        <PostForm />
+                        <PostForm userId={userId}/>
                     </Grid.Row>
                 }
                 <Grid.Row>
