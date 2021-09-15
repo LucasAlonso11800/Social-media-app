@@ -18,20 +18,12 @@ export const GET_HOME_PAGE_POSTS = gql`
 export const GET_SINGLE_POST = gql`
     query($id: ID!){
         single_post(id: $id){
-            id
+            postId
             body
             createdAt
+            userId
             username
-            comments{
-                id
-                body
-                username
-                createdAt
-            }
-            likes {
-                id
-                username
-            }
+            profileName
         }
     }
 `;
@@ -147,6 +139,18 @@ export const GET_FOLLOW_STATUS = gql`
 export const GET_COMMENT_COUNT = gql`
     query($postId: ID!){
         comment_count(postId: $postId)
+    }
+`;
+
+export const GET_COMMENTS_FROM_POSTS = gql`
+    query($postId: ID!){
+        comments_from_posts(postId: $postId){
+            id
+            body
+            username
+            profileName
+            createdAt
+        }
     }
 `;
 

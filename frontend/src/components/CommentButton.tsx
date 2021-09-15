@@ -25,12 +25,16 @@ export default function CommentButton(props: Props) {
 
     return (
         <Popup
-            content="Comment"
+            content="Comments"
             inverted
             trigger={
-                <Button labelPosition="right" as={Link} to={`/posts/${username}/${postId}`}>
+                <Button
+                    labelPosition="right"
+                    as={window.location.pathname.startsWith('/posts') ? "div" : Link}
+                    to={`/posts/${username}/${postId}`}
+                >
                     <Button basic as="div" color='twitter'>
-                        <Icon name="comment" />
+                        <Icon name="comments" />
                     </Button>
                     <Label basic color="blue" pointing="left">
                         {data?.comment_count}

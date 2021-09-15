@@ -49,29 +49,23 @@ export interface IPostsBySearchQuery{
     posts_by_search: IPost[]
 };
 
-export interface ISinglePostQuery{
-    single_post: IPost
-};
-
 export interface IPost {
-    id: string
     postId: string
     body: string
     createdAt: string
     userId: string
     username: string
     profileName: string
-    comments: IComment[],
-    likes: ILike[]
 };
 
 // Comments
 
 export interface IComment {
+    id: string
     body: string
     createdAt: string
-    id: string
     username: string
+    profileName: string
 };
 
 // Likes
@@ -103,6 +97,7 @@ export interface IProfile {
 // Followers
 
 export interface IFollower {
+    id: string
     username: string
 };
 

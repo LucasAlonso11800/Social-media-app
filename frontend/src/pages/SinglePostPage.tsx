@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-import { RouteComponentProps } from 'react-router';
 // GraphQL
 import { useQuery } from '@apollo/client'
-import { GET_SINGLE_POST } from '../graphql/Queries'
+import { GET_COMMENTS_FROM_POSTS, GET_SINGLE_POST } from '../graphql/Queries'
 // Interfaces
-import { ISinglePostQuery } from '../Interfaces';
+import { IComment, IPost } from '../Interfaces';
 import { Grid, Container, Dimmer, Loader } from 'semantic-ui-react';
 // Components
 import Comment from '../components/Comment';
@@ -13,18 +12,27 @@ import CommentForm from '../components/CommentForm';
 import { GlobalContext } from '../context/GlobalContext';
 import PostCard from '../components/PostCard';
 
-export default function SinglePostPage(props: RouteComponentProps) {
+type QueryResult = {
+    single_post: IPost,
+    comments_from_posts: IComment[]
+}
+
+export default function SinglePostPage() {
     const { state } = useContext(GlobalContext);
 
     const postId = window.location.pathname.split('/')[3];
 
-    const { error, loading, data: post } = useQuery<ISinglePostQuery>(GET_SINGLE_POST, { variables: { id: postId } });
+    const { error: postError, loading, data: post } = useQuery<Pick<QueryResult, "single_post">>(GET_SINGLE_POST, {
+        variables: { id: postId },
+        onError: (): any => console.log(JSON.stringify(postError, null, 2))
+    });
 
-    if (error) {
-        if (error.message === "Error: Post not found" || /CastError: Cast to ObjectId failed/.test(error.message)) {
-            window.location.assign('/404')
-        }
-    };
+    const { error: commentsError, data: comments } = useQuery<Pick<QueryResult, "comments_from_posts">>(GET_COMMENTS_FROM_POSTS, {
+        variables: { postId },
+        onError: (): any => console.log(JSON.stringify(commentsError, null, 2)),
+    });
+
+    if (postError && postError.message === "Error: Post not found") window.location.assign('/404');
 
     return (
         <Container>
@@ -37,7 +45,7 @@ export default function SinglePostPage(props: RouteComponentProps) {
                         <Grid.Column width="16">
                             {post?.single_post && <PostCard post={post.single_post} />}
                             {state ? <CommentForm postId={postId} /> : null}
-                            {post?.single_post.comments.map(c => <Comment key={c.id} comment={c} postId={post?.single_post.id} />)}
+                            {comments?.comments_from_posts?.map(c => <Comment key={c.id} comment={c} postId={postId} />)}
                         </Grid.Column>
                     }
                 </Grid.Row>

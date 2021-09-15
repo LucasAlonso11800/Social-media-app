@@ -35,7 +35,7 @@ function DeleteButton(props: Props) {
                 proxy.writeQuery({
                     query: GET_POSTS_FROM_USER,
                     variables: { username },
-                    data: { posts_from_user: data.posts_from_user.filter(p => p.id !== postId) }
+                    data: { posts_from_user: data.posts_from_user.filter(p => p.postId !== postId) }
                 });
             }
             setOpen(false);

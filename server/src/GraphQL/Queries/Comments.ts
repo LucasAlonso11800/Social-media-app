@@ -25,6 +25,7 @@ export const GET_COMMENTS_FROM_POSTS = {
                     JOIN profiles
                     ON profiles.profile_user_id = comment_user_id
                     WHERE comment_post_id = ${args.postId}
+                    ORDER BY comment_created_at DESC
             `;
             return await mysqlQuery(getCommentsQuery, context.connection)
         }

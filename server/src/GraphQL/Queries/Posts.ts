@@ -18,10 +18,13 @@ export const GET_SINGLE_POST = {
                     post_body AS body,
                     post_created_at AS createdAt,
                     post_user_id AS userId,
-                    user_username AS username
+                    user_username AS username,
+                    profile_profile_name AS profileName
                     FROM posts
                     JOIN users
                     ON users.user_id = post_user_id
+                    JOIN profiles
+                    ON profiles.profile_user_id = post_user_id
                     WHERE post_id = ${args.id}
             `;
             const response: IPost[] = await mysqlQuery(getPostQuery, context.connection);
