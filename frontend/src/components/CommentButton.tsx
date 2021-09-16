@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 // GraphQL
 import { useQuery } from '@apollo/client';
 import { GET_COMMENT_COUNT } from '../graphql/Queries';
-// Semantic
+// Components
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     postId: string
@@ -18,9 +20,9 @@ type QueryResult = {
 export default function CommentButton(props: Props) {
     const { postId, username } = props;
 
-    const { error, data } = useQuery<QueryResult>(GET_COMMENT_COUNT, {
+    const { data } = useQuery<QueryResult>(GET_COMMENT_COUNT, {
         variables: { postId },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (

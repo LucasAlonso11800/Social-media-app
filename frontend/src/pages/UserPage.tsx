@@ -11,6 +11,8 @@ import { Grid, Container, CardGroup, Dimmer, Loader } from 'semantic-ui-react';
 import PostCard from '../components/PostCard';
 import Profile from '../components/Profile';
 import PostForm from '../components/PostForm';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type QueryResult = {
     posts_from_user: IPost[]
@@ -20,13 +22,11 @@ export default function UserPage() {
     const { state } = useContext(GlobalContext);
     const userId = window.location.pathname.substring(6);
 
-    const { error, loading, data } = useQuery<QueryResult>(GET_POSTS_FROM_USER, {
+    const { loading, data } = useQuery<QueryResult>(GET_POSTS_FROM_USER, {
         variables: { userId },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
-    if(error && error.message === "Error: User not found") window.location.assign('/404');
-    console.log(userId, state?.id, state?.id === userId, typeof userId, typeof state?.id)
     return (
         <Container>
             <Grid>

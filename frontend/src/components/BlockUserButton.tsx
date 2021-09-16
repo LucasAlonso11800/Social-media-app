@@ -6,6 +6,8 @@ import { BLOCK_USER } from '../graphql/Mutations';
 import { Button, Icon, Popup } from 'semantic-ui-react';
 // Interfaces
 import { IBlockStatus } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     blockingUserId: string
@@ -21,13 +23,13 @@ type MutationResult = {
 export default function BlockUserButton(props: Props) {
     const { blockingUserId, blockedUserId, isBlocking, setIsBlocking } = props;
 
-    const [blockUser, { error, loading }] = useMutation<MutationResult>(BLOCK_USER, {
+    const [blockUser, { loading }] = useMutation<MutationResult>(BLOCK_USER, {
         onCompleted: (data) => setIsBlocking(data.block_user.isBlocking),
         variables: {
             blockingUserId,
             blockedUserId
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (

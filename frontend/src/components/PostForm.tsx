@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-// Semantic
-import { Form, Button } from 'semantic-ui-react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '../graphql/Mutations';
 import { GET_POSTS_FROM_USER } from '../graphql/Queries';
+// Components
+import { Form, Button } from 'semantic-ui-react';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Interfaces
 import { ICreatePost, IPost } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string
@@ -50,7 +52,7 @@ export default function PostForm(props: Props) {
             formik.setTouched({ body: false });
         },
         variables: queryVariables,
-        onError: (): any => console.log(JSON.stringify(error, null, 2)),
+        onError: (error): unknown => handleError(error, undefined),
     });
 
     useEffect(() => {
@@ -76,12 +78,12 @@ export default function PostForm(props: Props) {
                 </Button>
             </Form.Group>
             {formik.touched.body && formik.errors.body &&
-                    <div className="ui red message">
-                        <ul className="list">
-                            <li>{formik.errors.body}</li>
-                        </ul>
-                    </div>
-                }
+                <div className="ui red message">
+                    <ul className="list">
+                        <li>{formik.errors.body}</li>
+                    </ul>
+                </div>
+            }
             {error !== undefined ?
                 <div className="ui red message">
                     <ul className="list">

@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { RouteComponentProps } from 'react-router';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../graphql/Mutations';
-// Semantic
+// Components
 import { Form, Button, Container } from 'semantic-ui-react';
 // Form
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
 import { ILoginUser, EActionType } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 const validationSchema = yup.object({
     username: yup
@@ -24,7 +25,7 @@ const validationSchema = yup.object({
         .required('A password must be provided'),
 });
 
-function LoginPage(props: RouteComponentProps) {
+export default function LoginPage() {
     const { dispatch } = useContext(GlobalContext);
 
     const [queryVariables, setQueryVariables] = useState<ILoginUser>();
@@ -35,10 +36,10 @@ function LoginPage(props: RouteComponentProps) {
                 type: EActionType.LOGIN,
                 payload: result.data.login_user
             });
-            props.history.push('/');
+            window.location.assign('/');
         },
         variables: queryVariables,
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     const formik = useFormik({
@@ -48,7 +49,7 @@ function LoginPage(props: RouteComponentProps) {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            if(error !== undefined && queryVariables === values) return loginUser()
+            if (error !== undefined && queryVariables === values) return loginUser()
             setQueryVariables(values)
         }
     });
@@ -106,6 +107,4 @@ function LoginPage(props: RouteComponentProps) {
             </Form>
         </Container>
     )
-}
-
-export default LoginPage
+};

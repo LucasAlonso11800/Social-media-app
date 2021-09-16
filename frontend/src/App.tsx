@@ -9,8 +9,10 @@ import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@ap
 import { setContext } from '@apollo/client/link/context';
 // Context
 import { GlobalProvider, GlobalContext } from './context/GlobalContext';
-// Pages
+// Components
 import Navbar from './components/Navbar'
+import Snackbar from './components/Snackbar';
+// Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -45,6 +47,7 @@ export default function App() {
             <GlobalProvider>
                 <Router>
                     <Navbar />
+                    <Snackbar />
                     <Route exact path="/" component={HomePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />

@@ -9,17 +9,19 @@ import { IPost } from '../Interfaces';
 // Components
 import { Grid, Container, CardGroup, Dimmer, Loader } from 'semantic-ui-react';
 import PostCard from '../components/PostCard';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type QueryResult = {
     home_page_posts: IPost[]
 };
 
 export default function HomePage() {
-    const { state } = useContext(GlobalContext);
+    const { state, setSnackbarOpen } = useContext(GlobalContext);
 
-    const { error, loading, data } = useQuery<QueryResult>(GET_HOME_PAGE_POSTS, {
+    const { loading, data } = useQuery<QueryResult>(GET_HOME_PAGE_POSTS, {
         variables: { userId: state?.id },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, setSnackbarOpen)
     });
 
     return (

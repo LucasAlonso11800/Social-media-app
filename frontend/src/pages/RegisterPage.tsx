@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
-import { RouteComponentProps } from 'react-router';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../graphql/Mutations';
-// Semantic
+// Components
 import { Form, Button, Container, Select } from 'semantic-ui-react';
 // Form
 import * as yup from 'yup';
@@ -13,6 +12,8 @@ import { useFormik } from 'formik';
 // Interfaces
 import { IAddUser, EActionType } from '../Interfaces';
 import { countries } from '../consts/Countries';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -44,13 +45,13 @@ const validationSchema = yup.object({
         .required('Please select a date'),
 });
 
-export default function RegisterPage(props: RouteComponentProps) {
+export default function RegisterPage() {
     const { dispatch } = useContext(GlobalContext);
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
     const [selectedCountry, setSelectedCountry] = useState('Argentina');
 
     const [addUser, { loading, error }] = useMutation(ADD_USER, {
-        update(proxy, result) {
+        update(_, result) {
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.add_user
@@ -61,7 +62,7 @@ export default function RegisterPage(props: RouteComponentProps) {
             ...queryVariables,
             country: selectedCountry
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     const formik = useFormik({

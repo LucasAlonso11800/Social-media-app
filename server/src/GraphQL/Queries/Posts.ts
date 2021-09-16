@@ -92,7 +92,7 @@ export const GET_HOME_PAGE_POSTS = {
                 ON users.user_id = followee_id
                 JOIN profiles
                 ON profiles.profile_user_id = followee_id
-                WHERE follower_id = ${args.userId}
+                WHERE follower_id = ${userId ? userId : 0}
                 ORDER BY posts.post_created_at DESC
                 LIMIT 100
             `;

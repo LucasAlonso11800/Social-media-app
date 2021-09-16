@@ -1,19 +1,20 @@
 import React, { useContext } from 'react'
-// GraphQL
-import { useQuery } from '@apollo/client';
-import { GET_USER_IMAGE } from '../graphql/Queries';
-// Semantic
-import { Card, Image } from 'semantic-ui-react';
 import moment from 'moment';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
+// GraphQL
+import { useQuery } from '@apollo/client';
+import { GET_USER_IMAGE } from '../graphql/Queries';
 // Components
+import { Card, Image } from 'semantic-ui-react';
 import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 // Interfaces
 import { IPost } from '../Interfaces';
 import CommentButton from './CommentButton';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     post: IPost;
@@ -23,9 +24,9 @@ export default function PostCard(props: Props) {
     const { state } = useContext(GlobalContext);
     const { body, createdAt, postId, username, userId, profileName } = props.post;
 
-    const { error: imageError, data: image } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
+    const { data: image } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
         variables: { userId },
-        onError: (): any => console.log(JSON.stringify(imageError, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (

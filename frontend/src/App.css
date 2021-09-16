@@ -21,6 +21,33 @@ i.icon{
     margin-left: 2rem!important;
 }
 
+/* Snackbar */
+.snackbar{
+    position: absolute!important;
+    z-index: 500;
+    right: 0rem;
+}
+.snackbar.closed{
+    transform: translateX(200%);
+}
+.snackbar.open {
+    animation: snackbar-animation 5s ease-in-out forwards;
+}
+@keyframes snackbar-animation {
+    0% {
+        transform: translateX(200%)
+    }
+    10% {
+        transform: translateX(-10%)
+    }
+    80% {
+        transform: translateX(-10%)
+    }
+    100% {
+        transform: translateX(200%)
+    }
+}
+
 /* Search bar */
 .search-bar{
     width: 100%;

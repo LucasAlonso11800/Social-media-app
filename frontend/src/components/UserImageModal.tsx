@@ -5,6 +5,8 @@ import { EDIT_USER_IMAGE } from '../graphql/Mutations';
 // Components
 import { Modal, Image, Button } from 'semantic-ui-react';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     open: boolean
@@ -23,7 +25,7 @@ export default function UserImageModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [fileSizeError, setFileSizeError] = useState(false);
 
-    const [editImage, { error, loading }] = useMutation<{ edit_user_image: string }>(EDIT_USER_IMAGE, {
+    const [editImage, { loading }] = useMutation<{ edit_user_image: string }>(EDIT_USER_IMAGE, {
         onCompleted: (data) => {
             setUserImage(data.edit_user_image);
             setOpen(false);
@@ -32,7 +34,7 @@ export default function UserImageModal(props: Props) {
             image: image.src === userImage ? image.src : newImage,
             userId
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2)),
+        onError: (error): unknown => handleError(error, undefined),
     });
 
     const handleReaderLoaded = (readerEvt: any) => {

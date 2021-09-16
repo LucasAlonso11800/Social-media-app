@@ -8,6 +8,8 @@ import { GlobalContext } from '../context/GlobalContext';
 import { Button } from 'semantic-ui-react';
 // Interfaces
 import { IFollowStatus } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     followeeId: string
@@ -23,13 +25,13 @@ export default function FollowButton(props: Props) {
     const { state } = useContext(GlobalContext);
     const { followeeId, followStatus, setFollowStatus } = props;
 
-    const [followUser, { error, loading }] = useMutation<MutationResult>(FOLLOW_USER, {
+    const [followUser, { loading }] = useMutation<MutationResult>(FOLLOW_USER, {
         onCompleted: (data) => setFollowStatus(data.follow_user),
         variables: {
             followerId: state?.id,
             followeeId,
         },
-        onError: (): any => console.log(error, JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (

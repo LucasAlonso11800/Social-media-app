@@ -9,6 +9,8 @@ import { DELETE_POST, DELETE_COMMENT } from '../graphql/Mutations';
 import { GET_COMMENTS_FROM_POSTS, GET_POSTS_FROM_USER } from '../graphql/Queries';
 // Interfaces
 import { GlobalState, IComment, IPost } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     postId?: string,
@@ -26,7 +28,7 @@ export default function DeleteButton(props: Props) {
 
     const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
 
-    const [deleteMutation, { error }] = useMutation(mutation, {
+    const [deleteMutation] = useMutation(mutation, {
         update(proxy) {
             return commentId ? deleteComment(proxy, postId, commentId) : deletePost(proxy, postId, state);
         },
@@ -35,7 +37,7 @@ export default function DeleteButton(props: Props) {
             commentId,
             userId: state?.id
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2)),
+        onError: (error): unknown => handleError(error, undefined),
     });
 
     return (
@@ -58,7 +60,7 @@ export default function DeleteButton(props: Props) {
     )
 };
 
-function deletePost(proxy: ApolloCache<any>, postId: string | undefined, state: GlobalState){
+function deletePost(proxy: ApolloCache<any>, postId: string | undefined, state: GlobalState) {
     const data: Pick<QueryResult, 'posts_from_user'> = proxy.readQuery({
         query: GET_POSTS_FROM_USER,
         variables: { userId: state?.id }
@@ -71,7 +73,7 @@ function deletePost(proxy: ApolloCache<any>, postId: string | undefined, state: 
     });
 };
 
-function deleteComment(proxy: ApolloCache<any>, postId: string | undefined, commentId: string | undefined): void{
+function deleteComment(proxy: ApolloCache<any>, postId: string | undefined, commentId: string | undefined): void {
     const data: Pick<QueryResult, 'comments_from_posts'> = proxy.readQuery({
         query: GET_COMMENTS_FROM_POSTS,
         variables: { postId }

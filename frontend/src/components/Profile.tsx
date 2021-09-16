@@ -17,6 +17,8 @@ import FollowerInfo from './FollowerInfo';
 import ProfileUserImage from './ProfileUserImage';
 // Interfaces
 import { IBlockStatus, IFollowStatus, IProfile } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string;
@@ -38,31 +40,28 @@ export default function Profile(props: Props) {
     const [followStatus, setFollowStatus] = useState<IFollowStatus>();
     const [isBlocking, setIsBlocking] = useState<boolean>(false);
 
-    const { error, loading } = useQuery<Pick<QueryResult, 'profile'>>(GET_PROFILE, {
+    const { loading } = useQuery<Pick<QueryResult, 'profile'>>(GET_PROFILE, {
         onCompleted: (data) => setProfile(data.profile),
         variables: { userId },
-        onError: (): any => {
-            if(error?.message === "Error: User not found") return window.location.assign('/404');
-            console.log(JSON.stringify(error, null, 2))
-        } 
+        onError: (error): unknown => handleError(error, undefined)
     });
 
-    const { error: userImageError, loading: userImageLoading } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
+    const { loading: userImageLoading } = useQuery<{ user_image: string }>(GET_USER_IMAGE, {
         onCompleted: (data) => setUserImage(data.user_image),
         variables: { userId },
-        onError: (): any => console.log(JSON.stringify(userImageError, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
-    const { error: followStatusError } = useQuery<Pick<QueryResult, 'follow_status'>>(GET_FOLLOW_STATUS, {
+    useQuery<Pick<QueryResult, 'follow_status'>>(GET_FOLLOW_STATUS, {
         onCompleted: (data) => setFollowStatus(data.follow_status),
         variables: {
             followerId: state?.id,
             followeeId: userId
         },
-        onError: (): any => console.log(JSON.stringify(followStatusError, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
-    const { error: blockStatusError } = useQuery<Pick<QueryResult, 'block_status'>>(GET_BLOCK_STATUS, {
+    useQuery<Pick<QueryResult, 'block_status'>>(GET_BLOCK_STATUS, {
         onCompleted: (data) => {
             if (data.block_status.isBlocked) window.location.assign('/404');
             setIsBlocking(data.block_status.isBlocking);
@@ -71,7 +70,7 @@ export default function Profile(props: Props) {
             blockingUserId: state?.id,
             blockedUserId: userId
         },
-        onError: (): any => console.log(JSON.stringify(blockStatusError, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     if (profile) {

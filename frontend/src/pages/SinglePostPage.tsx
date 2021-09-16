@@ -11,6 +11,8 @@ import CommentForm from '../components/CommentForm';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 import PostCard from '../components/PostCard';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type QueryResult = {
     single_post: IPost,
@@ -22,17 +24,15 @@ export default function SinglePostPage() {
 
     const postId = window.location.pathname.split('/')[3];
 
-    const { error: postError, loading, data: post } = useQuery<Pick<QueryResult, "single_post">>(GET_SINGLE_POST, {
+    const { loading, data: post } = useQuery<Pick<QueryResult, "single_post">>(GET_SINGLE_POST, {
         variables: { id: postId },
-        onError: (): any => console.log(JSON.stringify(postError, null, 2))
+        onError: (error): unknown => handleError(error, undefined),
     });
-
-    const { error: commentsError, data: comments } = useQuery<Pick<QueryResult, "comments_from_posts">>(GET_COMMENTS_FROM_POSTS, {
+    
+    const { data: comments } = useQuery<Pick<QueryResult, "comments_from_posts">>(GET_COMMENTS_FROM_POSTS, {
         variables: { postId },
-        onError: (): any => console.log(JSON.stringify(commentsError, null, 2)),
+        onError: (error): unknown => handleError(error, undefined)
     });
-
-    if (postError && postError.message === "Error: Post not found") window.location.assign('/404');
 
     return (
         <Container>

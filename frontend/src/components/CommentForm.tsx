@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-// Semantic
-import { Form, Button } from 'semantic-ui-react';
 // GraphQL
 import { useMutation } from '@apollo/client'
 import { ADD_COMMENT } from '../graphql/Mutations';
+import { GET_COMMENTS_FROM_POSTS } from '../graphql/Queries';
+// Components
+import { Form, Button } from 'semantic-ui-react';
 // Interfaces
 import { IAddComment, IComment } from '../Interfaces';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { GET_COMMENTS_FROM_POSTS } from '../graphql/Queries';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     postId: string
@@ -57,7 +59,7 @@ export default function CommentForm(props: Props) {
             body: queryVariables?.body,
             postId
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     useEffect(() => {

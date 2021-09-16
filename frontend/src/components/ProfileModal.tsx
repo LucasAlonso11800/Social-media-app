@@ -10,6 +10,8 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
 import { IEditProfile, IProfile } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     open: boolean
@@ -34,7 +36,7 @@ export default function ProfileModal(props: Props) {
     const [newImage, setNewImage] = useState('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
-    const [editProfile, { error, loading }] = useMutation<{ edit_profile: IProfile }>(EDIT_PROFILE, {
+    const [editProfile, { loading }] = useMutation<{ edit_profile: IProfile }>(EDIT_PROFILE, {
         onCompleted: (data) => {
             setProfile(data.edit_profile)
             setOpen(false);
@@ -45,7 +47,7 @@ export default function ProfileModal(props: Props) {
             profileId: profile.id,
             userId
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     const formik = useFormik({

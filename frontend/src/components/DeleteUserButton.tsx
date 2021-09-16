@@ -4,6 +4,8 @@ import { useMutation } from '@apollo/client';
 import { DELETE_USER } from '../graphql/Mutations';
 // Components
 import { Button, Confirm, Icon, Popup } from 'semantic-ui-react';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string
@@ -13,13 +15,13 @@ export default function DeleteUserButton(props: Props) {
     const { userId } = props;
     const [open, setOpen] = useState(false);
 
-    const [deleteUser, { error, loading }] = useMutation(DELETE_USER, {
+    const [deleteUser, { loading }] = useMutation(DELETE_USER, {
         onCompleted: () => {
             localStorage.removeItem('token');
             window.location.assign('/');
         },
         variables: { id: userId },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (

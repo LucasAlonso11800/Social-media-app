@@ -6,10 +6,12 @@ import { LIKE_POST_OR_COMMENT } from '../graphql/Mutations';
 import { GET_LIKE_STATUS } from '../graphql/Queries';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
-// Semantic
+// Components
 import { Icon, Label, Button, Popup } from 'semantic-ui-react';
 // Interfaces
 import { ILikeStatus } from '../Interfaces';
+// Helpers
+import { handleError } from '../helpers/handleError';
 
 type Props = {
     postId?: string
@@ -25,20 +27,18 @@ export default function LikeButton(props: Props) {
     const { state } = useContext(GlobalContext);
     const [likeStatus, setLikeStatus] = useState<ILikeStatus>();
 
-    const { error } = useQuery(GET_LIKE_STATUS, {
-        onCompleted: (data: QueryResult) => {
-            setLikeStatus(data.like_status)
-        },
+    useQuery(GET_LIKE_STATUS, {
+        onCompleted: (data: QueryResult) => setLikeStatus(data.like_status),
         variables: {
             postId,
             commentId,
             userId: state !== null ? state.id : null,
             type: postId ? "P" : "C"
         },
-        onError: (): any => console.log(JSON.stringify(error, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
-    const [likePost, { loading, error: likeError }] = useMutation(LIKE_POST_OR_COMMENT, {
+    const [likePost, { loading }] = useMutation(LIKE_POST_OR_COMMENT, {
         onCompleted: (data) => {
             const newLikeStatus: ILikeStatus = {
                 count: data.like_post_or_comment.count,
@@ -51,7 +51,7 @@ export default function LikeButton(props: Props) {
             commentId,
             type: postId ? "P" : "C"
         },
-        onError: (): any => console.log(JSON.stringify(likeError, null, 2))
+        onError: (error): unknown => handleError(error, undefined)
     });
 
     return (
