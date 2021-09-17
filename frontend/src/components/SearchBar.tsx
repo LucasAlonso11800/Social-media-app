@@ -1,22 +1,16 @@
 import React from 'react';
 // Components
-import { Input, Select, Button, Icon, Popup } from 'semantic-ui-react';
+import { Input, Button, Icon, Popup } from 'semantic-ui-react';
 
 type Props = {
     loading: boolean
-    searchData: Function
+    searchData: () => void
     query: string
-    setQuery: Function
-    setLookingForPosts: Function
+    setQuery: React.Dispatch<React.SetStateAction<string>>
 };
 
 export default function SearchBar(props: Props) {
-    const { loading, searchData, query, setQuery, setLookingForPosts } = props
-
-    const options = [
-        { key: 'p', value: 'p', text: 'Posts' },
-        { key: 'u', value: 'u', text: 'Users' }
-    ];
+    const { loading, searchData, query, setQuery } = props
 
     return (
         <div className="search-bar">
@@ -28,7 +22,7 @@ export default function SearchBar(props: Props) {
                         as="div"
                         color="twitter"
                         disabled={loading}
-                        onClick={() => searchData({ variables: { query } })}
+                        onClick={() => searchData()}
                     >
                         <Icon name="search" />
                     </Button>
@@ -38,11 +32,6 @@ export default function SearchBar(props: Props) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Look for users or posts"
-            />
-            <Select
-                onChange={(e) => setLookingForPosts(e.currentTarget.innerText === 'Posts' ? true : false)}
-                defaultValue='p'
-                options={options}
             />
         </div>
     )

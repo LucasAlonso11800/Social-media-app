@@ -11,17 +11,9 @@ if (localStorage.getItem("token")) {
         localStorage.removeItem("token");
     } else {
         initialState = {
-            email: decodedToken.email,
             id: decodedToken.id,
             username: decodedToken.username,
-            token: localStorage.getItem("token") as string,
-            image: '',
-            country: decodedToken.country,
-            city: decodedToken.city,
-            birthDate: decodedToken.birthDate,
-            followers: decodedToken.followers,
-            following: decodedToken.following,
-            blockedUsers: decodedToken.blockedUsers,
+            token: localStorage.getItem("token") as string
         }
     }
 };

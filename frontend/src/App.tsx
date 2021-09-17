@@ -19,6 +19,7 @@ import RegisterPage from './pages/RegisterPage';
 import SinglePostPage from './pages/SinglePostPage';
 import UserPage from './pages/UserPage';
 import NotFoundPage from './pages/NotFoundPage';
+import SearchPage from './pages/SearchPage';
 
 const httpLink = createHttpLink({ uri: serverURL });
 
@@ -53,6 +54,7 @@ export default function App() {
                     <Route exact path="/register" component={RegisterPage} />
                     <Route exact path="/posts/:username/:postId" component={SinglePostPage} />
                     <Route exact path="/user/:username" component={UserPage} />
+                    <Route exact path="/search" component={SearchPage} />
                     <Route exact path="/404" component={NotFoundPage} />
                 </Router>
             </GlobalProvider>

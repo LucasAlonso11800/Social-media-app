@@ -44,20 +44,12 @@ export const GET_POSTS_FROM_USER = gql`
 export const GET_POSTS_BY_SEARCH = gql`
     query($query: String!){
         posts_by_search(query: $query){
-            id
+            postId
             body
             createdAt
             username
-            comments{
-                id
-                body
-                username
-                createdAt
-            }
-            likes {
-                id
-                username
-            }
+            profileName
+            userId
         }
     }  
 `;
@@ -89,15 +81,10 @@ export const GET_USERS_BY_SEARCH = gql`
         users_by_search(query: $query){
             id
             username
+            profileName
             city
             country
             birthDate
-            followers{
-                username
-            }
-            following{
-                username
-            }
         }
     }
 `;

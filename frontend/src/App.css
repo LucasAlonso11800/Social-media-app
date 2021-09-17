@@ -52,6 +52,7 @@ i.icon{
 .search-bar{
     width: 100%;
     display: flex;
+    margin-bottom: 2rem;
 }
 .search-bar .ui.input{
     flex-grow: 1;
@@ -289,4 +290,12 @@ i.icon.user-card__user-data-icon{
 
 .not-found__disclaimer{
     font-size: 12px
+}
+
+/* Search page */
+.search-page__container{
+    margin-bottom: 4rem;
+}
+.search-page__container h2{
+    text-align: center;
 }

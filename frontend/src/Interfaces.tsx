@@ -1,19 +1,17 @@
 // Context
-export interface IUserData{
-    email: string
+export interface IUserContext {
     id: string
     token: string
     username: string
-    image: string
+}
+export interface IUserData extends IUserContext {
+    profileName: string
     country: string
     city: string
     birthDate: string
-    followers: IFollower[]
-    following: IFollower[]
-    blockedUsers: IUserData[]
 };
 
-export interface IDecodedToken extends IUserData {
+export interface IDecodedToken extends IUserContext {
     exp: number
     iat: number
 };
@@ -25,7 +23,7 @@ export enum EActionType {
 
 export interface ILoginAction {
     type: EActionType.LOGIN
-    payload: IUserData
+    payload: IUserContext
 };
 
 export interface ILogoutAction {
@@ -35,17 +33,17 @@ export interface ILogoutAction {
 
 export type Actions = ILoginAction | ILogoutAction;
 
-export type GlobalState = IUserData | null;
+export type GlobalState = IUserContext | null;
 
 // Users
 
-export interface IUsersBySearchQuery{
+export interface IUsersBySearchQuery {
     users_by_search: IUserData[]
 };
 
 // Posts
 
-export interface IPostsBySearchQuery{
+export interface IPostsBySearchQuery {
     posts_by_search: IPost[]
 };
 

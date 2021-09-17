@@ -8,7 +8,7 @@ import { EActionType } from '../Interfaces';
 
 export default function NavBar() {
     const { state, dispatch } = useContext(GlobalContext);
-    
+
     const pathname = window.location.pathname;
     const path = pathname === '/' ? 'home' : pathname.substring(1);
     const [activeItem, setActiveItem] = useState(path);
@@ -29,6 +29,13 @@ export default function NavBar() {
                 to={`/user/${state.id}`}
                 onClick={() => setActiveItem('user')}
             />
+            <Menu.Item
+                name="Search"
+                active={activeItem === 'search'}
+                as={Link}
+                to="/search"
+                onClick={() => setActiveItem('search')}
+            />
             <Menu.Menu position='right'>
                 <Menu.Item
                     name='logout'
@@ -47,6 +54,13 @@ export default function NavBar() {
                 as={Link}
                 to="/"
                 onClick={() => setActiveItem('home')}
+            />
+            <Menu.Item
+                name="Search"
+                active={activeItem === 'search'}
+                as={Link}
+                to="/search"
+                onClick={() => setActiveItem('search')}
             />
             <Menu.Menu position='right'>
                 <Menu.Item
