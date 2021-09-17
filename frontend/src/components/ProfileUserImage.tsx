@@ -9,7 +9,7 @@ type Props = {
     userImage: string
     username: string
     loading: boolean
-    setUserImageModalOpen: Function
+    setUserImageModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 export default function ProfileUserImage(props: Props) {

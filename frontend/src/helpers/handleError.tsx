@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
 
-export function handleError(error: ApolloError, setSnackbarOpen: undefined | ((boolean: boolean) => void)): void | null {
+export function handleError(error: ApolloError, setSnackbarOpen: undefined | React.Dispatch<React.SetStateAction<boolean>>): void | null {
     console.log(JSON.stringify(error, null, 2))
     switch(error.message){
         case "Failed to fetch": return setSnackbarOpen ? setSnackbarOpen(true) : null

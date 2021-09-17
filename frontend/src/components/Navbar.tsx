@@ -11,7 +11,7 @@ export default function NavBar() {
 
     const pathname = window.location.pathname;
     const path = pathname === '/' ? 'home' : pathname.substring(1);
-    const [activeItem, setActiveItem] = useState(path);
+    const [activeItem, setActiveItem] = useState<string>(path);
 
     const nav = state !== null ?
         <Menu secondary pointing size={'huge'}>

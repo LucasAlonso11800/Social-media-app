@@ -13,7 +13,7 @@ type Props = {
 
 export default function DeleteUserButton(props: Props) {
     const { userId } = props;
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     const [deleteUser, { loading }] = useMutation(DELETE_USER, {
         onCompleted: () => {

@@ -14,7 +14,7 @@ import { handleError } from '../helpers/handleError';
 type Props = {
     followeeId: string
     followStatus: IFollowStatus | undefined
-    setFollowStatus: Function
+    setFollowStatus: React.Dispatch<React.SetStateAction<IFollowStatus | undefined>>
 };
 
 type MutationResult = {

@@ -13,7 +13,7 @@ type Props = {
     blockingUserId: string
     blockedUserId: string
     isBlocking: boolean
-    setIsBlocking: Function
+    setIsBlocking: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type MutationResult = {

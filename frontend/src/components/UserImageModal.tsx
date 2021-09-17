@@ -10,9 +10,9 @@ import { handleError } from '../helpers/handleError';
 
 type Props = {
     open: boolean
-    setOpen: Function
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
     userImage: string
-    setUserImage: Function
+    setUserImage: React.Dispatch<React.SetStateAction<string>>
     userId: string
 };
 

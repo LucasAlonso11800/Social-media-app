@@ -32,8 +32,8 @@ export default function ProfileModal(props: Props) {
         alt: 'Profile image',
         src: profile.profileImage
     });
-    const [fileSizeError, setFileSizeError] = useState(false);
-    const [newImage, setNewImage] = useState('');
+    const [fileSizeError, setFileSizeError] = useState<boolean>(false);
+    const [newImage, setNewImage] = useState<string>('');
     const [queryVariables, setQueryVariables] = useState<IEditProfile>();
 
     const [editProfile, { loading }] = useMutation<{ edit_profile: IProfile }>(EDIT_PROFILE, {
@@ -69,20 +69,20 @@ export default function ProfileModal(props: Props) {
         if (queryVariables) editProfile()
     }, [queryVariables]);
 
-    const _handleReaderLoaded = (readerEvt: any) => {
+    const handleReaderLoaded = (readerEvt: any) => {
         let binaryString = readerEvt.target.result
         setImage({ ...image, src: btoa(binaryString) })
         setNewImage(btoa(binaryString))
     };
 
-    const handleImg = (e: any) => {
+    const handleImg = (e: any): void => {
         const file = e.target.files[0]
         if (file) {
             if (file.size > 1048577) return setFileSizeError(true);
             setFileSizeError(false);
             setImage({ ...image, alt: file.name })
             const reader = new FileReader();
-            reader.onload = _handleReaderLoaded;
+            reader.onload = handleReaderLoaded;
             reader.readAsBinaryString(file);
         }
     };

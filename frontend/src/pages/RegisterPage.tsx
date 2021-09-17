@@ -48,7 +48,7 @@ const validationSchema = yup.object({
 export default function RegisterPage() {
     const { dispatch } = useContext(GlobalContext);
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
-    const [selectedCountry, setSelectedCountry] = useState('Argentina');
+    const [selectedCountry, setSelectedCountry] = useState<string>('Argentina');
 
     const [addUser, { loading, error }] = useMutation(ADD_USER, {
         update(_, result) {
