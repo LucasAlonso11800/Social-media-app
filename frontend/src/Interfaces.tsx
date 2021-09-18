@@ -106,11 +106,6 @@ export interface IProfile {
 
 // Followers
 
-export interface IFollower {
-    id: string
-    username: string
-};
-
 export interface IFollowStatus {
     followeeCount: number
     followerCount: number

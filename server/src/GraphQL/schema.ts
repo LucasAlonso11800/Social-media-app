@@ -2,7 +2,7 @@ const { GraphQLSchema, GraphQLObjectType } = require('graphql');
 
 // Queries
 import {
-    GET_USERS_BY_SEARCH, GET_USER_FOLLOW_COUNT,
+    GET_USERS_BY_SEARCH,
     GET_PROFILE, 
     GET_FOLLOW_LIST, GET_FOLLOW_STATUS,
     GET_USER_IMAGE, 
@@ -29,7 +29,6 @@ const RootQuery = new GraphQLObjectType({
     fields: {
         // Users
         users_by_search: GET_USERS_BY_SEARCH,
-        user_follow_count: GET_USER_FOLLOW_COUNT,
         // Profile
         profile: GET_PROFILE,
         // Follows
