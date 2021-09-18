@@ -9,16 +9,17 @@ import { EDIT_PROFILE } from '../graphql/Mutations';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IEditProfile, IProfile } from '../Interfaces';
+import { IEditProfile, IProfile, SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
 type Props = {
     open: boolean
-    setOpen: Function
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
     profile: IProfile
+    setProfile: React.Dispatch<React.SetStateAction<IProfile | undefined>>
     userId: string
-    setProfile: Function
+    snackbarDispatch: React.Dispatch<SnackbarActions>
 };
 
 const validationSchema = yup.object({
@@ -27,7 +28,7 @@ const validationSchema = yup.object({
 });
 
 export default function ProfileModal(props: Props) {
-    const { open, setOpen, profile, userId, setProfile } = props;
+    const { open, setOpen, profile, setProfile, userId, snackbarDispatch } = props;
     const [image, setImage] = useState({
         alt: 'Profile image',
         src: profile.profileImage
@@ -47,7 +48,7 @@ export default function ProfileModal(props: Props) {
             profileId: profile.id,
             userId
         },
-        onError: (error): unknown => handleError(error, undefined)
+        onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
     const formik = useFormik({

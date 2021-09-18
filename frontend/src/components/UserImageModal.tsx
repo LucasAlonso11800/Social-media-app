@@ -5,6 +5,8 @@ import { EDIT_USER_IMAGE } from '../graphql/Mutations';
 // Components
 import { Modal, Image, Button } from 'semantic-ui-react';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
+// Interfaces
+import { SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
@@ -14,10 +16,11 @@ type Props = {
     userImage: string
     setUserImage: React.Dispatch<React.SetStateAction<string>>
     userId: string
+    snackbarDispatch: React.Dispatch<SnackbarActions>
 };
 
 export default function UserImageModal(props: Props) {
-    const { open, setOpen, userImage, setUserImage, userId } = props;
+    const { open, setOpen, userImage, setUserImage, userId, snackbarDispatch } = props;
     const [image, setImage] = useState({
         src: userImage,
         alt: 'User image'
@@ -34,7 +37,7 @@ export default function UserImageModal(props: Props) {
             image: image.src === userImage ? image.src : newImage,
             userId
         },
-        onError: (error): unknown => handleError(error, undefined),
+        onError: (error): unknown => handleError(error, snackbarDispatch),
     });
 
     const handleReaderLoaded = (readerEvt: any) => {

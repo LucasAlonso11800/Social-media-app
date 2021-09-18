@@ -38,8 +38,8 @@ export default function PostCard(props: Props) {
                     src={image?.user_image ? `data:image/png;base64,${image?.user_image}` : ProfilePlaceholder}
                     onClick={() => window.location.href = `/user/${userId}`}
                 />
-                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${userId}`} >{username}</Card.Header>
-                <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
+                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${userId}`} >{profileName}</Card.Header>
+                <Card.Meta>{username} - {moment(createdAt).fromNow(true)}</Card.Meta>
                 <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${username}/${postId}`} >
                     {body}
                 </Card.Description>

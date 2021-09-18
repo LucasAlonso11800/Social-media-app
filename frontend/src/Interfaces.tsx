@@ -35,17 +35,29 @@ export type Actions = ILoginAction | ILogoutAction;
 
 export type GlobalState = IUserContext | null;
 
-// Users
-
-export interface IUsersBySearchQuery {
-    users_by_search: IUserData[]
+export type SnackbarState = {
+    open: boolean
+    message: string | null
 };
+
+export enum ESnackbarActionType {
+    OPEN,
+    CLOSE
+};
+
+export interface IOpenSnackbarAction {
+    type: ESnackbarActionType.OPEN
+    payload: string
+};
+
+export interface ICloseSnackbarAction {
+    type: ESnackbarActionType.CLOSE
+    payload: null
+};
+
+export type SnackbarActions = IOpenSnackbarAction | ICloseSnackbarAction
 
 // Posts
-
-export interface IPostsBySearchQuery {
-    posts_by_search: IPost[]
-};
 
 export interface IPost {
     postId: string

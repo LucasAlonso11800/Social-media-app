@@ -138,7 +138,7 @@ export const LOGIN_USER = {
         const response: IUser[] = await mysqlQuery(getUserQuery, context.connection);
         const user = response[0];
 
-        if (!user) throw new Error('User not found');
+        if (!user) throw new Error('Wrong username or password');
         const match = await bcrypt.compare(password, user.password);
         if (!match) throw new Error('Wrong username or password');
 

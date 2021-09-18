@@ -46,23 +46,23 @@ const validationSchema = yup.object({
 });
 
 export default function RegisterPage() {
-    const { dispatch } = useContext(GlobalContext);
+    const { dispatch, snackbarDispatch } = useContext(GlobalContext);
     const [queryVariables, setQueryVariables] = useState<IAddUser>();
     const [selectedCountry, setSelectedCountry] = useState<string>('Argentina');
 
-    const [addUser, { loading, error }] = useMutation(ADD_USER, {
+    const [addUser, { loading }] = useMutation(ADD_USER, {
         update(_, result) {
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.add_user
             })
-            window.location.assign(`/user/${result.data.add_user.username}`)
+            window.location.assign("/")
         },
         variables: {
             ...queryVariables,
             country: selectedCountry
         },
-        onError: (error): unknown => handleError(error, undefined)
+        onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
     const formik = useFormik({
@@ -75,10 +75,7 @@ export default function RegisterPage() {
             birthDate: new Date().toISOString().substring(0, 10)
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            if (error !== undefined && queryVariables === values) return addUser();
-            setQueryVariables(values);
-        }
+        onSubmit: (values) => setQueryVariables(values)
     });
 
     useEffect(() => {
@@ -202,13 +199,6 @@ export default function RegisterPage() {
                 <Button type="submit" color="twitter" disabled={loading} className="form__submit-button">
                     Register
                 </Button>
-                {error !== undefined ?
-                    <div className="ui red message form__submit-button">
-                        <ul className="list">
-                            <li>{error.message}</li>
-                        </ul>
-                    </div>
-                    : null}
             </Form>
         </Container>
     )

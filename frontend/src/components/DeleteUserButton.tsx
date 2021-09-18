@@ -4,15 +4,18 @@ import { useMutation } from '@apollo/client';
 import { DELETE_USER } from '../graphql/Mutations';
 // Components
 import { Button, Confirm, Icon, Popup } from 'semantic-ui-react';
+// Interfaces   
+import { SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string
+    snackbarDispatch:  React.Dispatch<SnackbarActions>
 };
 
 export default function DeleteUserButton(props: Props) {
-    const { userId } = props;
+    const { userId, snackbarDispatch } = props;
     const [open, setOpen] = useState<boolean>(false);
 
     const [deleteUser, { loading }] = useMutation(DELETE_USER, {
@@ -21,7 +24,7 @@ export default function DeleteUserButton(props: Props) {
             window.location.assign('/');
         },
         variables: { id: userId },
-        onError: (error): unknown => handleError(error, undefined)
+        onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
     return (

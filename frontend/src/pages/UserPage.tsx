@@ -19,7 +19,7 @@ type QueryResult = {
 };
 
 export default function UserPage() {
-    const { state } = useContext(GlobalContext);
+    const { state, snackbarDispatch } = useContext(GlobalContext);
     const userId = window.location.pathname.substring(6);
 
     const { loading, data } = useQuery<QueryResult>(GET_POSTS_FROM_USER, {
@@ -41,7 +41,7 @@ export default function UserPage() {
                 </Grid.Row>
                 {state && state.id.toString() === userId &&
                     <Grid.Row>
-                        <PostForm userId={userId}/>
+                        <PostForm userId={userId} snackbarDispatch={snackbarDispatch}/>
                     </Grid.Row>
                 }
                 <Grid.Row>

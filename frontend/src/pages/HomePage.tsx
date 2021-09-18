@@ -17,11 +17,11 @@ type QueryResult = {
 };
 
 export default function HomePage() {
-    const { state, setSnackbarOpen } = useContext(GlobalContext);
+    const { state, snackbarDispatch } = useContext(GlobalContext);
 
     const { loading, data } = useQuery<QueryResult>(GET_HOME_PAGE_POSTS, {
         variables: { userId: state?.id },
-        onError: (error): unknown => handleError(error, setSnackbarOpen)
+        onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
     return (

@@ -26,12 +26,12 @@ const validationSchema = yup.object({
 });
 
 export default function LoginPage() {
-    const { dispatch } = useContext(GlobalContext);
+    const { dispatch, snackbarDispatch } = useContext(GlobalContext);
 
     const [queryVariables, setQueryVariables] = useState<ILoginUser>();
 
-    const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
-        update(proxy, result) {
+    const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+        update(_, result) {
             dispatch({
                 type: EActionType.LOGIN,
                 payload: result.data.login_user
@@ -39,7 +39,7 @@ export default function LoginPage() {
             window.location.assign('/');
         },
         variables: queryVariables,
-        onError: (error): unknown => handleError(error, undefined)
+        onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
     const formik = useFormik({
@@ -48,10 +48,7 @@ export default function LoginPage() {
             password: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            if (error !== undefined && queryVariables === values) return loginUser()
-            setQueryVariables(values)
-        }
+        onSubmit: (values) => setQueryVariables(values)
     });
 
     useEffect(() => {
@@ -97,13 +94,6 @@ export default function LoginPage() {
                 <Button type="submit" color="twitter" disabled={loading}>
                     Login
                 </Button>
-                {error !== undefined ?
-                    <div className="ui red message">
-                        <ul className="list">
-                            <li>{error.message}</li>
-                        </ul>
-                    </div>
-                    : null}
             </Form>
         </Container>
     )

@@ -3,17 +3,21 @@ import React, { useEffect, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 // Components
 import { Message } from 'semantic-ui-react';
+// Interfaces
+import { ESnackbarActionType } from '../Interfaces';
 
 export default function Snackbar() {
-    const { snackbarOpen, setSnackbarOpen } = useContext(GlobalContext);
+    const { snackbarState, snackbarDispatch } = useContext(GlobalContext);
+
+    const type = ESnackbarActionType.CLOSE;
 
     useEffect(() => {
-        if (snackbarOpen === true) setTimeout(() => setSnackbarOpen(false), 5000)
-    }, [snackbarOpen]);
+        if (snackbarState.open === true) setTimeout(() => snackbarDispatch({ type, payload: null }), 5000)
+    }, [snackbarState]);
 
     return (
-        <Message className={snackbarOpen ? "snackbar open" : "snackbar closed"} color="red">
-            <Message.Content>An unexpected error occurred in the server</Message.Content>
+        <Message className={snackbarState.open ? "snackbar open" : "snackbar closed"} color="red">
+            <Message.Content>{snackbarState.message}</Message.Content>
         </Message>
     )
 };

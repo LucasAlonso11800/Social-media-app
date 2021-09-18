@@ -9,12 +9,13 @@ import { Form, Button } from 'semantic-ui-react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Interfaces
-import { ICreatePost, IPost } from '../Interfaces';
+import { ICreatePost, IPost, SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string
+    snackbarDispatch:  React.Dispatch<SnackbarActions>
 };
 
 type QueryResult = {
@@ -26,7 +27,7 @@ const validationSchema = yup.object({
 });
 
 export default function PostForm(props: Props) {
-    const { userId } = props;
+    const { userId, snackbarDispatch } = props;
     const [queryVariables, setQueryVariables] = useState<ICreatePost>();
 
     const formik = useFormik({
@@ -35,7 +36,7 @@ export default function PostForm(props: Props) {
         onSubmit: (values) => setQueryVariables(values)
     });
 
-    const [createPost, { error, loading }] = useMutation(CREATE_POST, {
+    const [createPost, { loading }] = useMutation(CREATE_POST, {
         update(proxy, result) {
             const data: QueryResult = proxy.readQuery({
                 query: GET_POSTS_FROM_USER,
@@ -52,7 +53,7 @@ export default function PostForm(props: Props) {
             formik.setTouched({ body: false });
         },
         variables: queryVariables,
-        onError: (error): unknown => handleError(error, undefined),
+        onError: (error): unknown => handleError(error, snackbarDispatch),
     });
 
     useEffect(() => {
@@ -84,13 +85,6 @@ export default function PostForm(props: Props) {
                     </ul>
                 </div>
             }
-            {error !== undefined ?
-                <div className="ui red message">
-                    <ul className="list">
-                        <li>{error.message}</li>
-                    </ul>
-                </div>
-                : null}
         </Form>
     )
 };

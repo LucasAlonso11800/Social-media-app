@@ -40,6 +40,7 @@ const client = new ApolloClient({
 
 export default function App() {
     const { state } = useContext(GlobalContext);
+
     const inLoginOrRegisterPage = window.location.pathname === "/login" || window.location.pathname === "/register";
     if (state !== null && inLoginOrRegisterPage) window.location.assign('/');
 

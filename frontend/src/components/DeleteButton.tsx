@@ -23,7 +23,7 @@ type QueryResult = {
 }
 
 export default function DeleteButton(props: Props) {
-    const { state } = useContext(GlobalContext);
+    const { state, snackbarDispatch } = useContext(GlobalContext);
     const { postId, commentId } = props;
 
     const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
@@ -37,7 +37,7 @@ export default function DeleteButton(props: Props) {
             commentId,
             userId: state?.id
         },
-        onError: (error): unknown => handleError(error, undefined),
+        onError: (error): unknown => handleError(error, snackbarDispatch),
     });
 
     return (

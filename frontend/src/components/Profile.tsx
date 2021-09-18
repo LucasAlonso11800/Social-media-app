@@ -31,7 +31,7 @@ type QueryResult = {
 };
 
 export default function Profile(props: Props) {
-    const { state } = useContext(GlobalContext);
+    const { state, snackbarDispatch } = useContext(GlobalContext);
     const { userId } = props;
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [userImageModalOpen, setUserImageModalOpen] = useState<boolean>(false);
@@ -103,7 +103,7 @@ export default function Profile(props: Props) {
                                             </Button>
                                         }
                                     />
-                                    <DeleteUserButton userId={state.id} />
+                                    <DeleteUserButton userId={state.id} snackbarDispatch={snackbarDispatch} />
                                 </>
                             }
                             {state && state.username !== username ?
@@ -125,8 +125,20 @@ export default function Profile(props: Props) {
                         />{moment(birthDate).fromNow(true)}</Card.Meta>
                     <FollowerInfo profileName={profileName} bio={bio} followStatus={followStatus} />
                 </Card.Content>
-                <ProfileModal open={modalOpen} setOpen={setModalOpen} profile={profile} userId={userId} setProfile={setProfile} />
-                <UserImageModal open={userImageModalOpen} setOpen={setUserImageModalOpen} userImage={userImage} setUserImage={setUserImage} userId={userId} />
+                <ProfileModal
+                    open={modalOpen}
+                    setOpen={setModalOpen}
+                    profile={profile}
+                    setProfile={setProfile}
+                    userId={userId}
+                    snackbarDispatch={snackbarDispatch} />
+                <UserImageModal
+                    open={userImageModalOpen}
+                    setOpen={setUserImageModalOpen}
+                    userImage={userImage}
+                    setUserImage={setUserImage}
+                    userId={userId}
+                    snackbarDispatch={snackbarDispatch} />
             </Card>
         )
     }
