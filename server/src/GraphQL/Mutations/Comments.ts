@@ -36,7 +36,7 @@ export const ADD_COMMENT = {
                 ) VALUES (
                     ${postId},
                     ${user.id},
-                    "${new Date().toISOString().substring(0, 10)}",
+                    "${new Date().toISOString().substring(0, 19)}",
                     "${body}"
                 )
             `;

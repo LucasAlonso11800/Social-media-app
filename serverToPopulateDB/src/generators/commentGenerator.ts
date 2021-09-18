@@ -14,7 +14,7 @@ export default async function commentsGenerator(connection: Connection) {
         const query = `INSERT INTO comments(
             comment_post_id, comment_user_id, comment_body, comment_created_at
         ) VALUES (
-            ${comment.post_id}, ${comment.user_id}, "${comment.body}", "${comment.createdAt.toISOString().substring(0, 10)}"
+            ${comment.post_id}, ${comment.user_id}, "${comment.body}", "${comment.createdAt.toISOString().substring(0, 19)}"
         )`;
 
         try {

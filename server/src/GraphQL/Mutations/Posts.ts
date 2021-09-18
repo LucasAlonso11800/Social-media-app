@@ -28,7 +28,7 @@ export const CREATE_POST = {
         try {
             const insertPostQuery = `
                 INSERT INTO posts(post_user_id, post_body, post_created_at)
-                VALUES(${user.id}, "${args.body}", "${new Date().toISOString().substring(0, 10)}"
+                VALUES(${user.id}, "${args.body}", "${new Date().toISOString().substring(0, 19)}"
                 )
             `;
             const queryResult: IMySQLQuery = await mysqlQuery(insertPostQuery, context.connection);
