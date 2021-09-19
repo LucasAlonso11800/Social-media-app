@@ -74,7 +74,7 @@ export default function PostForm(props: Props) {
                         error={formik.touched.body && Boolean(formik.errors.body)}
                     />
                 </Form.Field>
-                <Button type="submit" color="twitter" disabled={loading} className="post-form__button">
+                <Button type="submit" color="twitter" disabled={formik.values.body.trim() === '' || loading} className="post-form__button">
                     Post
                 </Button>
             </Form.Group>

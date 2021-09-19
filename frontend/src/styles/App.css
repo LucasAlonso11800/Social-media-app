@@ -23,6 +23,7 @@ main.main{
     min-height: 100vh;
     width: 100%;
     z-index: 10;
+    padding-bottom: 2em;
 }
 
 /* Semantic */
@@ -37,6 +38,10 @@ i.icon{
 .search-bar .ui.selection.dropdown{
     min-width: 10rem!important;
     margin-left: 2rem!important;
+}
+
+.ui.one.cards{
+    width: 100%!important;
 }
 
 /* Snackbar */
@@ -78,8 +83,9 @@ i.icon{
 }
 
 /* Home */
-.home-page__loader{
+.home-page__dimmer{
     margin-top: 4rem;
+    background-color: transparent!important;
 }
 
 /* User Page */
@@ -336,6 +342,9 @@ i.icon.user-card__user-data-icon{
     width: 100%;
     margin-bottom: 0.5rem!important;
 }
+.post-form__button{
+    margin-bottom: 0.5rem!important;
+}
 
 /* Comment form */
 .comment-form__body-input{
@@ -343,4 +352,11 @@ i.icon.user-card__user-data-icon{
     padding-right: 0.5rem!important;
     width: 100%;
     margin-bottom: 0.5rem!important;
+}
+.comment-form__button{
+    margin-bottom: 0.5rem!important;
+}
+
+.login-page{
+    background: transparent!important;
 }

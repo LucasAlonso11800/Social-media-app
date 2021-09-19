@@ -10,7 +10,7 @@ type Props = {
 
 export default function FollowerInfo(props: Props) {
     const { profileName, bio, followStatus } = props;
-    console.log(bio, typeof bio)
+
     return (
         <div className="profile__profile-info">
             {bio !== null && bio !== '' &&

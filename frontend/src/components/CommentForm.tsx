@@ -39,7 +39,7 @@ export default function CommentForm(props: Props) {
         onSubmit: (values) => setQueryVariables(values)
     });
 
-    const [addComment, { error }] = useMutation<MutationResult>(ADD_COMMENT, {
+    const [addComment, { error, loading }] = useMutation<MutationResult>(ADD_COMMENT, {
         update(proxy, result) {
             const data: QueryResult = proxy.readQuery({
                 query: GET_COMMENTS_FROM_POSTS,
@@ -84,7 +84,7 @@ export default function CommentForm(props: Props) {
                 <Button
                     type="submit"
                     color="twitter"
-                    disabled={formik.values.body.trim() === ''}
+                    disabled={formik.values.body.trim() === '' || loading}
                     className="comment-form__button"
                 >
                     Comment

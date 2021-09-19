@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 // GraphQL
 import { useQuery } from '@apollo/client';
 import { GET_POSTS_FROM_USER } from '../graphql/Queries';
@@ -31,25 +31,25 @@ export default function UserPage() {
         <Container className="user-page__container">
             <Grid columns={1} divided className="user-page__grid">
                 <Grid.Row className="user-page__profile-container">
-                    {loading ?
-                        <Dimmer active={loading} inverted className="home-page__loader">
-                            <Loader>Loading...</Loader>
-                        </Dimmer>
-                        :
-                        <Profile userId={userId} />
-                    }
+                    <Profile userId={userId} />
                 </Grid.Row>
                 {state && state.id.toString() === userId &&
                     <Grid.Row>
-                        <PostForm userId={userId} snackbarDispatch={snackbarDispatch}/>
+                        <PostForm userId={userId} snackbarDispatch={snackbarDispatch} />
                     </Grid.Row>
                 }
                 <Grid.Row>
-                    <CardGroup itemsPerRow={1} style={{ width: '100%' }}>
-                        {data && data.posts_from_user.map(post => {
-                            return <PostCard post={post} key={post.postId} />
-                        })}
-                    </CardGroup>
+                    {loading ?
+                        <Dimmer active={loading} className="home-page__dimmer">
+                            <Loader>Loading posts...</Loader>
+                        </Dimmer>
+                        :
+                        <CardGroup itemsPerRow={1}>
+                            {data && data.posts_from_user.map(post => {
+                                return <PostCard post={post} key={post.postId} />
+                            })}
+                        </CardGroup>
+                    }
                 </Grid.Row>
             </Grid>
         </Container>

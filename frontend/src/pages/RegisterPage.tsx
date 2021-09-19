@@ -84,7 +84,7 @@ export default function RegisterPage() {
 
     return (
         <Container>
-            <Form onSubmit={formik.handleSubmit} className={loading ? 'loading' : ''} noValidate>
+            <Form onSubmit={formik.handleSubmit} className={loading ? 'loading login-page' : ' login-page'} noValidate>
                 <h1>Create your account</h1>
                 <Form.Input
                     name="username"

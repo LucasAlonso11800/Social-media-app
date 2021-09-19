@@ -28,13 +28,13 @@ export default function HomePage() {
         <Container className="home-page__container">
             <Grid columns={1} divided className="home-page__grid">
                 <Grid.Row>
-                    <Dimmer active={loading} inverted className="home-page__loader">
-                        <Loader>Loading posts...</Loader>
+                    <Dimmer active={loading} inverted className="home-page__dimmer">
+                        <Loader className="home-page__loader">Loading posts...</Loader>
                     </Dimmer>
                 </Grid.Row>
                 <Grid.Row>
                     {!loading && data?.home_page_posts &&
-                        <CardGroup itemsPerRow={1} style={{ width: '100%' }}>
+                        <CardGroup itemsPerRow={1} className="home-page__cards-container">
                             {data.home_page_posts.map(post => {
                                 return <PostCard post={post} key={post.postId} />
                             })}

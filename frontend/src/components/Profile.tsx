@@ -6,7 +6,7 @@ import { GET_BLOCK_STATUS, GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
-import { Grid, Card, Image, Button, Icon, Popup } from 'semantic-ui-react';
+import { Grid, Card, Image, Button, Icon, Popup, Dimmer, Loader} from 'semantic-ui-react';
 import ProfileModal from './ProfileModal';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import FollowButton from './FollowButton';
@@ -73,11 +73,18 @@ export default function Profile(props: Props) {
         onError: (error): unknown => handleError(error, undefined)
     });
 
+    if (loading) {
+        return (
+            <Dimmer active={loading} className="home-page__dimmer">
+                <Loader>Loading profile...</Loader>
+            </Dimmer>
+        )
+    }
     if (profile) {
         const { profileName, profileImage, bio, username, city, country, birthDate } = profile;
 
         return (
-            <Card fluid className={loading ? 'loading' : ''}>
+            <Card fluid>
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width="16">
