@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node ./dist/app.ts",
         "dev": "nodemon ./src/app.ts",
-        "build": "tsc -p"
+        "build": "ts-node ./src/app.ts"
     },
     "keywords": [],
     "author": "Lucas Alonso",
