@@ -35,8 +35,8 @@ export default function SinglePostPage() {
     });
 
     return (
-        <Container>
-            <Grid>
+        <Container className="single-post-page__container">
+            <Grid className="single-post-page__grid">
                 <Grid.Row>
                     {loading ?
                         <Dimmer active={loading} inverted className="home-page__loader">

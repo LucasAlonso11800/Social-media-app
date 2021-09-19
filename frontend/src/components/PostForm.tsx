@@ -64,7 +64,7 @@ export default function PostForm(props: Props) {
         <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
             <h2>Create post</h2>
             <Form.Group style={{ width: '100%', margin: 0 }}>
-                <Form.Field width="16">
+                <Form.Field className="post-form__body-input">
                     <Form.Input
                         placeholder="What are you thinking about?"
                         name="body"
@@ -74,7 +74,7 @@ export default function PostForm(props: Props) {
                         error={formik.touched.body && Boolean(formik.errors.body)}
                     />
                 </Form.Field>
-                <Button type="submit" color="twitter" disabled={loading}>
+                <Button type="submit" color="twitter" disabled={loading} className="post-form__button">
                     Post
                 </Button>
             </Form.Group>

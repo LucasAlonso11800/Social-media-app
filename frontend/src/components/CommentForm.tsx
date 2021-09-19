@@ -70,7 +70,7 @@ export default function CommentForm(props: Props) {
         <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
             <h2>Comment this post</h2>
             <Form.Group style={{ width: '100%', margin: 0 }}>
-                <Form.Field width="16">
+                <Form.Field className="comment-form__body-input">
                     <Form.Input
                         fluid
                         placeholder="What would you like to say?"
@@ -85,7 +85,7 @@ export default function CommentForm(props: Props) {
                     type="submit"
                     color="twitter"
                     disabled={formik.values.body.trim() === ''}
-                    className="ui button"
+                    className="comment-form__button"
                 >
                     Comment
                 </Button>

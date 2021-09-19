@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
-import 'semantic-ui-css/semantic.min.css'
-import './App.css';
 import { serverURL } from './consts/ServerURL';
+// Styles
+import 'semantic-ui-css/semantic.min.css'
+import './styles/App.css';
+import './styles/MediaQuerys.css';
 // React-router-dom
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 // Apollo

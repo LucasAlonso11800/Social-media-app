@@ -25,8 +25,8 @@ export default function HomePage() {
     });
 
     return (
-        <Container>
-            <Grid columns={3} divided>
+        <Container className="home-page__container">
+            <Grid columns={1} divided className="home-page__grid">
                 <Grid.Row>
                     <Dimmer active={loading} inverted className="home-page__loader">
                         <Loader>Loading posts...</Loader>

@@ -6,6 +6,10 @@
     padding: 0;
     list-style-type: none;
 }
+body{
+    overflow-x: hidden;
+    min-width: 320px;
+}
 
 /* Semantic */
 i.icon{
@@ -29,6 +33,7 @@ i.icon{
 }
 .snackbar.closed{
     transform: translateX(200%);
+    display: none;
 }
 .snackbar.open {
     animation: snackbar-animation 5s ease-in-out forwards;
@@ -145,6 +150,9 @@ i.icon{
     justify-content: space-between;
     margin-top: 3rem;
 }
+.profile__title{
+    margin-right: 2rem;
+}
 
 i.icon.profile__icon{
     margin-right: 0.5rem!important;
@@ -157,12 +165,16 @@ i.icon.profile__icon{
     margin-top: 2rem;
 }
 
+.profile__profile-name{
+    margin-right: 4rem!important;
+}
+
 .profile__numbers-container{
     display: flex;
 }
 
-.profile__number{
-    margin-right: 1rem!important;
+.profile__number:first-child{
+    margin-right: 2rem!important;
 }
 
 /* Profile Modal */
@@ -244,6 +256,7 @@ i.icon.profile__icon{
 
 .user-card__user-image{
     height: 150px;
+    width: 150px;
     object-fit: cover;
     border-radius: 100em;
     border: 1px solid #35a2f4;
@@ -284,11 +297,13 @@ i.icon.user-card__user-data-icon{
 }
 
 .not-found__subtitle{
+    text-align: center;
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
 }
 
 .not-found__disclaimer{
+    text-align: center;
     font-size: 12px
 }
 
@@ -298,4 +313,20 @@ i.icon.user-card__user-data-icon{
 }
 .search-page__container h2{
     text-align: center;
+}
+
+/* Post form */
+.post-form__body-input{
+    padding: 0!important;
+    padding-right: 0.5rem!important;
+    width: 100%;
+    margin-bottom: 0.5rem!important;
+}
+
+/* Comment form */
+.comment-form__body-input{
+    padding: 0!important;
+    padding-right: 0.5rem!important;
+    width: 100%;
+    margin-bottom: 0.5rem!important;
 }

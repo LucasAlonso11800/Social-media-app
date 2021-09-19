@@ -88,8 +88,8 @@ export default function Profile(props: Props) {
                 </Grid>
                 <Card.Content>
                     <div className="profile__name-follow-container">
-                        <h2>{profileName}</h2>
-                        <div>
+                        <h2 className="profile__title">{profileName}</h2>
+                        <div className="profile__icons-container">
                             {!state || state.username !== username ?
                                 <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} /> : null}
                             {state && state.username === username &&

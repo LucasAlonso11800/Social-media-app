@@ -1,0 +1,115 @@
+/* Home Page */
+@media all and (max-width: 800px){
+    .home-page__container{
+        display: flex!important;
+        justify-content: center;
+    }
+    .home-page__grid{
+        width: 80%;
+    }    
+}
+
+/* Posts */
+@media all and (max-width: 450px){
+    .post__user-image{
+        height: 60px!important;
+        width: 60px!important;
+    }
+}
+
+/* Search page */
+@media all and (max-width: 800px){
+    .search-page__container{
+        width: 80%;
+        margin: auto;
+    }
+}
+
+/* User Page */
+@media all and (max-width: 800px){
+    .user-page__container{
+        display: flex!important;
+        justify-content: center;
+    }
+    .user-page__grid{
+        width: 80%;
+    }    
+}
+
+/* Profile */
+@media all and (max-width: 500px){
+    .profile__user-image-container{
+        height: 100px!important;
+        width: 100px!important;
+        left: 10%;
+        top: 75%;
+    }
+    .profile__user-image{
+        height: 100px!important;
+        width: 100px!important;
+    }
+}
+@media all and (max-width: 400px){
+    .profile__user-image-container{
+        top: 70%;
+    }
+    .ui.button{
+        padding: 7px 14px
+    }
+}
+@media all and (max-width: 340px){
+    .profile__icons-container{
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+        margin-right: 0.5rem
+    }
+}
+
+/* Profile modal */
+
+@media all and (max-width: 650px){
+    .profile-modal__img-container{
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+    .profile-modal__img{
+        max-width: 80%!important;
+    }
+    .profile-modal__img-button{
+        margin-bottom: 1rem!important;
+    }
+}
+
+/* User image modal */
+@media all and (max-width: 650px){
+    .user-modal__img-container{
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+    .user-modal__img{
+        max-width: 80%!important;
+    }
+    .user-modal__img-button{
+        margin-bottom: 1rem!important;
+    }
+}
+
+/* User card */
+@media all and (max-width: 450px){
+    .user-card__user-image{
+        height: 120px;
+        width: 120px;
+    }
+}
+
+/* Single Post Page */
+@media all and (max-width: 800px){
+    .single-post-page__container{
+        display: flex!important;
+        justify-content: center;
+    }
+    .single-post-page__grid{
+        width: 80%;
+    }    
+}

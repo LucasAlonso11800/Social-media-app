@@ -28,8 +28,8 @@ export default function UserPage() {
     });
 
     return (
-        <Container>
-            <Grid>
+        <Container className="user-page__container">
+            <Grid columns={1} divided className="user-page__grid">
                 <Grid.Row className="user-page__profile-container">
                     {loading ?
                         <Dimmer active={loading} inverted className="home-page__loader">
