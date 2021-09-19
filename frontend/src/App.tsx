@@ -50,15 +50,17 @@ export default function App() {
         <ApolloProvider client={client}>
             <GlobalProvider>
                 <Router>
-                    <Navbar />
-                    <Snackbar />
-                    <Route exact path="/" component={HomePage} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/register" component={RegisterPage} />
-                    <Route exact path="/posts/:username/:postId" component={SinglePostPage} />
-                    <Route exact path="/user/:username" component={UserPage} />
-                    <Route exact path="/search" component={SearchPage} />
-                    <Route exact path="/404" component={NotFoundPage} />
+                    <main className="main">
+                        <Navbar />
+                        <Snackbar />
+                        <Route exact path="/" component={HomePage} />
+                        <Route exact path="/login" component={LoginPage} />
+                        <Route exact path="/register" component={RegisterPage} />
+                        <Route exact path="/posts/:username/:postId" component={SinglePostPage} />
+                        <Route exact path="/user/:username" component={UserPage} />
+                        <Route exact path="/search" component={SearchPage} />
+                        <Route exact path="/404" component={NotFoundPage} />
+                    </main>
                 </Router>
             </GlobalProvider>
         </ApolloProvider>
