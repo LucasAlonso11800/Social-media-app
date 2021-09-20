@@ -4,9 +4,9 @@
     "description": "",
     "main": "/dist/app.js",
     "scripts": {
-        "start": "node ./dist/app.ts",
-        "dev": "nodemon ./src/app.ts",
-        "build": "ts-node ./src/app.ts"
+        "start": "node dist/app.js",
+        "build": "tsc",
+        "postinstall": "npm run build"
     },
     "keywords": [],
     "author": "Lucas Alonso",
