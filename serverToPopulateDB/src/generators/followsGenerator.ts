@@ -2,11 +2,16 @@ import { Connection } from 'mysql2';
 import insert from '../Helpers/Insert';
 
 export default async function followsGenerator(connection: Connection, numberOfIterations: number): Promise<any> {
-    for (let i = numberOfIterations; i < 3000; i++) {
+    for (let i = numberOfIterations; i < 200; i++) {
+        const FollowerNumber = Math.floor(Math.random() * 40 + 1);
+        const FollowerIsEven = FollowerNumber % 2 === 0;
+
+        const FolloweeNumber = Math.floor(Math.random() * 40 + 1);
+        const FolloweeIsEven = FolloweeNumber % 2 === 0;
 
         const follow = {
-            follower_id: Math.floor(Math.random() * 100 + 1),
-            followee_id: Math.floor(Math.random() * 100 + 1)
+            follower_id: FollowerIsEven ? (FollowerNumber - 1) * 5 : FollowerNumber * 5,
+            followee_id: FolloweeIsEven ? (FolloweeNumber - 1) * 5 : FolloweeNumber * 5
         };
 
         if(follow.followee_id === follow.follower_id) continue

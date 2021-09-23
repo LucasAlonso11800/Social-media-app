@@ -3,11 +3,11 @@ import faker from 'faker';
 import insert from '../Helpers/Insert';
 
 export default async function profilesGenerator(connection: Connection) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
         const description = faker.company.catchPhrase();
-        
+
         const profile = {
-            user_id: i + 1,
+            user_id: (i * 10) + 5,
             name: faker.name.firstName(),
             description: description.length > 140 ? description.substring(0, 140) : description
         };

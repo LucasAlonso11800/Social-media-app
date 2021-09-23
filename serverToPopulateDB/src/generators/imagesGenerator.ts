@@ -5,15 +5,15 @@ import fs from 'fs';
 import request from 'request';
 
 export default async function imagesGenerator(connection: Connection) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
         try {
-            const imageURL = faker.image.imageUrl(250, 250);
+            const imageURL = faker.image.imageUrl(200, 200);
 
             const base64 = await generateBase64Image(imageURL);
 
             const image = {
                 type: "U",
-                user_id: i + 1,
+                user_id: (i * 10) + 5,
                 profile_id: null,
                 image: base64
             };
@@ -30,16 +30,16 @@ export default async function imagesGenerator(connection: Connection) {
             throw new Error(err)
         }
     }
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
         try {
-            const imageURL = faker.image.imageUrl(1024, 768);
+            const imageURL = faker.image.imageUrl(800, 600);
 
             const base64 = await generateBase64Image(imageURL);
 
             const image = {
                 type: "P",
                 user_id: null,
-                profile_id: i + 1,
+                profile_id: (i * 10) + 5,
                 image: base64
             };
 

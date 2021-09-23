@@ -4,7 +4,7 @@ import faker from 'faker';
 import insert from '../Helpers/Insert';
 
 export default async function usersGenerator(connection: Connection) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
         const firstName = faker.name.firstName();
         const lastName = faker.name.lastName();
         const password = await bcrypt.hash(faker.lorem.word(), 10);

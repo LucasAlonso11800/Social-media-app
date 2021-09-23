@@ -28,15 +28,16 @@ connection.connect((error) => {
 
 app.post('/', async (req, res) => {
     try {
-        await usersGenerator(connection);
-        await postsGenerator(connection);
-        await commentsGenerator(connection);
+        // await usersGenerator(connection);
+        // await postsGenerator(connection);
+        // await commentsGenerator(connection);
         // await likesGenerator(connection);
         // await followsGenerator(connection, 0);
         // await blocksGenerator(connection, 0);
         // await profilesGenerator(connection);
-        // await imagesGenerator(connection);
-        // res.send("Everything's working");
+        await imagesGenerator(connection);
+
+        res.send("Everything's working");
     }
     catch (err) {
         res.send(JSON.stringify(err))
