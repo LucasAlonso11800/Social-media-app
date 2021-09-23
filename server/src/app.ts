@@ -5,6 +5,7 @@ import { graphqlHTTP } from 'express-graphql';
 import 'dotenv/config';
 
 import schema from './GraphQL/schema';
+import { mysqlConnection } from './Helpers/ConnectionToDBPromise';
 const app = express();
 
 const connection = mysql.createConnection({
@@ -14,10 +15,10 @@ const connection = mysql.createConnection({
     password: process.env.dbPassword
 });
 
-connection.connect((err) => {
-    if(err) throw err;
-    console.log('Connected to MySQL');
-});
+(async () => {
+    await mysqlConnection(connection)
+    console.log('Connected to MySQL')
+})();
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
