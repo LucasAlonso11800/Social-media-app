@@ -57,7 +57,7 @@ export default function LoginPage() {
 
     return (
         <Container>
-            <Form onSubmit={formik.handleSubmit} className={loading ? 'loading login-page' : ' login-page'}>
+            <Form onSubmit={formik.handleSubmit}>
                 <h1>Login</h1>
                 <Form.Input
                     name="username"

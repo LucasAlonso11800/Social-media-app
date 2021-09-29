@@ -28,7 +28,7 @@ export default function SinglePostPage() {
         variables: { id: postId },
         onError: (error): unknown => handleError(error, undefined),
     });
-    
+
     const { data: comments } = useQuery<Pick<QueryResult, "comments_from_posts">>(GET_COMMENTS_FROM_POSTS, {
         variables: { postId },
         onError: (error): unknown => handleError(error, undefined)
@@ -43,6 +43,8 @@ export default function SinglePostPage() {
                             <Loader>Loading...</Loader>
                         </Dimmer> :
                         <Grid.Column width="16">
+                            <h2>Comments</h2>
+                            <br />
                             {post?.single_post && <PostCard post={post.single_post} />}
                             {state ? <CommentForm postId={postId} /> : null}
                             {comments?.comments_from_posts?.map(c => <Comment key={c.id} comment={c} postId={postId} />)}
