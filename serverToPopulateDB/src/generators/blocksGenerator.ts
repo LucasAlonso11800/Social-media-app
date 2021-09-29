@@ -3,10 +3,10 @@ import insert from '../Helpers/Insert';
 
 export default async function blocksGenerator(connection: Connection, numberOfIterations: number): Promise<any>{
     for (let i = numberOfIterations; i < 5; i++) {
-        const BlockingNumber = Math.floor(Math.random() * 40 + 1);
+        const BlockingNumber = Math.floor(Math.random() * 20 + 1);
         const BlockingIsEven = BlockingNumber % 2 === 0;
 
-        const blockedNumber = Math.floor(Math.random() * 40 + 1);
+        const blockedNumber = Math.floor(Math.random() * 20 + 1);
         const blockedIsEven = blockedNumber % 2 === 0;
 
         const block = {

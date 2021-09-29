@@ -5,7 +5,7 @@ import fs from 'fs';
 import request from 'request';
 
 export default async function imagesGenerator(connection: Connection) {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         try {
             const imageURL = faker.image.imageUrl(125, 125);
 
@@ -25,12 +25,13 @@ export default async function imagesGenerator(connection: Connection) {
             )`;
 
             await insert(query, connection)
+            console.log(i)
         }
         catch (err: any) {
             throw new Error(err)
         }
     }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         try {
             const imageURL = faker.image.imageUrl(700, 525);
 
@@ -50,6 +51,7 @@ export default async function imagesGenerator(connection: Connection) {
             )`;
 
             await insert(query, connection)
+            console.log(i)
         }
         catch (err: any) {
             throw new Error(err)

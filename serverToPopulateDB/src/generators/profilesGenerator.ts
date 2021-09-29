@@ -3,7 +3,7 @@ import faker from 'faker';
 import insert from '../Helpers/Insert';
 
 export default async function profilesGenerator(connection: Connection) {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         const description = faker.company.catchPhrase();
 
         const profile = {

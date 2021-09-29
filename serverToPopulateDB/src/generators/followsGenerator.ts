@@ -3,10 +3,10 @@ import insert from '../Helpers/Insert';
 
 export default async function followsGenerator(connection: Connection, numberOfIterations: number): Promise<any> {
     for (let i = numberOfIterations; i < 200; i++) {
-        const FollowerNumber = Math.floor(Math.random() * 40 + 1);
+        const FollowerNumber = Math.floor(Math.random() * 20 + 1);
         const FollowerIsEven = FollowerNumber % 2 === 0;
 
-        const FolloweeNumber = Math.floor(Math.random() * 40 + 1);
+        const FolloweeNumber = Math.floor(Math.random() * 20 + 1);
         const FolloweeIsEven = FolloweeNumber % 2 === 0;
 
         const follow = {

@@ -4,7 +4,7 @@ import insert from '../Helpers/Insert';
 
 export default async function postsGenerator(connection: Connection) {
     for (let i = 0; i < 100; i++) {
-        const number = Math.floor(Math.random() * 40 + 1);
+        const number = Math.floor(Math.random() * 20 + 1);
         const isEven = number % 2 === 0;
 
         const post = {

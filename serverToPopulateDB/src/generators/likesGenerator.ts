@@ -6,7 +6,7 @@ export default async function likesGenerator(connection: Connection) {
         const likeTypes = ["P", "C"];
         const type = likeTypes[Math.floor(Math.random() * 2)];
 
-        const UserNumber = Math.floor(Math.random() * 40 + 1);
+        const UserNumber = Math.floor(Math.random() * 20 + 1);
         const UserIsEven = UserNumber % 2 === 0;
 
         const PostNumber = Math.floor(Math.random() * 100 + 1);

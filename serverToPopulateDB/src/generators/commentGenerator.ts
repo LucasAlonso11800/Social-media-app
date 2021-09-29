@@ -4,7 +4,7 @@ import insert from '../Helpers/Insert';
 
 export default async function commentsGenerator(connection: Connection) {
     for (let i = 0; i < 200; i++) {
-        const UserNumber = Math.floor(Math.random() * 40 + 1);
+        const UserNumber = Math.floor(Math.random() * 20 + 1);
         const UserIsEven = UserNumber % 2 === 0;
 
         const PostNumber = Math.floor(Math.random() * 100 + 1);
