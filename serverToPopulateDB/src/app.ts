@@ -21,27 +21,26 @@ const connection = mysql.createConnection({
     port: parseInt(process.env.dbPort as string)
 });
 
-connection.connect((error) => {
-    if (error) throw error;
-    console.log('Connected')
-});
-
-app.post('/', async (req, res) => {
-    try {
-        // await usersGenerator(connection);
-        // await postsGenerator(connection);
-        // await commentsGenerator(connection);
-        // await likesGenerator(connection);
-        // await followsGenerator(connection, 0);
-        // await blocksGenerator(connection, 0);
-        // await profilesGenerator(connection);
-        await imagesGenerator(connection);
-
-        res.send("Everything's working");
-    }
-    catch (err) {
-        res.send(JSON.stringify(err))
-    }
+app.post('/', (req, res) => {
+    connection.connect(async (error) => {
+        if (error) throw error;
+        console.log('Connected')
+        try {
+            // await usersGenerator(connection);
+            // await postsGenerator(connection);
+            // await commentsGenerator(connection);
+            // await likesGenerator(connection);
+            // await followsGenerator(connection, 0);
+            // await blocksGenerator(connection, 0);
+            // await profilesGenerator(connection);
+            await imagesGenerator(connection);
+    
+            res.send("Everything's working");
+        }
+        catch (err) {
+            res.send(JSON.stringify(err))
+        }
+    });
 });
 
 app.listen(8000, () => console.log('Listening on 8000'));

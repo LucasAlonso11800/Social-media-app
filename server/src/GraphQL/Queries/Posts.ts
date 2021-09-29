@@ -94,10 +94,10 @@ export const GET_HOME_PAGE_POSTS = {
                 ON profiles.profile_user_id = followee_id
                 WHERE follower_id = ${userId ? userId : 0}
                 ORDER BY posts.post_created_at DESC
-                LIMIT 100
+                LIMIT 30
             `;
             const postsFromFollowings = await mysqlQuery(getPostsQuery, context.connection)
-            if(postsFromFollowings.length === 100) return postsFromFollowings
+            if(postsFromFollowings.length === 30) return postsFromFollowings
 
             const fillingPostsQuery = `
                 SELECT
@@ -113,7 +113,7 @@ export const GET_HOME_PAGE_POSTS = {
                     JOIN profiles
                     ON profiles.profile_user_id = post_user_id
                     ORDER BY post_created_at DESC
-                    LIMIT ${100 - postsFromFollowings.length}
+                    LIMIT ${30 - postsFromFollowings.length}
             `;
 
             const fillingPosts = await mysqlQuery(fillingPostsQuery, context.connection);

@@ -7,7 +7,7 @@ import request from 'request';
 export default async function imagesGenerator(connection: Connection) {
     for (let i = 0; i < 20; i++) {
         try {
-            const imageURL = faker.image.imageUrl(200, 200);
+            const imageURL = faker.image.imageUrl(125, 125);
 
             const base64 = await generateBase64Image(imageURL);
 
@@ -32,7 +32,7 @@ export default async function imagesGenerator(connection: Connection) {
     }
     for (let i = 0; i < 20; i++) {
         try {
-            const imageURL = faker.image.imageUrl(800, 600);
+            const imageURL = faker.image.imageUrl(700, 525);
 
             const base64 = await generateBase64Image(imageURL);
 
