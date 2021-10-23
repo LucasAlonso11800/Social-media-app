@@ -1,6 +1,3 @@
-CREATE DATABASE social_media;
-USE social_media; 
-
 CREATE TABLE users(
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_username VARCHAR(40) UNIQUE,

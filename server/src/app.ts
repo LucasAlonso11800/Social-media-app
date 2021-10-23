@@ -5,7 +5,7 @@ import { graphqlHTTP } from 'express-graphql';
 import 'dotenv/config';
 
 import schema from './GraphQL/schema';
-import { mysqlConnection } from './Helpers/ConnectionToDBPromise';
+
 const app = express();
 
 const connection = mysql.createConnection({
