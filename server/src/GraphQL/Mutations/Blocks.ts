@@ -3,12 +3,20 @@ import { GraphQLID, GraphQLNonNull } from "graphql";
 import { mysqlQuery } from "../../Helpers/MySQLPromise";
 // Types
 import { BlockStatusType } from "../Types/BlockStatusType";
-import { IBlockRelation, IContext } from "../../Interfaces";
+import { IBlockRelation, IMySQLQuery } from "../../Interfaces";
 
 type Args = {
     blockingUserId: string,
     blockedUserId: string
 };
+
+type MySQLResponse = [
+    [{
+        blocking_user_id: number,
+        blocked_user_id: number
+    }],
+    IMySQLQuery
+];
 
 export const BLOCK_USER = {
     name: 'BLOCK_USER',
@@ -17,20 +25,21 @@ export const BLOCK_USER = {
         blockingUserId: { type: new GraphQLNonNull(GraphQLID) },
         blockedUserId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: Args, context: IContext) {
+    async resolve(_: any, args: Args) {
         const { blockingUserId, blockedUserId } = args;
         try {
-            const checkRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}`;
-            const response: IBlockRelation[] = await mysqlQuery(checkRelationQuery);
+            const checkRelationQuery = `CALL CheckBlockRelation(${blockingUserId}, ${blockedUserId})`;
+            const response: MySQLResponse = await mysqlQuery(checkRelationQuery);
 
-            const query = response[0] ?
-                `DELETE FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id = ${blockedUserId}` :
-                `INSERT INTO blocks (blocking_user_id, blocked_user_id) VALUES (${blockingUserId}, ${blockedUserId}) `
-                ;
+            const isAlreadyBlocking = response[0][0] ? true : false;
+
+            const query = isAlreadyBlocking ?
+                `CALL BlockDel(${blockingUserId}, ${blockedUserId})` :
+                `CALL BlockIns(${blockingUserId}, ${blockedUserId}) `;
 
             await mysqlQuery(query);
 
-            return { isBlocking: response[0] ? false : true }
+            return { isBlocking: isAlreadyBlocking ? false : true }
         }
         catch (err: any) {
             throw new Error(err)
