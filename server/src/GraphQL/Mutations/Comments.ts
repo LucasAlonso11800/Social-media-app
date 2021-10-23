@@ -5,7 +5,7 @@ import checkAuth from '../../Helpers/CheckAuth';
 import { mysqlQuery } from '../../Helpers/MySQLPromise';
 // Types
 import { CommentType } from '../Types/CommentType';
-import { IContext, IMySQLQuery } from '../../Interfaces';
+import { IComment, IContext, IMySQLQuery } from '../../Interfaces';
 
 type Args = {
     postId: string,
@@ -13,6 +13,11 @@ type Args = {
     commentId: string,
     userId: string
 };
+
+type MySQLResponse = [
+    [IComment],
+    IMySQLQuery
+];
 
 export const ADD_COMMENT = {
     name: 'ADD_COMMENT',
@@ -27,37 +32,11 @@ export const ADD_COMMENT = {
 
         if (args.body.trim() === '') throw new Error('Empty comment');
         try {
-            const insertCommentQuery = `
-                INSERT INTO comments (
-                    comment_post_id,
-                    comment_user_id,
-                    comment_created_at,
-                    comment_body
-                ) VALUES (
-                    ${postId},
-                    ${user.id},
-                    "${new Date().toISOString().substring(0, 19)}",
-                    "${body}"
-                )
-            `;
-            const queryResult: IMySQLQuery = await mysqlQuery(insertCommentQuery);
-
-            const getCommentQuery = `SELECT 
-                comment_id AS id,
-                comment_body AS body,
-                comment_created_at AS createdAt,
-                user_username AS username,
-                profile_profile_name AS profileName
-                FROM comments
-                JOIN users
-                ON comment_user_id = users.user_id
-                JOIN profiles
-                ON profiles.profile_user_id = comment_user_id
-                WHERE comment_id = ${queryResult.insertId}
-            `;
-
-            const response = await mysqlQuery(getCommentQuery);
-            return response[0]
+            const date = new Date().toISOString().substring(0, 19);
+  
+            const queryResult: IMySQLQuery = await mysqlQuery(`CALL CommentIns(${postId}, ${user.id}, "${date}", "${body}")`);
+            const response: MySQLResponse = await mysqlQuery(`CALL SingleCommentGet(${queryResult.insertId})`);
+            return response[0][0]
         }
         catch (err: any) {
             throw new Error(err)
@@ -79,7 +58,7 @@ export const DELETE_COMMENT = {
         if (userId !== user.id.toString()) throw new Error("Action not allowed");
 
         try {
-            const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${commentId}`;
+            const deleteCommentQuery = `CALL CommentDel(${commentId})`;
             await mysqlQuery(deleteCommentQuery);
             return "Comment deleted"
         }

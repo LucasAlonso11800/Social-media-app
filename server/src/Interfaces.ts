@@ -37,6 +37,14 @@ export interface IPost {
     createdAt: string
 };
 
+// Comments
+export interface IComment {
+    body: string
+    username: string
+    profileName: string
+    createdAt: string
+}
+
 // Likes
 export interface ILike {
     like_id: number
