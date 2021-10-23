@@ -31,7 +31,7 @@ export const GET_PROFILE = {
                     ON users.user_id = profile_user_id
                     WHERE profile_user_id = ${userId}
             `;
-            const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection)
+            const response: IProfile[] = await mysqlQuery(getProfileQuery)
 
             if (response[0]) return response[0];
             throw new Error("User not found");

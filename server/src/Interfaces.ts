@@ -1,9 +1,7 @@
 import express from 'express';
-import { Connection } from 'mysql2';
 
 export interface IContext {
     headers: typeof express.request.headers,
-    connection: Connection
 };
 
 // MySQL

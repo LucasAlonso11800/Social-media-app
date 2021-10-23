@@ -27,7 +27,7 @@ export const GET_SINGLE_POST = {
                     ON profiles.profile_user_id = post_user_id
                     WHERE post_id = ${args.id}
             `;
-            const response: IPost[] = await mysqlQuery(getPostQuery, context.connection);
+            const response: IPost[] = await mysqlQuery(getPostQuery);
             if (response[0]) return response[0];
             throw new Error("Post not found");
         }
@@ -60,7 +60,7 @@ export const GET_POSTS_FROM_USER = {
                     WHERE post_user_id = ${args.userId}
                     ORDER BY post_created_at DESC
             `;
-            return await mysqlQuery(getPostsQuery, context.connection)
+            return await mysqlQuery(getPostsQuery)
         }
         catch (err: any) {
             throw new Error(err)
@@ -96,7 +96,7 @@ export const GET_HOME_PAGE_POSTS = {
                 ORDER BY posts.post_created_at DESC
                 LIMIT 30
             `;
-            const postsFromFollowings = await mysqlQuery(getPostsQuery, context.connection)
+            const postsFromFollowings = await mysqlQuery(getPostsQuery)
             if(postsFromFollowings.length === 30) return postsFromFollowings
 
             const fillingPostsQuery = `
@@ -116,7 +116,7 @@ export const GET_HOME_PAGE_POSTS = {
                     LIMIT ${30 - postsFromFollowings.length}
             `;
 
-            const fillingPosts = await mysqlQuery(fillingPostsQuery, context.connection);
+            const fillingPosts = await mysqlQuery(fillingPostsQuery);
             const response = [...postsFromFollowings, ...fillingPosts].sort((a, b) => a.post_created_at - b.post_created_at)
             return response
         }
@@ -150,7 +150,7 @@ export const GET_POSTS_BY_SEARCH = {
                     ORDER BY post_created_at
                     LIMIT 100
             `;
-            return await mysqlQuery(getPostsBySearchQuery, context.connection);
+            return await mysqlQuery(getPostsBySearchQuery);
         }
         catch (err: any) {
             throw new Error(err);

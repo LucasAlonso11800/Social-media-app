@@ -38,14 +38,14 @@ export const EDIT_PROFILE = {
                     profile_profile_description = "${bio}"
                 WHERE profile_id = ${profileId}
             `;
-            await mysqlQuery(updateProfileQuery, context.connection);
+            await mysqlQuery(updateProfileQuery);
 
             if (profileImage !== null) {
                 const updateProfileImageQuery = `UPDATE images
                     SET image_image = "${profileImage}"
                     WHERE image_profile_id = ${profileId}
                 `;
-                await mysqlQuery(updateProfileImageQuery, context.connection);
+                await mysqlQuery(updateProfileImageQuery);
             };
 
             const getProfileQuery = `SELECT 
@@ -66,7 +66,7 @@ export const EDIT_PROFILE = {
                 WHERE profile_id = ${profileId}
             `;
             
-            const response: IProfile[] = await mysqlQuery(getProfileQuery, context.connection); 
+            const response: IProfile[] = await mysqlQuery(getProfileQuery); 
             return response[0]
         }
         catch (err: any) {

@@ -27,7 +27,7 @@ export const GET_COMMENTS_FROM_POSTS = {
                     WHERE comment_post_id = ${args.postId}
                     ORDER BY comment_created_at DESC
             `;
-            return await mysqlQuery(getCommentsQuery, context.connection)
+            return await mysqlQuery(getCommentsQuery)
         }
         catch (err: any) {
             throw new Error(err)
@@ -43,7 +43,7 @@ export const GET_COMMENT_COUNT = {
     async resolve(_: any, args: { postId: string }, context: IContext) {
         try {
             const getCommentCountQuery = `SELECT COUNT(*) AS count FROM comments WHERE comment_post_id = ${args.postId}`;
-            const response = await mysqlQuery(getCommentCountQuery, context.connection)
+            const response = await mysqlQuery(getCommentCountQuery)
             return response[0].count
         }
         catch (err: any) {

@@ -8,7 +8,7 @@ import schema from './GraphQL/schema';
 
 const app = express();
 
-const connection = mysql.createConnection({
+export const connection = mysql.createConnection({
     host: process.env.dbHost,
     database: process.env.dbDatabase,
     user: process.env.dbUser,
@@ -29,8 +29,7 @@ app.use('/graphql', graphqlHTTP((req, res) => {
         schema,
         graphiql: true,
         context: {
-            headers: req.headers,
-            connection: connection
+            headers: req.headers
         }
     }
 }));

@@ -14,7 +14,7 @@ export const GET_USER_IMAGE = {
 
         try {
             const getUserImageQuery = `SELECT image_image FROM images WHERE image_user_id = ${userId}`;
-            const response: IImage[] = await mysqlQuery(getUserImageQuery, context.connection);
+            const response: IImage[] = await mysqlQuery(getUserImageQuery);
             return response[0] ? response[0].image_image : null
         }
         catch (err: any) {

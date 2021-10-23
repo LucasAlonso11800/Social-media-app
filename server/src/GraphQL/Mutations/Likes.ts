@@ -39,16 +39,16 @@ export const LIKE_POST_OR_COMMENT = {
 
 async function likePost(user: JwtPayload, postId: string, context: IContext) {
     const checkRelationQuery = `SELECT * FROM likes WHERE like_post_id = ${postId} && like_user_id = ${user.id}`;
-    const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
+    const response: ILike[] = await mysqlQuery(checkRelationQuery);
 
     const query = response[0] ?
         `DELETE FROM likes WHERE like_id = ${response[0].like_id}` :
         `INSERT INTO likes (like_type, like_user_id, like_post_id) VALUES("P", ${user.id}, ${postId})`
     ;
-    await mysqlQuery(query, context.connection);
+    await mysqlQuery(query);
     
     const getLikeList = `SELECT * FROM likes WHERE like_post_id = ${postId}`;
-    const likeList: ILike[] = await mysqlQuery(getLikeList, context.connection);
+    const likeList: ILike[] = await mysqlQuery(getLikeList);
     
     return {
         liked: response[0] ? false : true,
@@ -58,16 +58,16 @@ async function likePost(user: JwtPayload, postId: string, context: IContext) {
 
 async function likeComment(user: JwtPayload, commentId: string, context: IContext) {
     const checkRelationQuery = `SELECT * FROM likes WHERE like_comment_id = ${commentId} && like_user_id = ${user.id}`;
-    const response: ILike[] = await mysqlQuery(checkRelationQuery, context.connection);
+    const response: ILike[] = await mysqlQuery(checkRelationQuery);
 
     const query = response[0] ?
         `DELETE FROM likes WHERE like_id = ${response[0].like_id}` :
         `INSERT INTO likes (like_type, like_user_id, like_comment_id) VALUES("C", ${user.id}, ${commentId})`
     ;
-    await mysqlQuery(query, context.connection);
+    await mysqlQuery(query);
     
     const getLikeList = `SELECT * FROM likes WHERE like_comment_id = ${commentId}`;
-    const likeList: ILike[] = await mysqlQuery(getLikeList, context.connection);
+    const likeList: ILike[] = await mysqlQuery(getLikeList);
     
     return {
         liked: response[0] ? false : true,

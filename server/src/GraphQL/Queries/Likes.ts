@@ -29,7 +29,7 @@ export const GET_LIKE_STATUS = {
                 `SELECT * FROM likes WHERE like_comment_id = ${commentId}` :
                 `SELECT * FROM likes WHERE like_post_id = ${postId}`;
 
-            const likesList: ILike[] = await mysqlQuery(getLikesListQuery, context.connection);
+            const likesList: ILike[] = await mysqlQuery(getLikesListQuery);
             const userHasLiked = userId !== null ? likesList.find(like => like.like_user_id.toString() === userId) : false;
 
             return {
@@ -71,7 +71,7 @@ export const GET_LIKE_LIST = {
                     WHERE like_post_id = ${postId}`
                 ;
 
-            return await mysqlQuery(getLikesListQuery, context.connection)
+            return await mysqlQuery(getLikesListQuery)
         }
         catch (err: any) {
             throw new Error(err)

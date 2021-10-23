@@ -25,7 +25,7 @@ export const EDIT_USER_IMAGE = {
 
         try {
             const updateUserImageQuery = `UPDATE images SET image_image = "${image}" WHERE image_user_id = ${userId}`;
-            await mysqlQuery(updateUserImageQuery, context.connection)
+            await mysqlQuery(updateUserImageQuery)
 
             return image;
         }

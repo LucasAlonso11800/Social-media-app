@@ -40,7 +40,7 @@ export const ADD_COMMENT = {
                     "${body}"
                 )
             `;
-            const queryResult: IMySQLQuery = await mysqlQuery(insertCommentQuery, context.connection);
+            const queryResult: IMySQLQuery = await mysqlQuery(insertCommentQuery);
 
             const getCommentQuery = `SELECT 
                 comment_id AS id,
@@ -56,7 +56,7 @@ export const ADD_COMMENT = {
                 WHERE comment_id = ${queryResult.insertId}
             `;
 
-            const response = await mysqlQuery(getCommentQuery, context.connection);
+            const response = await mysqlQuery(getCommentQuery);
             return response[0]
         }
         catch (err: any) {
@@ -80,7 +80,7 @@ export const DELETE_COMMENT = {
 
         try {
             const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = ${commentId}`;
-            await mysqlQuery(deleteCommentQuery, context.connection);
+            await mysqlQuery(deleteCommentQuery);
             return "Comment deleted"
         }
         catch (err: any) {

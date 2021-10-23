@@ -26,7 +26,7 @@ export const GET_USERS_BY_SEARCH = {
                     ON profiles.profile_user_id = user_id
                     WHERE user_username LIKE "%${args.query}%"
             `;
-            return await mysqlQuery(getUsersBySearchQuery, context.connection);
+            return await mysqlQuery(getUsersBySearchQuery);
         }
         catch (err: any) {
             throw new Error(err);

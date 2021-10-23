@@ -31,7 +31,7 @@ export const CREATE_POST = {
                 VALUES(${user.id}, "${args.body}", "${new Date().toISOString().substring(0, 19)}"
                 )
             `;
-            const queryResult: IMySQLQuery = await mysqlQuery(insertPostQuery, context.connection);
+            const queryResult: IMySQLQuery = await mysqlQuery(insertPostQuery);
 
             const getPostQuery = `
                 SELECT post_id AS postId, 
@@ -47,7 +47,7 @@ export const CREATE_POST = {
                 ON profiles.profile_user_id = post_user_id
                 WHERE post_id = ${queryResult.insertId}
             `;
-            const response: IPost[] = await mysqlQuery(getPostQuery, context.connection);
+            const response: IPost[] = await mysqlQuery(getPostQuery);
             return response[0]
         }
         catch (err: any) {
@@ -71,7 +71,7 @@ export const DELETE_POST = {
 
         try {
             const deletePostQuery = `DELETE FROM posts WHERE post_id = ${postId}`;
-            await mysqlQuery(deletePostQuery, context.connection);
+            await mysqlQuery(deletePostQuery);
             return 'Post deleted'
         }
         catch (err: any) {

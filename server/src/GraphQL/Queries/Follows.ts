@@ -24,8 +24,8 @@ export const GET_FOLLOW_STATUS = {
             const getFollowerListQuery = `SELECT * FROM follows WHERE followee_id = ${followeeId}`;
             const getFolloweeListQuery = `SELECT * FROM follows WHERE follower_id = ${followeeId}`;
 
-            const followerList: IFollowRelation[] = await mysqlQuery(getFollowerListQuery, context.connection);
-            const followeeList: IFollowRelation[] = await mysqlQuery(getFolloweeListQuery, context.connection);
+            const followerList: IFollowRelation[] = await mysqlQuery(getFollowerListQuery);
+            const followeeList: IFollowRelation[] = await mysqlQuery(getFolloweeListQuery);
 
             const userHasFollowed = followerList.find(follow => follow.follower_id.toString() === followerId);
             return {
@@ -59,7 +59,7 @@ export const GET_FOLLOW_LIST = {
                     WHERE followee_id = ${followeeId}
                 `;
 
-            return await mysqlQuery(getFollowsListQuery, context.connection)
+            return await mysqlQuery(getFollowsListQuery)
         }
         catch (err: any) {
             throw new Error(err)

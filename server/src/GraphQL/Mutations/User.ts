@@ -55,7 +55,7 @@ export const ADD_USER = {
                 "${birthDate}"
             )`;
 
-            const queryResult: IMySQLQuery = await mysqlQuery(insertUserQuery, context.connection);
+            const queryResult: IMySQLQuery = await mysqlQuery(insertUserQuery);
 
             const getUserQuery = `
                 SELECT
@@ -64,7 +64,7 @@ export const ADD_USER = {
                     FROM users 
                     WHERE user_id = ${queryResult.insertId}
             `;
-            const user: IUser[] = await mysqlQuery(getUserQuery, context.connection);
+            const user: IUser[] = await mysqlQuery(getUserQuery);
 
             // Initial user image
             const insertUserImageQuery = `INSERT INTO images(
@@ -76,7 +76,7 @@ export const ADD_USER = {
                 ${user[0].id},
                 null
             )`;
-            await mysqlQuery(insertUserImageQuery, context.connection)
+            await mysqlQuery(insertUserImageQuery)
 
             // Initial profile
             const insertProfileQuery = `INSERT INTO profiles(
@@ -86,7 +86,7 @@ export const ADD_USER = {
                 ${user[0].id},
                 "${user[0].username}"
             )`;
-            const profileQueryResult: IMySQLQuery = await mysqlQuery(insertProfileQuery, context.connection);
+            const profileQueryResult: IMySQLQuery = await mysqlQuery(insertProfileQuery);
 
             // Initial profile image
             const insertProfileImageQuery = `INSERT INTO images(
@@ -98,7 +98,7 @@ export const ADD_USER = {
                 ${profileQueryResult.insertId},
                 null
             )`;
-            await mysqlQuery(insertProfileImageQuery, context.connection);
+            await mysqlQuery(insertProfileImageQuery);
 
             const token = generateToken(user[0]);
 
@@ -135,7 +135,7 @@ export const LOGIN_USER = {
                 user_password AS password
                 FROM users 
                 WHERE user_username = "${username}"`;
-        const response: IUser[] = await mysqlQuery(getUserQuery, context.connection);
+        const response: IUser[] = await mysqlQuery(getUserQuery);
         const user = response[0];
 
         if (!user) throw new Error('Wrong username or password');
@@ -164,7 +164,7 @@ export const DELETE_USER = {
 
         try {
             const deleteUserQuery = `DELETE FROM users WHERE user_id = ${args.id}`;
-            await mysqlQuery(deleteUserQuery, context.connection);
+            await mysqlQuery(deleteUserQuery);
             return "User deleted"
         }
         catch (err: any) {

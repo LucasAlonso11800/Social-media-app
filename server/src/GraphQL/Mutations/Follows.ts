@@ -25,25 +25,25 @@ export const FOLLOW_USER = {
         followerId: { type: new GraphQLNonNull(GraphQLID) },
         followeeId: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(_: any, args: Args, context: IContext) {
+    async resolve(_: any, args: Args) {
         const { followerId, followeeId } = args;
 
         try {
             const checkRelationQuery = `CALL CheckFollowRelation(${followerId}, ${followeeId})`;
-            const response: MySQLResponse = await mysqlQuery(checkRelationQuery, context.connection);
+            const response: MySQLResponse = await mysqlQuery(checkRelationQuery);
 
             const query = response[0][0] ?
                 `CALL FollowDel(${followerId}, ${followeeId})` :
                 `CALL FollowIns (${followerId}, ${followeeId}) `
                 ;
 
-            await mysqlQuery(query, context.connection);
+            await mysqlQuery(query);
 
-            const followerList: MySQLResponse = await mysqlQuery(`CALL FollowersCountGet(${followeeId})`, context.connection);
-            const followeeList: MySQLResponse = await mysqlQuery(`CALL FolloweesCountGet(${followeeId})`, context.connection);
+            const followerList: MySQLResponse = await mysqlQuery(`CALL FollowersCountGet(${followeeId})`);
+            const followeeList: MySQLResponse = await mysqlQuery(`CALL FolloweesCountGet(${followeeId})`);
 
             return {
-                follows: response[0] ? false : true,
+                follows: response[0][0] ? false : true,
                 followerCount: followerList[0][0].followers,
                 followeeCount: followeeList[0][0].followees
             }

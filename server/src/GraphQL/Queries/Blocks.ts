@@ -26,10 +26,10 @@ export const GET_BLOCK_STATUS = {
 
         try {
             const blockingRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockingUserId} AND blocked_user_id`;
-            const isBlocking: IBlockRelation[] = await mysqlQuery(blockingRelationQuery, context.connection);
+            const isBlocking: IBlockRelation[] = await mysqlQuery(blockingRelationQuery);
 
             const blockedRelationQuery = `SELECT * FROM blocks WHERE blocking_user_id = ${blockedUserId} AND blocked_user_id = ${blockingUserId}`;
-            const isBlocked: IBlockRelation[] = await mysqlQuery(blockedRelationQuery, context.connection);
+            const isBlocked: IBlockRelation[] = await mysqlQuery(blockedRelationQuery);
 
             return {
                 isBlocking: isBlocking[0] ? true : false,
