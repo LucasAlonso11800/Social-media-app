@@ -9,6 +9,7 @@ import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import { SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     open: boolean
@@ -61,13 +62,15 @@ export default function UserImageModal(props: Props) {
     const inputFile: any = useRef(null);
     const onButtonClick = () => inputFile.current.click();
 
+    const imageSrc = image.src && image.src !== '' ? getBase64ImageSrc(image.src) : ProfilePlaceholder
+
     return (
         <Modal open={open} className="user-modal">
             <h2 className="user-modal__title">Edit your image</h2>
             <p className="user-modal__subtitle">It's the image that will be displayed besides your posts and comments</p>
             <div className="user-modal__img-container">
                 <Image
-                    src={image.src && image.src !== '' ? `data:image/png;base64,${image.src}` : ProfilePlaceholder}
+                    src={imageSrc}
                     alt={image.alt}
                     className="user-modal__img"
                 />

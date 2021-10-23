@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 // Components
 import { Modal, Container, Form, Button, Image } from 'semantic-ui-react';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
@@ -9,9 +9,10 @@ import { EDIT_PROFILE } from '../graphql/Mutations';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IEditProfile, IProfile, SnackbarActions } from '../Interfaces';
+import { IProfile, SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     open: boolean
@@ -29,13 +30,18 @@ const validationSchema = yup.object({
 
 export default function ProfileModal(props: Props) {
     const { open, setOpen, profile, setProfile, userId, snackbarDispatch } = props;
-    const [image, setImage] = useState({
-        alt: 'Profile image',
-        src: profile.profileImage
-    });
+
     const [fileSizeError, setFileSizeError] = useState<boolean>(false);
-    const [newImage, setNewImage] = useState<string>('');
-    const [queryVariables, setQueryVariables] = useState<IEditProfile>();
+
+    const formik = useFormik({
+        initialValues: {
+            profileName: profile.profileName,
+            bio: profile.bio,
+            profileImage: profile.profileImage
+        },
+        validationSchema,
+        onSubmit: () => handleSubmit()
+    });
 
     const [editProfile, { loading }] = useMutation<{ edit_profile: IProfile }>(EDIT_PROFILE, {
         onCompleted: (data) => {
@@ -43,37 +49,20 @@ export default function ProfileModal(props: Props) {
             setOpen(false);
         },
         variables: {
-            ...queryVariables,
-            profileImage: image.src === profile.profileImage ? image.src : newImage,
+            ...formik.values,
             profileId: profile.id,
             userId
         },
         onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
-    const formik = useFormik({
-        initialValues: {
-            profileName: profile.profileName,
-            bio: profile.bio,
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            if (queryVariables?.bio === values.bio &&
-                queryVariables?.profileName === values.profileName &&
-                image.src !== profile.profileImage
-            ) return editProfile()
-            setQueryVariables(values)
-        }
-    });
+    function handleSubmit(){
+        editProfile()
+    };
 
-    useEffect(() => {
-        if (queryVariables) editProfile()
-    }, [queryVariables]);
-
-    const handleReaderLoaded = (readerEvt: any) => {
-        let binaryString = readerEvt.target.result
-        setImage({ ...image, src: btoa(binaryString) })
-        setNewImage(btoa(binaryString))
+    const handleReaderLoaded = (readerEvt: any): void => {
+        const binaryString = readerEvt.target.result;
+        formik.setFieldValue('profileImage', btoa(binaryString), true); 
     };
 
     const handleImg = (e: any): void => {
@@ -81,7 +70,6 @@ export default function ProfileModal(props: Props) {
         if (file) {
             if (file.size > 1048577) return setFileSizeError(true);
             setFileSizeError(false);
-            setImage({ ...image, alt: file.name })
             const reader = new FileReader();
             reader.onload = handleReaderLoaded;
             reader.readAsBinaryString(file);
@@ -89,7 +77,9 @@ export default function ProfileModal(props: Props) {
     };
 
     const inputFile: any = useRef(null);
-    const onButtonClick = () => inputFile.current.click();
+    const handleClick = () => inputFile.current.click();
+
+    const imageSrc = formik.values.profileImage ? getBase64ImageSrc(formik.values.profileImage) : ProfilePlaceholder;
 
     return (
         <Modal open={open}>
@@ -130,8 +120,8 @@ export default function ProfileModal(props: Props) {
                     }
                     <div className="profile-modal__img-container">
                         <Image
-                            src={image.src ? `data:image/png;base64,${image.src}` : ProfilePlaceholder}
-                            alt={image.alt}
+                            src={imageSrc}
+                            alt='Profile image'
                             className="profile-modal__img"
                         />
                         <input
@@ -143,7 +133,7 @@ export default function ProfileModal(props: Props) {
                         />
                         <Button
                             type="button"
-                            onClick={() => onButtonClick()}
+                            onClick={() => handleClick()}
                             className="profile-modal__img-button"
                             disabled={loading}
                         >Change image</Button>

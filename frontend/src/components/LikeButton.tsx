@@ -43,8 +43,8 @@ export default function LikeButton(props: Props) {
             const newLikeStatus: ILikeStatus = {
                 count: data.like_post_or_comment.count,
                 liked: data.like_post_or_comment.liked
-            }
-            setLikeStatus(newLikeStatus)
+            };
+            setLikeStatus(newLikeStatus);
         },
         variables: {
             postId,

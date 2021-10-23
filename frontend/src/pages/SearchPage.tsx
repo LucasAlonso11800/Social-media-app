@@ -55,13 +55,16 @@ export default function SearchPage() {
     };
 
     useEffect(() => {
-        if(localStorage.getItem("query")) searchData()
-    }, [])
+        if (localStorage.getItem("query")) searchData()
+    }, []);
+
+    const thereAreUsers = !usersLoading && usersData !== undefined;
+    const thereArePosts = !postsLoading && postsData !== undefined;
 
     return (
         <Container>
             <SearchBar query={query} setQuery={setQuery} loading={usersLoading || postsLoading} searchData={searchData} />
-            {!usersLoading && usersData !== undefined &&
+            {thereAreUsers &&
                 <div className="search-page__container">
                     <h2>Users</h2>
                     <Carousel
@@ -76,20 +79,16 @@ export default function SearchPage() {
                         transitionDuration={1000}
                         removeArrowOnDeviceType={["tablet", "mobile"]}
                     >
-                        {usersData.users_by_search.map((user) => {
+                        {usersData!.users_by_search.map((user) => {
                             return <UserCard user={user} key={user.id} />
                         })}
                     </Carousel>
                 </div>
             }
-            {!postsLoading && postsData !== undefined &&
+            {thereArePosts &&
                 <div className="search-page__container">
                     <h2>Posts</h2>
-                    {
-                        postsData.posts_by_search.map((post) => {
-                            return <PostCard post={post} key={post.postId} />
-                        })
-                    }
+                    {postsData!.posts_by_search.map((post) => <PostCard post={post} key={post.postId} />)}
                 </div>
             }
         </Container>

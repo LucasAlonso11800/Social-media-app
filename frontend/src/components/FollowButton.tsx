@@ -40,8 +40,8 @@ export default function FollowButton(props: Props) {
             disabled={loading}
             className={loading ? 'loading' : ''}
             onClick={() => {
-                if (state) return followUser()
-                return window.location.href = '/login'
+                if (state) return followUser();
+                window.location.assign('/login');
             }}
         >
             {followStatus?.follows ? 'Unfollow' : 'Follow'}

@@ -4,6 +4,8 @@ import { GlobalContext } from '../context/GlobalContext';
 // Components
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import { Image } from 'semantic-ui-react';
+// Helpers
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     userImage: string
@@ -16,12 +18,14 @@ export default function ProfileUserImage(props: Props) {
     const { state } = useContext(GlobalContext);
     const { userImage, username, loading, setUserImageModalOpen } = props;
 
+    const imageSrc = userImage ? getBase64ImageSrc(userImage) : ProfilePlaceholder;
+
     return (
         <div className="profile__user-image-container">
             <Image
                 fluid
                 className={loading ? "loading profile__user-image" : "profile__user-image"}
-                src={userImage ? `data:image/png;base64,${userImage}` : ProfilePlaceholder}
+                src={imageSrc}
             />
             {state?.username === username ?
                 <div className="profile__actual-change-user-image" onClick={() => setUserImageModalOpen(true)}>

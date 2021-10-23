@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
@@ -10,7 +10,7 @@ import { Form, Button, Container } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { ILoginUser, EActionType } from '../Interfaces';
+import { EActionType } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
@@ -28,32 +28,33 @@ const validationSchema = yup.object({
 export default function LoginPage() {
     const { dispatch, snackbarDispatch } = useContext(GlobalContext);
 
-    const [queryVariables, setQueryVariables] = useState<ILoginUser>();
-
-    const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-        update(_, result) {
-            dispatch({
-                type: EActionType.LOGIN,
-                payload: result.data.login_user
-            });
-            window.location.assign('/');
-        },
-        variables: queryVariables,
-        onError: (error): unknown => handleError(error, snackbarDispatch)
-    });
-
     const formik = useFormik({
         initialValues: {
             username: '',
             password: ''
         },
-        validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        validationSchema,
+        onSubmit: () => handleSubmit()
     });
 
-    useEffect(() => {
-        if (queryVariables) loginUser();
-    }, [queryVariables])
+    const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+        onCompleted: (data) => {
+            dispatch({
+                type: EActionType.LOGIN,
+                payload: data.login_user
+            });
+            window.location.assign('/');
+        },
+        variables: {
+            username: formik.values.username,
+            password: formik.values.password
+        },
+        onError: (error): unknown => handleError(error, snackbarDispatch)
+    });
+
+    function handleSubmit(){
+        loginUser()
+    };
 
     return (
         <Container>

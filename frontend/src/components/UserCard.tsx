@@ -12,6 +12,7 @@ import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import { IFollowStatus, IUserData } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     user: IUserData
@@ -37,19 +38,21 @@ export default function UserCard(props: Props) {
         }
     });
 
+    const imageSrc = data?.user_image ? getBase64ImageSrc(data?.user_image) : ProfilePlaceholder;
+
     return (
         <Card fluid centered raised>
             <Card.Content>
                 <div className="user-card__user-image-container">
                     <Image
                         className="user-card__user-image"
-                        src={data?.user_image ? `data:image/png;base64,${data?.user_image}` : ProfilePlaceholder}
-                        onClick={() => window.location.href = `/user/${user.id}`}
+                        src={imageSrc}
+                        onClick={() => window.location.assign(`/user/${user.id}`)}
                     />
                 </div>
                 <Card.Header
                     className="user-card__username"
-                    onClick={() => window.location.href = `/user/${user.id}`}
+                    onClick={() => window.location.assign(`/user/${user.id}`)}
                 >
                     {user.profileName}
                 </Card.Header>
@@ -61,7 +64,7 @@ export default function UserCard(props: Props) {
                             trigger={<Icon name="user" className="user-card__user-data-icon" />}
                         />
                         <p>{user.username}</p>
-                        </Card.Description>
+                    </Card.Description>
                     <Card.Description className="user-card__user-data">
                         <Popup
                             inverted

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '../graphql/Mutations';
@@ -9,7 +9,7 @@ import { Form, Button } from 'semantic-ui-react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Interfaces
-import { ICreatePost, IPost, SnackbarActions } from '../Interfaces';
+import { IPost, SnackbarActions } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
 
@@ -28,12 +28,11 @@ const validationSchema = yup.object({
 
 export default function PostForm(props: Props) {
     const { userId, snackbarDispatch } = props;
-    const [queryVariables, setQueryVariables] = useState<ICreatePost>();
 
     const formik = useFormik({
         initialValues: { body: '' },
-        validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        validationSchema,
+        onSubmit: () => handleSubmit()
     });
 
     const [createPost, { loading }] = useMutation(CREATE_POST, {
@@ -52,13 +51,15 @@ export default function PostForm(props: Props) {
             formik.setFieldValue('body', '');
             formik.setTouched({ body: false });
         },
-        variables: queryVariables,
+        variables: {
+            body: formik.values.body
+        },
         onError: (error): unknown => handleError(error, snackbarDispatch),
     });
-
-    useEffect(() => {
-        if (queryVariables) createPost()
-    }, [queryVariables]);
+    
+    function handleSubmit(){
+        createPost()
+    };
 
     return (
         <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>

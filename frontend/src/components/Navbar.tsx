@@ -9,11 +9,12 @@ import { EActionType } from '../Interfaces';
 export default function NavBar() {
     const { state, dispatch } = useContext(GlobalContext);
 
-    const pathname = window.location.pathname;
+    const { pathname } = window.location;
     const path = pathname === '/' ? 'home' : pathname.substring(1);
+
     const [activeItem, setActiveItem] = useState<string>(path);
 
-    const nav = state !== null ?
+    return state !== null ?
         <Menu secondary pointing size={'huge'}>
             <Menu.Item
                 name="Home"
@@ -79,6 +80,4 @@ export default function NavBar() {
                 />
             </Menu.Menu>
         </Menu>
-
-    return nav
 };

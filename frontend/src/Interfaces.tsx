@@ -118,32 +118,3 @@ export interface IBlockStatus {
     isBlocking: boolean
     isBlocked: boolean
 };
-
-// Forms
-
-export interface IAddUser {
-    username: string
-    email: string
-    password: string
-    confirmPassword: string
-    city: string
-    birthDate: string
-};
-
-export interface ILoginUser {
-    username: string
-    password: string
-};
-
-export interface ICreatePost {
-    body: string
-};
-
-export interface IAddComment {
-    body: string
-};
-
-export interface IEditProfile {
-    profileName: string
-    bio: string
-};
