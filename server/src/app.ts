@@ -15,15 +15,14 @@ const connection = mysql.createConnection({
     password: process.env.dbPassword
 });
 
+connection.connect((err) => {
+    if(err) throw err;
+    console.log('Connected')
+});
+
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-app.use('/graphql', async (req, res, next) => {
-    await mysqlConnection(connection);
-    console.log('Connected to MySQL');
-    next()
-});
 
 app.use('/graphql', graphqlHTTP((req, res) => {
     return {

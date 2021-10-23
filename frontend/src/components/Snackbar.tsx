@@ -13,7 +13,7 @@ export default function Snackbar() {
 
     useEffect(() => {
         if (snackbarState.open === true) setTimeout(() => snackbarDispatch({ type, payload: null }), 5000)
-    }, [snackbarState]);
+    }, [snackbarState, snackbarDispatch, type]);
 
     return (
         <Message className={snackbarState.open ? "snackbar open" : "snackbar closed"} color="red">

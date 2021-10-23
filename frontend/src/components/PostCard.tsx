@@ -15,6 +15,7 @@ import { IPost } from '../Interfaces';
 import CommentButton from './CommentButton';
 // Helpers
 import { handleError } from '../helpers/handleError';
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     post: IPost;
@@ -29,25 +30,29 @@ export default function PostCard(props: Props) {
         onError: (error): unknown => handleError(error, undefined)
     });
 
+    const userCanDelete = state !== null && state.username === username && window.location.pathname.startsWith('/user/');
+
+    const imageSrc = image?.user_image ? getBase64ImageSrc(image?.user_image) : ProfilePlaceholder;
+
     return (
         <Card centered raised fluid>
             <Card.Content>
                 <Image
                     floated="right"
                     className="post__user-image"
-                    src={image?.user_image ? `data:image/png;base64,${image?.user_image}` : ProfilePlaceholder}
-                    onClick={() => window.location.href = `/user/${userId}`}
+                    src={imageSrc}
+                    onClick={() => window.location.assign(`/user/${userId}`)}
                 />
-                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.href = `/user/${userId}`} >{profileName}</Card.Header>
+                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.assign(`/user/${userId}`)} >{profileName}</Card.Header>
                 <Card.Meta>{username} - {moment(createdAt).fromNow(true)}</Card.Meta>
-                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.href = `/posts/${username}/${postId}`} >
+                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.assign(`/posts/${username}/${postId}`)} >
                     {body}
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <LikeButton postId={postId} />
                 <CommentButton postId={postId} username={username}/>
-                {state !== null && state.username === username && window.location.pathname.startsWith('/user/') && <DeleteButton postId={postId} />}
+                {userCanDelete && <DeleteButton postId={postId} />}
             </Card.Content>
         </Card>
     )

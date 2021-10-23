@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 // GraphQL
 import { useMutation } from '@apollo/client'
 import { ADD_COMMENT } from '../graphql/Mutations';
@@ -6,7 +6,7 @@ import { GET_COMMENTS_FROM_POSTS } from '../graphql/Queries';
 // Components
 import { Form, Button } from 'semantic-ui-react';
 // Interfaces
-import { IAddComment, IComment } from '../Interfaces';
+import { IComment } from '../Interfaces';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -31,12 +31,11 @@ const validationSchema = yup.object({
 
 export default function CommentForm(props: Props) {
     const { postId } = props
-    const [queryVariables, setQueryVariables] = useState<IAddComment>();
 
     const formik = useFormik({
         initialValues: { body: '' },
-        validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        validationSchema,
+        onSubmit: () => handleSubmit()
     });
 
     const [addComment, { error, loading }] = useMutation<MutationResult>(ADD_COMMENT, {
@@ -56,16 +55,16 @@ export default function CommentForm(props: Props) {
             formik.setTouched({ body: false });
         },
         variables: {
-            body: queryVariables?.body,
+            body: formik.values.body,
             postId
         },
         onError: (error): unknown => handleError(error, undefined)
     });
 
-    useEffect(() => {
-        if (queryVariables) addComment()
-    }, [queryVariables]);
-
+    function handleSubmit(){
+        addComment()
+    };
+    
     return (
         <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
             <h2>Comment this post</h2>

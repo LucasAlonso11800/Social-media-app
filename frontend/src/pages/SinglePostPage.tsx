@@ -43,10 +43,11 @@ export default function SinglePostPage() {
                             <Loader>Loading...</Loader>
                         </Dimmer> :
                         <Grid.Column width="16">
-                            <h2>Comments</h2>
-                            <br />
                             {post?.single_post && <PostCard post={post.single_post} />}
                             {state ? <CommentForm postId={postId} /> : null}
+                            <br />
+                            <h2>Comments</h2>
+                            <br />
                             {comments?.comments_from_posts?.map(c => <Comment key={c.id} comment={c} postId={postId} />)}
                         </Grid.Column>
                     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState,  useContext } from 'react';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
@@ -10,7 +10,7 @@ import { Form, Button, Container, Select } from 'semantic-ui-react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Interfaces
-import { IAddUser, EActionType } from '../Interfaces';
+import { EActionType } from '../Interfaces';
 import { countries } from '../consts/Countries';
 // Helpers
 import { handleError } from '../helpers/handleError';
@@ -47,23 +47,8 @@ const validationSchema = yup.object({
 
 export default function RegisterPage() {
     const { dispatch, snackbarDispatch } = useContext(GlobalContext);
-    const [queryVariables, setQueryVariables] = useState<IAddUser>();
-    const [selectedCountry, setSelectedCountry] = useState<string>('Argentina');
 
-    const [addUser, { loading }] = useMutation(ADD_USER, {
-        update(_, result) {
-            dispatch({
-                type: EActionType.LOGIN,
-                payload: result.data.add_user
-            })
-            window.location.assign("/")
-        },
-        variables: {
-            ...queryVariables,
-            country: selectedCountry
-        },
-        onError: (error): unknown => handleError(error, snackbarDispatch)
-    });
+    const [selectedCountry, setSelectedCountry] = useState<string>('Argentina');
 
     const formik = useFormik({
         initialValues: {
@@ -74,13 +59,28 @@ export default function RegisterPage() {
             city: '',
             birthDate: new Date().toISOString().substring(0, 10)
         },
-        validationSchema: validationSchema,
-        onSubmit: (values) => setQueryVariables(values)
+        validationSchema,
+        onSubmit: (values) => handleSubmit()
     });
 
-    useEffect(() => {
-        if (queryVariables !== undefined) addUser();
-    }, [queryVariables]);
+    const [addUser, { loading }] = useMutation(ADD_USER, {
+        onCompleted: (data) => {
+            dispatch({
+                type: EActionType.LOGIN,
+                payload: data.add_user
+            })
+            window.location.assign("/")
+        },
+        variables: {
+            ...formik.values,
+            country: selectedCountry
+        },
+        onError: (error): unknown => handleError(error, snackbarDispatch)
+    });
+
+    function handleSubmit() {
+        addUser();
+    };
 
     return (
         <Container>

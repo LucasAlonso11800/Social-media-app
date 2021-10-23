@@ -6,7 +6,7 @@ import { GET_BLOCK_STATUS, GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
-import { Grid, Card, Image, Button, Icon, Popup, Dimmer, Loader} from 'semantic-ui-react';
+import { Grid, Card, Image, Button, Icon, Popup, Dimmer, Loader } from 'semantic-ui-react';
 import ProfileModal from './ProfileModal';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import FollowButton from './FollowButton';
@@ -19,6 +19,7 @@ import ProfileUserImage from './ProfileUserImage';
 import { IBlockStatus, IFollowStatus, IProfile } from '../Interfaces';
 // Helpers
 import { handleError } from '../helpers/handleError';
+import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
 
 type Props = {
     userId: string;
@@ -79,16 +80,22 @@ export default function Profile(props: Props) {
                 <Loader>Loading profile...</Loader>
             </Dimmer>
         )
-    }
+    };
+
     if (profile) {
         const { profileName, profileImage, bio, username, city, country, birthDate } = profile;
+
+        const imageSrc = profileImage ? getBase64ImageSrc(profileImage) : ProfilePlaceholder;
+        const userCanEditAndDelete = state && state.username === username;
+        const userCanFollow = !state || state.username !== username;
+        const userCanBlock = state && state.username !== username;
 
         return (
             <Card fluid>
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width="16">
-                            <Image fluid className="profile__profile-image" src={profileImage ? `data:image/png;base64,${profileImage}` : ProfilePlaceholder} />
+                            <Image fluid className="profile__profile-image" src={imageSrc} />
                         </Grid.Column>
                         <ProfileUserImage userImage={userImage} username={username} loading={userImageLoading} setUserImageModalOpen={setUserImageModalOpen} />
                     </Grid.Row>
@@ -97,9 +104,8 @@ export default function Profile(props: Props) {
                     <div className="profile__name-follow-container">
                         <h2 className="profile__title">{profileName}</h2>
                         <div className="profile__icons-container">
-                            {!state || state.username !== username ?
-                                <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} /> : null}
-                            {state && state.username === username &&
+                            {userCanFollow && <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} />}
+                            {userCanEditAndDelete &&
                                 <>
                                     <Popup
                                         content="Edit profile"
@@ -110,11 +116,10 @@ export default function Profile(props: Props) {
                                             </Button>
                                         }
                                     />
-                                    <DeleteUserButton userId={state.id} snackbarDispatch={snackbarDispatch} />
+                                    <DeleteUserButton userId={state!.id} snackbarDispatch={snackbarDispatch} />
                                 </>
                             }
-                            {state && state.username !== username ?
-                                <BlockUserButton blockingUserId={state.id} blockedUserId={userId} isBlocking={isBlocking} setIsBlocking={setIsBlocking} /> : null}
+                            {userCanBlock && <BlockUserButton blockingUserId={state!.id} blockedUserId={userId} isBlocking={isBlocking} setIsBlocking={setIsBlocking} />}
                         </div>
                     </div>
                     <Card.Meta><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
@@ -132,20 +137,24 @@ export default function Profile(props: Props) {
                         />{moment(birthDate).fromNow(true)}</Card.Meta>
                     <FollowerInfo profileName={profileName} bio={bio} followStatus={followStatus} />
                 </Card.Content>
+
                 <ProfileModal
                     open={modalOpen}
                     setOpen={setModalOpen}
                     profile={profile}
                     setProfile={setProfile}
                     userId={userId}
-                    snackbarDispatch={snackbarDispatch} />
+                    snackbarDispatch={snackbarDispatch}
+                />
+
                 <UserImageModal
                     open={userImageModalOpen}
                     setOpen={setUserImageModalOpen}
                     userImage={userImage}
                     setUserImage={setUserImage}
                     userId={userId}
-                    snackbarDispatch={snackbarDispatch} />
+                    snackbarDispatch={snackbarDispatch}
+                />
             </Card>
         )
     }

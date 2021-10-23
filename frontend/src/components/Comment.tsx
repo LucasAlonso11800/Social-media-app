@@ -19,10 +19,12 @@ export default function Comment(props: Props) {
     const { comment, postId } = props;
     const { state } = useContext(GlobalContext);
 
+    const userCanDelete = state && state.username === comment.username;
+
     return (
         <Card fluid>
             <Card.Content>
-                {state && state.username === comment.username && <DeleteButton postId={postId} commentId={comment.id} />}
+                {userCanDelete && <DeleteButton postId={postId} commentId={comment.id} />}
                 <Card.Header>{comment.username}</Card.Header>
                 <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{comment.body}</Card.Description>
