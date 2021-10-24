@@ -10,7 +10,7 @@ import { IBlockStatus } from '../Interfaces';
 import { handleError } from '../helpers/handleError';
 
 type Props = {
-    blockingUserId: string
+    blockingUserId: number
     blockedUserId: string
     isBlocking: boolean
     setIsBlocking: React.Dispatch<React.SetStateAction<boolean>>

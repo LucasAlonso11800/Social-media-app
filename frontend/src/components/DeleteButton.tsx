@@ -26,7 +26,7 @@ export default function DeleteButton(props: Props) {
     const { state, snackbarDispatch } = useContext(GlobalContext);
     const { postId, commentId } = props;
 
-    const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
+    const mutation = commentId ? DELETE_COMMENT : DELETE_POST;  
 
     const [deleteMutation] = useMutation(mutation, {
         update(proxy) {
@@ -63,12 +63,12 @@ export default function DeleteButton(props: Props) {
 function deletePost(proxy: ApolloCache<any>, postId: string | undefined, state: GlobalState) {
     const data: Pick<QueryResult, 'posts_from_user'> = proxy.readQuery({
         query: GET_POSTS_FROM_USER,
-        variables: { userId: state?.id }
+        variables: { userId: state?.id.toString() }
     }) as Pick<QueryResult, 'posts_from_user'>;
-
+    
     proxy.writeQuery({
         query: GET_POSTS_FROM_USER,
-        variables: { userId: state?.id },
+        variables: { userId: state?.id.toString() },
         data: { posts_from_user: data.posts_from_user.filter(p => p.postId !== postId) }
     });
 };

@@ -41,7 +41,7 @@ export default function PostForm(props: Props) {
                 query: GET_POSTS_FROM_USER,
                 variables: { userId }
             }) as QueryResult;
-
+            
             proxy.writeQuery({
                 query: GET_POSTS_FROM_USER,
                 variables: { userId },

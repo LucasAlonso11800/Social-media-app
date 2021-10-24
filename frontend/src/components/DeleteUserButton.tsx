@@ -10,7 +10,7 @@ import { SnackbarActions } from '../Interfaces';
 import { handleError } from '../helpers/handleError';
 
 type Props = {
-    userId: string
+    userId: number
     snackbarDispatch:  React.Dispatch<SnackbarActions>
 };
 

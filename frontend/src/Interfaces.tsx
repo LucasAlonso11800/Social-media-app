@@ -1,6 +1,6 @@
 // Context
 export interface IUserContext {
-    id: string
+    id: number
     token: string
     username: string
 }
