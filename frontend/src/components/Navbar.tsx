@@ -29,6 +29,7 @@ export default function NavBar() {
                 as={Link}
                 to={`/user/${state.id}`}
                 onClick={() => setActiveItem('user')}
+                data-testid="navbarUsername"
             />
             <Menu.Item
                 name="Search"
@@ -44,6 +45,7 @@ export default function NavBar() {
                         type: EActionType.LOGOUT,
                         payload: null
                     })}
+                    data-testid="logout"
                 />
             </Menu.Menu>
         </Menu>
@@ -70,6 +72,7 @@ export default function NavBar() {
                     as={Link}
                     to="/login"
                     onClick={() => setActiveItem('login')}
+                    data-testid="login"
                 />
                 <Menu.Item
                     name='register'
@@ -77,6 +80,7 @@ export default function NavBar() {
                     as={Link}
                     to="/register"
                     onClick={() => setActiveItem('register')}
+                    data-testid="register"
                 />
             </Menu.Menu>
         </Menu>

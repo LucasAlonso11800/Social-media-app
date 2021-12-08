@@ -22,7 +22,7 @@ const validationSchema = yup.object({
         .string()
         .min(6, 'The username must be at least 6 characters long')
         .max(40, "The username can't be longer than 40 characters long")
-        .required('Username must be provided'),
+        .required('An username must be provided'),
     email: yup
         .string()
         .matches(emailRegex, 'Provide a valid email')
@@ -34,7 +34,7 @@ const validationSchema = yup.object({
         .required('A password must be provided'),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref('password')], "Passwords must be equal")
+        .oneOf([yup.ref('password')], "Passwords don't match")
         .required('A password must be provided'),
     city: yup
         .string()
@@ -94,9 +94,10 @@ export default function RegisterPage() {
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     value={formik.values.username}
                     onChange={formik.handleChange}
+                    data-testid="username"
                 />
                 {formik.touched.username && formik.errors.username &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="usernameError">
                         <ul className="list">
                             <li>{formik.errors.username}</li>
                         </ul>
@@ -106,13 +107,14 @@ export default function RegisterPage() {
                     name="email"
                     label="Email"
                     placeholder="Choose an email"
-                    type="email"
+                    type="text"
                     value={formik.values.email}
                     error={formik.touched.email && Boolean(formik.errors.email)}
                     onChange={formik.handleChange}
+                    data-testid="email"
                 />
                 {formik.touched.email && formik.errors.email &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="emailError">
                         <ul className="list">
                             <li>{formik.errors.email}</li>
                         </ul>
@@ -126,9 +128,10 @@ export default function RegisterPage() {
                     value={formik.values.password}
                     error={formik.touched.password && Boolean(formik.errors.password)}
                     onChange={formik.handleChange}
+                    data-testid="password"
                 />
-                {formik.touched.password && formik.errors.username &&
-                    <div className="ui red message">
+                {formik.touched.password && formik.errors.password &&
+                    <div className="ui red message" data-testid="passwordError">
                         <ul className="list">
                             <li>{formik.errors.password}</li>
                         </ul>
@@ -142,9 +145,10 @@ export default function RegisterPage() {
                     value={formik.values.confirmPassword}
                     error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
                     onChange={formik.handleChange}
+                    data-testid="confirmPassword"
                 />
                 {formik.touched.confirmPassword && formik.errors.confirmPassword &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="confirmPasswordError">
                         <ul className="list">
                             <li>{formik.errors.confirmPassword}</li>
                         </ul>
@@ -173,9 +177,10 @@ export default function RegisterPage() {
                     value={formik.values.city}
                     error={formik.touched.city && Boolean(formik.errors.city)}
                     onChange={formik.handleChange}
+                    data-testid="city"
                 />
                 {formik.touched.city && formik.errors.city &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="cityError">
                         <ul className="list">
                             <li>{formik.errors.city}</li>
                         </ul>
@@ -188,15 +193,16 @@ export default function RegisterPage() {
                     value={formik.values.birthDate}
                     error={formik.touched.birthDate && Boolean(formik.errors.birthDate)}
                     onChange={formik.handleChange}
+                    data-testid="birthDate"
                 />
                 {formik.touched.birthDate && formik.errors.birthDate &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="birthDateError">
                         <ul className="list">
                             <li>{formik.errors.birthDate}</li>
                         </ul>
                     </div>
                 }
-                <Button type="submit" color="twitter" disabled={loading} className="form__submit-button">
+                <Button type="submit" color="twitter" disabled={loading} className="form__submit-button" data-testid="registerButton">
                     Register
                 </Button>
             </Form>

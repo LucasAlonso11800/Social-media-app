@@ -17,7 +17,7 @@ import { handleError } from '../helpers/handleError';
 const validationSchema = yup.object({
     username: yup
         .string()
-        .min(6, 'The usename must be at least 6 characters long')
+        .min(6, 'The username must be at least 6 characters long')
         .required('An username must be provided'),
     password: yup
         .string()
@@ -68,9 +68,10 @@ export default function LoginPage() {
                     value={formik.values.username}
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     onChange={formik.handleChange}
+                    data-testid="username"
                 />
                 {formik.touched.username && formik.errors.username &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="usernameError">
                         <ul className="list">
                             <li>{formik.errors.username}</li>
                         </ul>
@@ -84,15 +85,16 @@ export default function LoginPage() {
                     value={formik.values.password}
                     error={formik.touched.password && Boolean(formik.errors.password)}
                     onChange={formik.handleChange}
+                    data-testid="password"
                 />
                 {formik.touched.password && formik.errors.password &&
-                    <div className="ui red message">
+                    <div className="ui red message" data-testid="passwordError">
                         <ul className="list">
                             <li>{formik.errors.password}</li>
                         </ul>
                     </div>
                 }
-                <Button type="submit" color="twitter" disabled={loading}>
+                <Button type="submit" color="twitter" disabled={loading} data-testid="loginButton">
                     Login
                 </Button>
             </Form>

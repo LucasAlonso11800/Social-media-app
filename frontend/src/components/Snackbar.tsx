@@ -16,7 +16,7 @@ export default function Snackbar() {
     }, [snackbarState, snackbarDispatch, type]);
 
     return (
-        <Message className={snackbarState.open ? "snackbar open" : "snackbar closed"} color="red">
+        <Message className={snackbarState.open ? "snackbar open" : "snackbar closed"} color="red" data-testid="snackbar">
             <Message.Content>{snackbarState.message}</Message.Content>
         </Message>
     )
