@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { login, setToken } from "../utils/utils";
+import { dislikePostOrComment, likePostOrComment, login, setToken } from "../utils/utils";
 
 before(() => login());
 beforeEach(() => {
@@ -27,19 +27,22 @@ describe('Failing at creating posts', () => {
     });
 });
 
-describe('Creating post and liking it', () => {
+describe('Creating, liking, unliking and deleting post', () => {
     const postBody: string = 'Just a normal post';
 
     it('Should create a post and display it', () => {
+        // Create comment                
         cy.get('[data-testid="postBodyInput"]').type(postBody);
         cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
         cy.get('[data-testid="postBodyError"]').should('not.exist');
         cy.wait(5000);
+        
+        // Check if it exists
         cy.get('[data-testid="postBody"]').first().should('have.text', postBody);
         cy.get('[data-testid="postData"]').first().should('have.text', `${Cypress.env('defaultUsername')} - a few seconds`)
     });
 
-    it('Should create a post, like it and unlike it', () => {
+    it('Should create a post, like it and dislike it', () => {
         // Create post
         cy.get('[data-testid="postBodyInput"]').type(postBody);
         cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
@@ -47,32 +50,9 @@ describe('Creating post and liking it', () => {
         cy.wait(5000);
 
         // Like said post
-        cy.get('[data-testid="likeButton"]')
-            .filter('div.ui.twitter.basic.button')
-            .then(notLiked => {
-                const listingCount = Cypress.$(notLiked).length;
-                notLiked.first().trigger('click');
-                cy.wait(5000);
-                cy.get('[data-testid="likeButton"]')
-                    .filter('div.ui.twitter.basic.button')
-                    .then(newNotLiked => {
-                        expect(listingCount).to.be.greaterThan(Cypress.$(newNotLiked).length);
-                    })
-            });
-
-        // Unlike said post
-        cy.get('[data-testid="likeButton"]')
-            .not('div.basic')
-            .then(liked => {
-                const listingCount = Cypress.$(liked).length;
-                liked.first().trigger('click');
-                cy.wait(5000);
-                cy.get('[data-testid="likeButton"]')
-                    .not('div.basic')
-                    .then(newLiked => {
-                        expect(listingCount).to.be.greaterThan(Cypress.$(newLiked).length);
-                    })
-            });
+        likePostOrComment();
+        // Dislike said post
+        dislikePostOrComment();
     });
 
     it('Should create a post and delete it', () => {

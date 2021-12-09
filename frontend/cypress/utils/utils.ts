@@ -26,4 +26,34 @@ export function setToken() {
             window.localStorage.setItem('token', token)
         },
     })
-}
+};
+
+export function likePostOrComment() {
+    cy.get('[data-testid="likeButton"]')
+        .filter('div.ui.twitter.basic.button')
+        .then(notLiked => {
+            const listingCount = Cypress.$(notLiked).length;
+            notLiked.first().trigger('click');
+            cy.wait(5000);
+            cy.get('[data-testid="likeButton"]')
+                .filter('div.ui.twitter.basic.button')
+                .then(newNotLiked => {
+                    expect(listingCount).to.be.greaterThan(Cypress.$(newNotLiked).length);
+                });
+        });
+};
+
+export function dislikePostOrComment() {
+    cy.get('[data-testid="likeButton"]')
+        .not('div.basic')
+        .then(liked => {
+            const listingCount = Cypress.$(liked).length;
+            liked.first().trigger('click');
+            cy.wait(5000);
+            cy.get('[data-testid="likeButton"]')
+                .not('div.basic')
+                .then(newLiked => {
+                    expect(listingCount).to.be.greaterThan(Cypress.$(newLiked).length);
+                });
+        });
+};

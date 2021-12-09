@@ -78,6 +78,7 @@ export default function CommentForm(props: Props) {
                         value={formik.values.body}
                         onChange={formik.handleChange}
                         error={formik.touched.body && Boolean(formik.errors.body)}
+                        data-testid="commentBodyInput"
                     />
                 </Form.Field>
                 <Button
@@ -85,12 +86,13 @@ export default function CommentForm(props: Props) {
                     color="twitter"
                     disabled={formik.values.body.trim() === '' || loading}
                     className="comment-form__button"
+                    data-testid="commentFormButton"
                 >
                     Comment
                 </Button>
             </Form.Group>
             {formik.touched.body && formik.errors.body &&
-                <div className="ui red message">
+                <div className="ui red message" data-testid="commentBodyError">
                     <ul className="list">
                         <li>{formik.errors.body}</li>
                     </ul>
