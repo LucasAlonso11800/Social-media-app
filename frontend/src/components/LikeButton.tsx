@@ -59,11 +59,22 @@ export default function LikeButton(props: Props) {
             content="Like"
             inverted
             trigger={
-                <Button as="div" labelPosition="right" onClick={state !== null ? () => likePost() : () => { }} className={loading ? 'loading' : ''}>
-                    <Button color='twitter' basic={!likeStatus?.liked} as={state !== null ? "div" : Link} to="/login">
+                <Button
+                    as="div"
+                    labelPosition="right"
+                    onClick={state !== null ? () => likePost() : () => { }}
+                    className={loading ? 'loading' : ''}
+                >
+                    <Button
+                        color='twitter'
+                        basic={!likeStatus?.liked}
+                        as={state !== null ? "div" : Link}
+                        to="/login"
+                        data-testid="likeButton"
+                    >
                         <Icon name="heart" />
                     </Button>
-                    <Label basic color="teal" pointing="left">
+                    <Label basic color="teal" pointing="left" data-testid="likeButtonCount">
                         {likeStatus?.count}
                     </Label>
                 </Button >

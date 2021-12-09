@@ -3,12 +3,13 @@ import React, { useContext } from 'react'
 import { Card } from 'semantic-ui-react';
 // Interfaces
 import { IComment } from '../Interfaces';
-import moment from 'moment';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // Components
 import DeleteButton from './DeleteButton';
 import LikeButton from './LikeButton';
+// Helpers
+import { transformDate } from '../helpers/transformDate';
 
 type Props = {
     comment: IComment;
@@ -22,11 +23,11 @@ export default function Comment(props: Props) {
     const userCanDelete = state && state.username === comment.username;
 
     return (
-        <Card fluid>
+        <Card fluid data-testid="comment">
             <Card.Content>
                 {userCanDelete && <DeleteButton postId={postId} commentId={comment.id} />}
                 <Card.Header>{comment.username}</Card.Header>
-                <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+                <Card.Meta>{transformDate(comment.createdAt)}</Card.Meta>
                 <Card.Description>{comment.body}</Card.Description>
             </Card.Content>
             <Card.Content extra>

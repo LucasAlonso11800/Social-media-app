@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import moment from 'moment';
 // Context
 import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
@@ -16,6 +15,7 @@ import CommentButton from './CommentButton';
 // Helpers
 import { handleError } from '../helpers/handleError';
 import { getBase64ImageSrc } from '../helpers/getBase64ImageSrc';
+import { transformDate } from '../helpers/transformDate';
 
 type Props = {
     post: IPost;
@@ -43,15 +43,24 @@ export default function PostCard(props: Props) {
                     src={imageSrc}
                     onClick={() => window.location.assign(`/user/${userId}`)}
                 />
-                <Card.Header style={{ cursor: "pointer" }} onClick={() => window.location.assign(`/user/${userId}`)} >{profileName}</Card.Header>
-                <Card.Meta>{username} - {moment(createdAt).fromNow(true)}</Card.Meta>
-                <Card.Description style={{ cursor: "pointer" }} onClick={() => window.location.assign(`/posts/${username}/${postId}`)} >
+                <Card.Header
+                    style={{ cursor: "pointer" }}
+                    onClick={() => window.location.assign(`/user/${userId}`)}
+                >
+                    {profileName}
+                </Card.Header>
+                <Card.Meta data-testid="postData">{username} - {transformDate(createdAt)}</Card.Meta>
+                <Card.Description
+                    style={{ cursor: "pointer" }}
+                    onClick={() => window.location.assign(`/posts/${username}/${postId}`)}
+                    data-testid="postBody"
+                >
                     {body}
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <LikeButton postId={postId} />
-                <CommentButton postId={postId} username={username}/>
+                <CommentButton postId={postId} username={username} />
                 {userCanDelete && <DeleteButton postId={postId} />}
             </Card.Content>
         </Card>

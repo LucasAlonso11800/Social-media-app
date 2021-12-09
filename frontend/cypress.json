@@ -1,1 +1,7 @@
-{}
+{
+    "env": {
+        "url": "http://localhost:3001",
+        "serverURL": "http://localhost:7000/graphql",
+        "defaultUsername": "Finroddd"
+    }
+}

@@ -51,6 +51,7 @@ export default function DeleteButton(props: Props) {
                         color='red'
                         floated="right"
                         onClick={() => deleteMutation()}
+                        data-testid="deleteButton"
                     >
                         <Icon name="trash alternate" />
                     </Button>

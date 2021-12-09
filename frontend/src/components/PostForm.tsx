@@ -15,7 +15,7 @@ import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: string
-    snackbarDispatch:  React.Dispatch<SnackbarActions>
+    snackbarDispatch: React.Dispatch<SnackbarActions>
 };
 
 type QueryResult = {
@@ -41,7 +41,7 @@ export default function PostForm(props: Props) {
                 query: GET_POSTS_FROM_USER,
                 variables: { userId }
             }) as QueryResult;
-            
+
             proxy.writeQuery({
                 query: GET_POSTS_FROM_USER,
                 variables: { userId },
@@ -56,8 +56,8 @@ export default function PostForm(props: Props) {
         },
         onError: (error): unknown => handleError(error, snackbarDispatch),
     });
-    
-    function handleSubmit(){
+
+    function handleSubmit() {
         createPost()
     };
 
@@ -73,14 +73,21 @@ export default function PostForm(props: Props) {
                         value={formik.values.body}
                         onChange={formik.handleChange}
                         error={formik.touched.body && Boolean(formik.errors.body)}
+                        data-testid="postBodyInput"
                     />
                 </Form.Field>
-                <Button type="submit" color="twitter" disabled={formik.values.body.trim() === '' || loading} className="post-form__button">
+                <Button
+                    type="submit"
+                    color="twitter"
+                    disabled={formik.values.body.trim() === '' || loading}
+                    className="post-form__button"
+                    data-testid="postFormButton"
+                >
                     Post
                 </Button>
             </Form.Group>
             {formik.touched.body && formik.errors.body &&
-                <div className="ui red message">
+                <div className="ui red message" data-testid="postBodyError">
                     <ul className="list">
                         <li>{formik.errors.body}</li>
                     </ul>
