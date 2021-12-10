@@ -41,8 +41,9 @@ export default function BlockUserButton(props: Props) {
                     onClick={() => blockUser()}
                     disabled={loading}
                     className={loading ? 'loading' : ''}
+                    data-testid="blockUserButton"
                 >
-                    <Icon name={isBlocking ? "lock open" : "lock"} />
+                    <Icon name={isBlocking ? "lock open" : "lock"} data-testid="blockUserIcon" />
                 </Button>
             }
         />

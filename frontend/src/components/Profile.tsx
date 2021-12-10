@@ -6,13 +6,14 @@ import { GET_BLOCK_STATUS, GET_FOLLOW_STATUS, GET_PROFILE, GET_USER_IMAGE } from
 // Context 
 import { GlobalContext } from '../context/GlobalContext';
 // Components
-import { Grid, Card, Image, Button, Icon, Popup, Dimmer, Loader } from 'semantic-ui-react';
+import { Grid, Card, Image, Icon, Popup, Dimmer, Loader } from 'semantic-ui-react';
 import ProfileModal from './ProfileModal';
 import ProfilePlaceholder from '../assets/ProfilePlaceholder.png';
 import FollowButton from './FollowButton';
 import UserImageModal from './UserImageModal';
 import BlockUserButton from './BlockUserButton';
 import DeleteUserButton from './DeleteUserButton';
+import EditProfileButton from './EditProfileButton';
 import FollowerInfo from './FollowerInfo';
 import ProfileUserImage from './ProfileUserImage';
 // Interfaces
@@ -95,41 +96,33 @@ export default function Profile(props: Props) {
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width="16">
-                            <Image fluid className="profile__profile-image" src={imageSrc} />
+                            <Image fluid className="profile__profile-image" src={imageSrc} data-testid="profileImage"/>
                         </Grid.Column>
                         <ProfileUserImage userImage={userImage} username={username} loading={userImageLoading} setUserImageModalOpen={setUserImageModalOpen} />
                     </Grid.Row>
                 </Grid>
                 <Card.Content>
                     <div className="profile__name-follow-container">
-                        <h2 className="profile__title">{profileName}</h2>
+                        <h2 className="profile__title" data-testid="profileName">{profileName}</h2>
                         <div className="profile__icons-container">
                             {userCanFollow && <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} />}
                             {userCanEditAndDelete &&
                                 <>
-                                    <Popup
-                                        content="Edit profile"
-                                        inverted
-                                        trigger={
-                                            <Button as="div" color="grey" onClick={() => setModalOpen(true)}>
-                                                <Icon name="edit" />
-                                            </Button>
-                                        }
-                                    />
+                                    <EditProfileButton setModalOpen={setModalOpen}/>
                                     <DeleteUserButton userId={state!.id} snackbarDispatch={snackbarDispatch} />
                                 </>
                             }
                             {userCanBlock && <BlockUserButton blockingUserId={state!.id} blockedUserId={userId} isBlocking={isBlocking} setIsBlocking={setIsBlocking} />}
                         </div>
                     </div>
-                    <Card.Meta><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
-                    <Card.Meta>
+                    <Card.Meta data-testid="username"><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
+                    <Card.Meta data-testid="userLocation">
                         <Popup
                             inverted
                             content="Lives in"
                             trigger={<Icon name="map marker alternate" className="profile__icon" />}
                         />{city}, {country}</Card.Meta>
-                    <Card.Meta>
+                    <Card.Meta data-testid="userAge">
                         <Popup
                             inverted
                             content="Age"

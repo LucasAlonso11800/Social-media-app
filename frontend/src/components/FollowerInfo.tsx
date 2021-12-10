@@ -15,10 +15,10 @@ export default function FollowerInfo(props: Props) {
 
     return (
         <div className="profile__profile-info">
-            {profileHasBio && <p className="profile__profile-name"><b>About {profileName}:</b> {bio}</p>}
+            {profileHasBio && <p className="profile__profile-name" data-testid="profileDescription"><b>About {profileName}:</b> {bio}</p>}
             <div className="profile__numbers-container">
-                <p className="profile__number">Followers: <b>{followStatus?.followerCount} </b></p>
-                <p className="profile__number">Following: <b>{followStatus?.followeeCount} </b></p>
+                <p className="profile__number" data-testid="followerNumber">Followers: <b>{followStatus?.followerCount} </b></p>
+                <p className="profile__number" data-testid="followingNumber">Following: <b>{followStatus?.followeeCount} </b></p>
             </div>
         </div>
     )

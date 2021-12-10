@@ -11,7 +11,7 @@ import { handleError } from '../helpers/handleError';
 
 type Props = {
     userId: number
-    snackbarDispatch:  React.Dispatch<SnackbarActions>
+    snackbarDispatch: React.Dispatch<SnackbarActions>
 };
 
 export default function DeleteUserButton(props: Props) {
@@ -33,7 +33,12 @@ export default function DeleteUserButton(props: Props) {
                 content="Delete your account"
                 inverted
                 trigger={
-                    <Button as="div" color="youtube" onClick={() => setOpen(true)}>
+                    <Button
+                        as="div"
+                        color="youtube"
+                        onClick={() => setOpen(true)}
+                        data-testid="deleteUserButton"
+                    >
                         <Icon name="trash alternate" disabled={loading} />
                     </Button>
                 }

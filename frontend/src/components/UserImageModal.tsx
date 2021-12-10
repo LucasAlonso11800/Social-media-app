@@ -65,7 +65,7 @@ export default function UserImageModal(props: Props) {
     const imageSrc = image.src && image.src !== '' ? getBase64ImageSrc(image.src) : ProfilePlaceholder
 
     return (
-        <Modal open={open} className="user-modal">
+        <Modal open={open} className="user-modal" data-testid="userModal">
             <h2 className="user-modal__title">Edit your image</h2>
             <p className="user-modal__subtitle">It's the image that will be displayed besides your posts and comments</p>
             <div className="user-modal__img-container">
@@ -73,6 +73,7 @@ export default function UserImageModal(props: Props) {
                     src={imageSrc}
                     alt={image.alt}
                     className="user-modal__img"
+                    data-testid="userModalImage"
                 />
                 <input
                     style={{ display: "none" }}
@@ -80,13 +81,17 @@ export default function UserImageModal(props: Props) {
                     ref={inputFile}
                     onChange={handleImg}
                     type="file"
+                    data-testid="userModalImageInput"
                 />
                 <Button
                     type="button"
                     onClick={() => onButtonClick()}
                     className="user-modal__img-button"
                     disabled={loading}
-                >Change image</Button>
+                    data-testid="userModalImageButton"
+                >
+                    Change image
+                </Button>
             </div>
             {fileSizeError ?
                 <div className="ui red message">
@@ -101,14 +106,20 @@ export default function UserImageModal(props: Props) {
                     onClick={() => setOpen(false)}
                     className="profile-modal__close-button"
                     disabled={loading}
-                >Close</Button>
+                    data-testid="userModalCloseButton"
+                >
+                    Close
+                </Button>
                 <Button
                     color="twitter"
                     type="button"
                     className="profile-modal__submit-button"
                     disabled={loading}
                     onClick={() => editImage()}
-                >Edit Image</Button>
+                    data-testid="userModalSubmitButton"
+                >
+                    Edit Image
+                </Button>
             </Button.Group>
         </Modal>
     )

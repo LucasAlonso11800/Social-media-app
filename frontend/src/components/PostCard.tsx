@@ -46,6 +46,7 @@ export default function PostCard(props: Props) {
                 <Card.Header
                     style={{ cursor: "pointer" }}
                     onClick={() => window.location.assign(`/user/${userId}`)}
+                    data-testid="postUser"
                 >
                     {profileName}
                 </Card.Header>

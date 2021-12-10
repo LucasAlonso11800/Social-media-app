@@ -43,6 +43,7 @@ export default function FollowButton(props: Props) {
                 if (state) return followUser();
                 window.location.assign('/login');
             }}
+            data-testid="followButton"
         >
             {followStatus?.follows ? 'Unfollow' : 'Follow'}
         </Button>

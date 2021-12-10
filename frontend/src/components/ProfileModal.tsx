@@ -56,17 +56,19 @@ export default function ProfileModal(props: Props) {
         onError: (error): unknown => handleError(error, snackbarDispatch)
     });
 
-    function handleSubmit(){
+    function handleSubmit() {
         editProfile()
     };
 
     const handleReaderLoaded = (readerEvt: any): void => {
         const binaryString = readerEvt.target.result;
-        formik.setFieldValue('profileImage', btoa(binaryString), true); 
+        console.log(btoa(binaryString))
+        formik.setFieldValue('profileImage', btoa(binaryString), true);
     };
 
     const handleImg = (e: any): void => {
         const file = e.target.files[0]
+        console.log(file);
         if (file) {
             if (file.size > 1048577) return setFileSizeError(true);
             setFileSizeError(false);
@@ -75,14 +77,14 @@ export default function ProfileModal(props: Props) {
             reader.readAsBinaryString(file);
         }
     };
-
+    
     const inputFile: any = useRef(null);
     const handleClick = () => inputFile.current.click();
 
     const imageSrc = formik.values.profileImage ? getBase64ImageSrc(formik.values.profileImage) : ProfilePlaceholder;
 
     return (
-        <Modal open={open}>
+        <Modal open={open} data-testid="profileModal">
             <Container>
                 <Form className={loading ? "loading profile-modal__form" : "profile-modal__form"} onSubmit={formik.handleSubmit}>
                     <h2 className="profile-modal__title">Edit your profile</h2>
@@ -94,9 +96,10 @@ export default function ProfileModal(props: Props) {
                         value={formik.values.profileName}
                         error={formik.touched.profileName && Boolean(formik.errors.profileName)}
                         onChange={formik.handleChange}
+                        data-testid="profileNameInput"
                     />
                     {formik.touched.profileName && formik.errors.profileName &&
-                        <div className="ui red message">
+                        <div className="ui red message" data-testid="profileNameInputError">
                             <ul className="list">
                                 <li>{formik.errors.profileName}</li>
                             </ul>
@@ -110,9 +113,10 @@ export default function ProfileModal(props: Props) {
                         value={formik.values.bio}
                         error={formik.touched.bio && Boolean(formik.errors.bio)}
                         onChange={formik.handleChange}
+                        data-testid="profileDescriptionInput"
                     />
                     {formik.touched.bio && formik.errors.bio &&
-                        <div className="ui red message">
+                        <div className="ui red message" data-testid="profileDescriptionInputError">
                             <ul className="list">
                                 <li>{formik.errors.bio}</li>
                             </ul>
@@ -123,6 +127,7 @@ export default function ProfileModal(props: Props) {
                             src={imageSrc}
                             alt='Profile image'
                             className="profile-modal__img"
+                            data-testid="profileModalImage"
                         />
                         <input
                             style={{ display: "none" }}
@@ -130,16 +135,20 @@ export default function ProfileModal(props: Props) {
                             ref={inputFile}
                             onChange={handleImg}
                             type="file"
+                            data-testid="profileModalImageInput"
                         />
                         <Button
                             type="button"
                             onClick={() => handleClick()}
                             className="profile-modal__img-button"
                             disabled={loading}
-                        >Change image</Button>
+                            data-testid="profileModalImageButton"
+                        >
+                            Change image
+                        </Button>
                     </div>
                     {fileSizeError ?
-                        <div className="ui red message">
+                        <div className="ui red message" data-testid="profileFileSizeError">
                             <ul className="list">
                                 <li>File size must be under 1MB</li>
                             </ul>
@@ -151,13 +160,19 @@ export default function ProfileModal(props: Props) {
                             onClick={() => setOpen(false)}
                             className="profile-modal__close-button"
                             disabled={loading}
-                        >Close</Button>
+                            data-testid="profileModalCloseButton"
+                        >
+                            Close
+                        </Button>
                         <Button
                             color="twitter"
                             type="submit"
                             className="profile-modal__submit-button"
                             disabled={loading}
-                        >Edit Profile</Button>
+                            data-testid="profileModalSubmitButton"
+                        >
+                            Edit Profile
+                        </Button>
                     </Button.Group>
                 </Form>
             </Container>

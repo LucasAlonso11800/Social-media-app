@@ -57,3 +57,5 @@ export function dislikePostOrComment() {
                 });
         });
 };
+
+export const getBase64ImageSrc = (base64: string): string => `data:image/png;base64,${base64}`
