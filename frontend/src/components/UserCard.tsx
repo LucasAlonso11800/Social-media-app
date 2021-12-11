@@ -57,7 +57,7 @@ export default function UserCard(props: Props) {
                     {user.profileName}
                 </Card.Header>
                 <Card.Content extra>
-                    <Card.Description className="user-card__user-data">
+                    <Card.Description className="user-card__user-data" data-testid="userCardUsername">
                         <Popup
                             inverted
                             content="Username"
@@ -65,7 +65,7 @@ export default function UserCard(props: Props) {
                         />
                         <p>{user.username}</p>
                     </Card.Description>
-                    <Card.Description className="user-card__user-data">
+                    <Card.Description className="user-card__user-data" data-testid="userCardLocation">
                         <Popup
                             inverted
                             content="Lives in"
@@ -73,7 +73,7 @@ export default function UserCard(props: Props) {
                         />
                         <p> {user.city}, {user.country}</p>
                     </Card.Description>
-                    <Card.Description className="user-card__user-data">
+                    <Card.Description className="user-card__user-data" data-testid="userCardAge">
                         <Popup
                             inverted
                             content="Age"
@@ -82,11 +82,11 @@ export default function UserCard(props: Props) {
                         {moment(user.birthDate).fromNow(true)}</Card.Description>
                     <Card.Description className="user-card__user-data">
                         <Icon name="users" className="user-card__user-data-icon" />
-                        <p><b>Followers: </b>{followersData?.follow_status.followerCount}</p>
+                        <p data-testid="userCardFollowerData"><b>Followers: </b>{followersData?.follow_status.followerCount}</p>
                     </Card.Description>
                     <Card.Description className="user-card__user-data">
                         <Icon name="users" className="user-card__user-data-icon" />
-                        <p><b>Following: </b>{followersData?.follow_status.followeeCount}</p>
+                        <p data-testid="userCardFollowingData"><b>Following: </b>{followersData?.follow_status.followeeCount}</p>
                     </Card.Description>
                 </Card.Content>
             </Card.Content>
