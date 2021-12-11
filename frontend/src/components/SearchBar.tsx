@@ -13,7 +13,7 @@ export default function SearchBar(props: Props) {
     const { loading, searchData, query, setQuery } = props
 
     return (
-        <div className="search-bar">
+        <div className="search-bar" data-testid="searchBar">
             <Popup
                 inverted
                 content="Search"
@@ -23,7 +23,6 @@ export default function SearchBar(props: Props) {
                         color="twitter"
                         disabled={loading}
                         onClick={() => searchData()}
-                        data-testid="searchButton"
                     >
                         <Icon name="search" />
                     </Button>
@@ -33,7 +32,6 @@ export default function SearchBar(props: Props) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Look for users or posts"
-                data-testid="searchInput"
             />
         </div>
     )

@@ -35,7 +35,7 @@ export default function PostCard(props: Props) {
     const imageSrc = image?.user_image ? getBase64ImageSrc(image?.user_image) : ProfilePlaceholder;
 
     return (
-        <Card centered raised fluid>
+        <Card centered raised fluid data-testid="postCard">
             <Card.Content>
                 <Image
                     floated="right"
@@ -46,15 +46,13 @@ export default function PostCard(props: Props) {
                 <Card.Header
                     style={{ cursor: "pointer" }}
                     onClick={() => window.location.assign(`/user/${userId}`)}
-                    data-testid="postUser"
                 >
                     {profileName}
                 </Card.Header>
-                <Card.Meta data-testid="postData">{username} - {transformDate(createdAt)}</Card.Meta>
+                <Card.Meta>{username} - {transformDate(createdAt)}</Card.Meta>
                 <Card.Description
                     style={{ cursor: "pointer" }}
                     onClick={() => window.location.assign(`/posts/${username}/${postId}`)}
-                    data-testid="postBody"
                 >
                     {body}
                 </Card.Description>
