@@ -15,7 +15,7 @@ export default function NavBar() {
     const [activeItem, setActiveItem] = useState<string>(path);
 
     return state !== null ?
-        <Menu secondary pointing size={'huge'}>
+        <Menu secondary pointing size='huge' data-testid="navbar">
             <Menu.Item
                 name="Home"
                 active={activeItem === 'home'}
@@ -29,7 +29,6 @@ export default function NavBar() {
                 as={Link}
                 to={`/user/${state.id}`}
                 onClick={() => setActiveItem('user')}
-                data-testid="navbarUsername"
             />
             <Menu.Item
                 name="Search"
@@ -51,7 +50,7 @@ export default function NavBar() {
             </Menu.Menu>
         </Menu>
         :
-        <Menu secondary pointing size={'huge'}>
+        <Menu secondary pointing size='huge' data-testid="navbar">
             <Menu.Item
                 name='home'
                 active={activeItem === 'home'}
@@ -60,12 +59,11 @@ export default function NavBar() {
                 onClick={() => setActiveItem('home')}
             />
             <Menu.Item
-                name="Search"
+                name="search"
                 active={activeItem === 'search'}
                 as={Link}
                 to="/search"
                 onClick={() => setActiveItem('search')}
-                data-testid="navbarSearch"
             />
             <Menu.Menu position='right'>
                 <Menu.Item
@@ -74,7 +72,6 @@ export default function NavBar() {
                     as={Link}
                     to="/login"
                     onClick={() => setActiveItem('login')}
-                    data-testid="login"
                 />
                 <Menu.Item
                     name='register'
@@ -82,7 +79,6 @@ export default function NavBar() {
                     as={Link}
                     to="/register"
                     onClick={() => setActiveItem('register')}
-                    data-testid="register"
                 />
             </Menu.Menu>
         </Menu>

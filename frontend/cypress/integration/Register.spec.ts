@@ -1,73 +1,81 @@
 /// <reference types="cypress" />
 
 describe('Register', () => {
+    const navbarId = '[data-testid="navbar"]';
+    const registerId = '[data-testid="register"]';
+    const submitButton = `${registerId} > button[type="submit"]`;
+    const errorMessage = `${registerId} > div.message > ul > li`;
+    const getInput = (name: string) => `${registerId} > .field > .input > input[name=${name}]`;
+
     beforeEach(() => {
         cy.visit(Cypress.env('url'));
-        cy.get('[data-testid="register"]').click();
+        cy.get(`${navbarId} > div > a:nth-child(2)`).click();
         cy.contains('Register');
     });
 
     it('Should fail register due to empty fields in form', () => {
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="usernameError"]').should('have.text', 'An username must be provided');
-        cy.get('[data-testid="emailError"]').should('have.text', 'An email must be provided');
-        cy.get('[data-testid="passwordError"]').should('have.text', 'A password must be provided');
-        cy.get('[data-testid="confirmPasswordError"]').should('have.text', 'A password must be provided');
-        cy.get('[data-testid="cityError"]').should('have.text', 'Please provide a city');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(0).should('have.text', 'An username must be provided');
+        cy.get(errorMessage).eq(1).should('have.text', 'An email must be provided');
+        cy.get(errorMessage).eq(2).should('have.text', 'A password must be provided');
+        cy.get(errorMessage).eq(3).should('have.text', 'A password must be provided');
+        cy.get(errorMessage).eq(4).should('have.text', 'Please provide a city');
     });
 
     it('Should fail register due to future birth date being selected', () => {
-        cy.get('[data-testid="birthDate"]').type('2030-12-31');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="birthDateError"]').should('have.text', "You weren't born in the future!");
+        cy.get(getInput('birthDate')).type('2030-12-31');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(5).should('have.text', "You weren't born in the future!");
     });
 
     it('Should fail register due to passwords not matching', () => {
-        cy.get('[data-testid="password"]').type('Password1');
-        cy.get('[data-testid="confirmPassword"]').type('Password2');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="confirmPasswordError"]').should('have.text', "Passwords don't match");
+        cy.get(getInput("password")).type('Password1');
+        cy.get(getInput("confirmPassword")).type('Password2');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(2).should('have.text', "Passwords don't match");
     });
 
     it('Should fail register due to password length validation', () => {
-        cy.get('[data-testid="password"]').type('pass');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="passwordError"]').should('have.text', "The password must be at least 8 characters long");
+        cy.get(getInput("password")).type('pass');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(2).should('have.text', "The password must be at least 8 characters long");
 
-        cy.get('[data-testid="password"]').type('superlongpasswordthatisnotgointtopass');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="passwordError"]').should('have.text', "The password can't be longer than 20 characters long");
+        cy.get(getInput("password")).type('superlongpasswordthatisnotgointtopass');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(2).should('have.text', "The password can't be longer than 20 characters long");
     });
 
     it('Should fail register due to username length validation', () => {
-        cy.get('[data-testid="username"]').type('user');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="usernameError"]').should('have.text', "The username must be at least 6 characters long");
+        cy.get(getInput("username")).type('user');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(0).should('have.text', "The username must be at least 6 characters long");
 
-        cy.get('[data-testid="username"]').type('superlongusernamethatisnotgointtopassthecurrenttest');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="usernameError"]').should('have.text', "The username can't be longer than 40 characters long");
+        cy.get(getInput("username")).type('superlongusernamethatisnotgointtopassthecurrenttest');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(0).should('have.text', "The username can't be longer than 40 characters long");
     });
 
     it('Should fail register due to invalid email', () => {
-        cy.get('[data-testid="email"]').type('whatever');
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="emailError"]').should('have.text', 'Provide a valid email');
+        cy.get(getInput("email")).type('whatever');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).eq(1).should('have.text', 'Provide a valid email');
     });
 
     it('Should succesfully register the user', () => {
         const username = Math.floor(Math.random() * 10000000 + 10000000);
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="username"]').type(username.toString())
-        cy.get('[data-testid="email"]').type(`${username}@gmail.com`);
-        cy.get('[data-testid="password"]').type('Password')
-        cy.get('[data-testid="confirmPassword"]').type('Password')
-        cy.get('[data-testid="city"]').type('New York')
-        cy.get('[data-testid="birthDate"]').type('1997-05-16');
+        cy.get(submitButton).click();
+        cy.get(getInput("username")).type(username.toString())
+        cy.get(getInput("email")).type(`${username}@gmail.com`);
+        cy.get(getInput("password")).type('Password')
+        cy.get(getInput("confirmPassword")).type('Password')
+        cy.get(getInput("city")).type('New York')
+        cy.get(getInput("birthDate")).type('1997-05-16');
 
-        cy.get('[data-testid="registerButton"]').click();
-        cy.get('[data-testid="logout"]').should('exist');
-        cy.get('[data-testid="navbarUsername"]').should('have.text', username.toString()).should(() => {
+        cy.get(submitButton).click();
+        cy.wait(1000);
+        
+        cy.get(`${navbarId} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
+        cy.get(`${navbarId} > a:nth-child(2)`).should('have.text', username.toString()).should(() => {
             expect(localStorage.getItem('token')).to.not.undefined;
         });
     });

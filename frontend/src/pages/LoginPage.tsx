@@ -58,7 +58,7 @@ export default function LoginPage() {
 
     return (
         <Container>
-            <Form onSubmit={formik.handleSubmit}>
+            <Form onSubmit={formik.handleSubmit} data-testid="login">
                 <h1>Login</h1>
                 <Form.Input
                     name="username"
@@ -68,10 +68,9 @@ export default function LoginPage() {
                     value={formik.values.username}
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     onChange={formik.handleChange}
-                    data-testid="username"
                 />
                 {formik.touched.username && formik.errors.username &&
-                    <div className="ui red message" data-testid="usernameError">
+                    <div className="ui red message">
                         <ul className="list">
                             <li>{formik.errors.username}</li>
                         </ul>
@@ -85,16 +84,15 @@ export default function LoginPage() {
                     value={formik.values.password}
                     error={formik.touched.password && Boolean(formik.errors.password)}
                     onChange={formik.handleChange}
-                    data-testid="password"
                 />
                 {formik.touched.password && formik.errors.password &&
-                    <div className="ui red message" data-testid="passwordError">
+                    <div className="ui red message">
                         <ul className="list">
                             <li>{formik.errors.password}</li>
                         </ul>
                     </div>
                 }
-                <Button type="submit" color="twitter" disabled={loading} data-testid="loginButton">
+                <Button type="submit" color="twitter" disabled={loading}>
                     Login
                 </Button>
             </Form>

@@ -1,46 +1,54 @@
 /// <reference types="cypress" />
 
+
 describe('Login', () => {
+    const navbarId = '[data-testid="navbar"]';
+    const loginId = '[data-testid="login"]';
+    const usernameInput = `${loginId} > .field > .input > input[name="username"]`;
+    const passwordInput = `${loginId} > .field > .input > input[name="password"]`;
+    const submitButton = `${loginId} > button[type="submit"]`;
+    const errorMessage = `${loginId} > div.message > ul > li`;
+
     beforeEach(() => {
         cy.visit(Cypress.env('url'));
-        cy.get('[data-testid="login"]').click();
+        cy.get(`${navbarId} > div > a:nth-child(1)`).click();
         cy.contains('Login');
     });
 
     it('Should fail login due to empty fields in form', () => {
-        cy.get('[data-testid="loginButton"]').click();
-        cy.get('[data-testid="usernameError"]').should('have.text', 'An username must be provided');
-        cy.get('[data-testid="passwordError"]').should('have.text', 'A password must be provided');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).first().should('have.text', 'An username must be provided');
+        cy.get(errorMessage).last().should('have.text', 'A password must be provided');
     });
 
     it('Should fail login due to fields being too short in form', () => {
-        cy.get('[data-testid="username"]').type('1234');
-        cy.get('[data-testid="password"]').type('1234');
-        cy.get('[data-testid="loginButton"]').click();
-        cy.get('[data-testid="usernameError"]').should('have.text', 'The username must be at least 6 characters long');
-        cy.get('[data-testid="passwordError"]').should('have.text', 'The password must be at least 8 characters long');
+        cy.get(usernameInput).type('1234');
+        cy.get(passwordInput).type('1234');
+        cy.get(submitButton).click();
+        cy.get(errorMessage).first().should('have.text', 'The username must be at least 6 characters long');
+        cy.get(errorMessage).last().should('have.text', 'The password must be at least 8 characters long');
     });
 
-
     it('Should fail login due to wrong username or password', () => {
-        cy.get('[data-testid="username"]').type('someusername');
-        cy.get('[data-testid="password"]').type('somepassword');
-        cy.get('[data-testid="loginButton"]').click();
+        cy.get(usernameInput).type('someusername');
+        cy.get(passwordInput).type('somepassword');
+        cy.get(submitButton).click();
 
         cy.get('[data-testid="snackbar"]').should('have.class', 'open').should('have.text', 'Wrong username or password');
         cy.wait(5000);
         cy.get('[data-testid="snackbar"]').should('have.class', 'closed');
     });
 
-    it('Should succesfully login the user', () => {
+    it.only('Should succesfully login the user', () => {
         cy.clearLocalStorage();
-
-        cy.get('[data-testid="username"]').type('Finroddd');
-        cy.get('[data-testid="password"]').type('pulqui123');
-        cy.get('[data-testid="loginButton"]').click();
-
-        cy.get('[data-testid="logout"]').should('exist');
-        cy.get('[data-testid="navbarUsername"]').should('have.text', 'Finroddd').should(() => {
+        cy.get(usernameInput).type('Finroddd');
+        cy.get(passwordInput).type('pulqui123');
+        
+        cy.get(submitButton).click();
+        cy.wait(1000);
+        
+        cy.get(`${navbarId} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
+        cy.get(`${navbarId} > a:nth-child(2)`).should('have.text', 'Finroddd').should(() => {
             expect(localStorage.getItem('token')).to.not.undefined;
         });
     });
