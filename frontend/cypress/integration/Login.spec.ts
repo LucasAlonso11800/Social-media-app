@@ -2,16 +2,16 @@
 
 
 describe('Login', () => {
-    const navbarId = '[data-testid="navbar"]';
-    const loginId = '[data-testid="login"]';
-    const usernameInput = `${loginId} > .field > .input > input[name="username"]`;
-    const passwordInput = `${loginId} > .field > .input > input[name="password"]`;
-    const submitButton = `${loginId} > button[type="submit"]`;
-    const errorMessage = `${loginId} > div.message > ul > li`;
+    const navbar = '[data-testid="navbar"]';
+    const login = '[data-testid="login"]';
+    const usernameInput = `${login} > .field > .input > input[name="username"]`;
+    const passwordInput = `${login} > .field > .input > input[name="password"]`;
+    const submitButton = `${login} > button[type="submit"]`;
+    const errorMessage = `${login} > div.message > ul > li`;
 
     beforeEach(() => {
         cy.visit(Cypress.env('url'));
-        cy.get(`${navbarId} > div > a:nth-child(1)`).click();
+        cy.get(`${navbar} > div > a:nth-child(1)`).click();
         cy.contains('Login');
     });
 
@@ -47,8 +47,8 @@ describe('Login', () => {
         cy.get(submitButton).click();
         cy.wait(1000);
         
-        cy.get(`${navbarId} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
-        cy.get(`${navbarId} > a:nth-child(2)`).should('have.text', 'Finroddd').should(() => {
+        cy.get(`${navbar} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
+        cy.get(`${navbar} > a:nth-child(2)`).should('have.text', 'Finroddd').should(() => {
             expect(localStorage.getItem('token')).to.not.undefined;
         });
     });

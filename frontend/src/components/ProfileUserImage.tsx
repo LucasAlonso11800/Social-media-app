@@ -21,26 +21,21 @@ export default function ProfileUserImage(props: Props) {
     const imageSrc = userImage ? getBase64ImageSrc(userImage) : ProfilePlaceholder;
 
     return (
-        <div className="profile__user-image-container">
+        <div className="profile__user-image-container" data-testid="userImage">
             <Image
                 fluid
                 className={loading ? "loading profile__user-image" : "profile__user-image"}
                 src={imageSrc}
-                data-testid="userImage"
             />
             {state?.username === username ?
                 <div
                     className="profile__actual-change-user-image"
                     onClick={() => setUserImageModalOpen(true)}
-                    data-testid="actualChangeUserImage"
                 >
                     Change Image
                 </div>
                 :
-                <div
-                    className="profile__change-user-image"
-                    data-testid="changeUserImage"
-                >
+                <div className="profile__change-user-image">
                     Change Image
                 </div>
             }

@@ -1,9 +1,9 @@
 /// <reference types="cypress" />
 
 describe('Search bar', () => {
-    const searchBarId = "[data-testid='searchBar']";
-    const userCardId = "[data-testid='userCard'] > .extra.content";
-    const postCardId = "[data-testid='postCard'] > .content";
+    const searchBar = "[data-testid='searchBar']";
+    const userCard = "[data-testid='userCard'] > .extra.content";
+    const postCard = "[data-testid='postCard'] > .content";
 
     beforeEach(() => {
         cy.visit(Cypress.env('url'));
@@ -12,31 +12,31 @@ describe('Search bar', () => {
     });
 
     it("Should fetch a user", () => {
-        cy.get(`${searchBarId} > .input > input`).should('exist').type(Cypress.env('defaultUsername'));
-        cy.get(`${searchBarId} > .button`).should('exist').click();
+        cy.get(`${searchBar} > .input > input`).should('exist').type(Cypress.env('defaultUsername'));
+        cy.get(`${searchBar} > .button`).should('exist').click();
         cy.wait(3000);
-        cy.get(`${userCardId} > .description:nth-child(1) > p`).first().should('exist').should('contain', Cypress.env('defaultUsername'));
-        cy.get(`${userCardId} > .description:nth-child(2) > p`).first().should('exist');
-        cy.get(`${userCardId} > .description:nth-child(3) > p`).first().should('exist');
-        cy.get(`${userCardId} > .description:nth-child(4) > p`).first().should('exist');
-        cy.get(`${userCardId} > .description:nth-child(5) > p`).first().should('exist');
+        cy.get(`${userCard} > .description:nth-child(1) > p`).first().should('exist').should('contain', Cypress.env('defaultUsername'));
+        cy.get(`${userCard} > .description:nth-child(2) > p`).first().should('exist');
+        cy.get(`${userCard} > .description:nth-child(3) > p`).first().should('exist');
+        cy.get(`${userCard} > .description:nth-child(4) > p`).first().should('exist');
+        cy.get(`${userCard} > .description:nth-child(5) > p`).first().should('exist');
     });
 
     it.only("Should fetch posts", () => {
-        cy.get(`${searchBarId} > .input > input`).should('exist').type('Lorem');
-        cy.get(`${searchBarId} > .button`).should('exist').click();
+        cy.get(`${searchBar} > .input > input`).should('exist').type('Lorem');
+        cy.get(`${searchBar} > .button`).should('exist').click();
         cy.wait(3000);
-        cy.get(`${postCardId} > .header`).first().should('exist');
-        cy.get(`${postCardId} > .description`).first().should('exist');
+        cy.get(`${postCard} > .header`).first().should('exist');
+        cy.get(`${postCard} > .description`).first().should('exist');
     });
 
     it('Should fetch and keep the input poblated when going to another page and coming back', () => {
-        cy.get(`${searchBarId} > .input > input`).should('exist').type(Cypress.env('defaultUsername'));
-        cy.get(`${searchBarId} > .button`).should('exist').click();
+        cy.get(`${searchBar} > .input > input`).should('exist').type(Cypress.env('defaultUsername'));
+        cy.get(`${searchBar} > .button`).should('exist').click();
         cy.wait(3000);
         cy.go('back')
         cy.go('forward')
         cy.wait(3000);
-        cy.get(`${userCardId} > .description:nth-child(1) > p`).first().should('exist').should('contain', Cypress.env('defaultUsername'));
+        cy.get(`${userCard} > .description:nth-child(1) > p`).first().should('exist').should('contain', Cypress.env('defaultUsername'));
     });
 });

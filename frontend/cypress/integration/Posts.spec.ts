@@ -10,11 +10,11 @@ beforeEach(() => {
     cy.wait(5000);
 });
 
-const postFormId = '[data-testid="postForm"]';
-const submitPostButton = `${postFormId} > .fields > button[type="submit"]`;
-const postBodyInput = `${postFormId} > .fields > .field > .field > .ui.input > input`;
-const postErrorMessage = `${postFormId} > div.message > ul > li`;
-const postCardId = '[data-testid="postCard"]';
+const postForm = '[data-testid="postForm"]';
+const submitPostButton = `${postForm} > .fields > button[type="submit"]`;
+const postBodyInput = `${postForm} > .fields > .field > .field > .ui.input > input`;
+const postErrorMessage = `${postForm} > div.message > ul > li`;
+const postCard = '[data-testid="postCard"]';
 
 describe('Failing at creating posts', () => {
     it('Should start with button being disabled', () => {
@@ -44,8 +44,8 @@ describe.only('Creating, liking, unliking and deleting post', () => {
         cy.wait(5000);
         
         // Check if it exists
-        cy.get(`${postCardId} > .content > .meta`).first().should('have.text', `${Cypress.env('defaultUsername')} - a few seconds`)
-        cy.get(`${postCardId} > .content > .description`).first().should('have.text', postBody);
+        cy.get(`${postCard} > .content > .meta`).first().should('have.text', `${Cypress.env('defaultUsername')} - a few seconds`)
+        cy.get(`${postCard} > .content > .description`).first().should('have.text', postBody);
     });
 
     it('Should create a post, like it and dislike it', () => {
@@ -70,6 +70,6 @@ describe.only('Creating, liking, unliking and deleting post', () => {
         // Delete it
         cy.get('[data-testid="deleteButton"]').first().click();
         cy.wait(5000);
-        cy.get(`${postCardId} > .content > .meta`).first().should('not.have.text', `${Cypress.env('defaultUsername')} - a few seconds`);
+        cy.get(`${postCard} > .content > .meta`).first().should('not.have.text', `${Cypress.env('defaultUsername')} - a few seconds`);
     })
 });

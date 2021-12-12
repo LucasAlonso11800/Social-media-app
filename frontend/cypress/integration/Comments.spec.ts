@@ -10,11 +10,11 @@ beforeEach(() => {
     cy.contains('Comments');
 });
 
-const commentFormId = '[data-testid="commentForm"]';
-const submitCommentButton = `${commentFormId} > .fields > button[type="submit"]`;
-const commentBodyInput = `${commentFormId} > .fields > .field > .field > .ui.input > input`;
-const commentErrorMessage = `${commentFormId} > div.message > ul > li`;
-const commentId = '[data-testid="comment"]';
+const commentForm = '[data-testid="commentForm"]';
+const submitCommentButton = `${commentForm} > .fields > button[type="submit"]`;
+const commentBodyInput = `${commentForm} > .fields > .field > .field > .ui.input > input`;
+const commentErrorMessage = `${commentForm} > div.message > ul > li`;
+const comment = '[data-testid="comment"]';
 
 describe('Failing at creating comments', () => {
     it('Should start with button being disabled', () => {
@@ -44,8 +44,8 @@ describe.only('Creating, liking, unliking and deleting comment', () => {
         cy.wait(5000);
 
         // Check if it exists
-        cy.get(`${commentId} > .content > .meta` ).first().should('have.text', `a few seconds`)
-        cy.get(`${commentId} > .content > .description` ).first().should('have.text', commentBody);
+        cy.get(`${comment} > .content > .meta` ).first().should('have.text', `a few seconds`)
+        cy.get(`${comment} > .content > .description` ).first().should('have.text', commentBody);
     });
 
     it('Should create a comment, like it and dislike it', () => {
@@ -70,6 +70,6 @@ describe.only('Creating, liking, unliking and deleting comment', () => {
         // Delete it
         cy.get('[data-testid="deleteButton"]').first().click();
         cy.wait(5000);
-        cy.get(`${commentId} > .content > .meta` ).first().should('not.have.text', `a few seconds`);
+        cy.get(`${comment} > .content > .meta` ).first().should('not.have.text', `a few seconds`);
     })
 });

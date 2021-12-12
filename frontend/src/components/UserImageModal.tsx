@@ -73,7 +73,6 @@ export default function UserImageModal(props: Props) {
                     src={imageSrc}
                     alt={image.alt}
                     className="user-modal__img"
-                    data-testid="userModalImage"
                 />
                 <input
                     style={{ display: "none" }}
@@ -81,14 +80,12 @@ export default function UserImageModal(props: Props) {
                     ref={inputFile}
                     onChange={handleImg}
                     type="file"
-                    data-testid="userModalImageInput"
                 />
                 <Button
                     type="button"
                     onClick={() => onButtonClick()}
                     className="user-modal__img-button"
                     disabled={loading}
-                    data-testid="userModalImageButton"
                 >
                     Change image
                 </Button>
@@ -103,10 +100,10 @@ export default function UserImageModal(props: Props) {
             <Button.Group fluid>
                 <Button
                     color="grey"
+                    type="button"
                     onClick={() => setOpen(false)}
                     className="profile-modal__close-button"
                     disabled={loading}
-                    data-testid="userModalCloseButton"
                 >
                     Close
                 </Button>
@@ -116,7 +113,6 @@ export default function UserImageModal(props: Props) {
                     className="profile-modal__submit-button"
                     disabled={loading}
                     onClick={() => editImage()}
-                    data-testid="userModalSubmitButton"
                 >
                     Edit Image
                 </Button>

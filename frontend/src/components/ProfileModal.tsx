@@ -77,7 +77,7 @@ export default function ProfileModal(props: Props) {
             reader.readAsBinaryString(file);
         }
     };
-    
+
     const inputFile: any = useRef(null);
     const handleClick = () => inputFile.current.click();
 
@@ -96,10 +96,9 @@ export default function ProfileModal(props: Props) {
                         value={formik.values.profileName}
                         error={formik.touched.profileName && Boolean(formik.errors.profileName)}
                         onChange={formik.handleChange}
-                        data-testid="profileNameInput"
                     />
                     {formik.touched.profileName && formik.errors.profileName &&
-                        <div className="ui red message" data-testid="profileNameInputError">
+                        <div className="ui red message">
                             <ul className="list">
                                 <li>{formik.errors.profileName}</li>
                             </ul>
@@ -113,10 +112,9 @@ export default function ProfileModal(props: Props) {
                         value={formik.values.bio}
                         error={formik.touched.bio && Boolean(formik.errors.bio)}
                         onChange={formik.handleChange}
-                        data-testid="profileDescriptionInput"
                     />
                     {formik.touched.bio && formik.errors.bio &&
-                        <div className="ui red message" data-testid="profileDescriptionInputError">
+                        <div className="ui red message">
                             <ul className="list">
                                 <li>{formik.errors.bio}</li>
                             </ul>
@@ -127,7 +125,6 @@ export default function ProfileModal(props: Props) {
                             src={imageSrc}
                             alt='Profile image'
                             className="profile-modal__img"
-                            data-testid="profileModalImage"
                         />
                         <input
                             style={{ display: "none" }}
@@ -135,20 +132,18 @@ export default function ProfileModal(props: Props) {
                             ref={inputFile}
                             onChange={handleImg}
                             type="file"
-                            data-testid="profileModalImageInput"
                         />
                         <Button
                             type="button"
                             onClick={() => handleClick()}
                             className="profile-modal__img-button"
                             disabled={loading}
-                            data-testid="profileModalImageButton"
                         >
                             Change image
                         </Button>
                     </div>
                     {fileSizeError ?
-                        <div className="ui red message" data-testid="profileFileSizeError">
+                        <div className="ui red message">
                             <ul className="list">
                                 <li>File size must be under 1MB</li>
                             </ul>
@@ -156,11 +151,11 @@ export default function ProfileModal(props: Props) {
                         : null}
                     <Button.Group fluid>
                         <Button
+                            type="button"
                             color="grey"
                             onClick={() => setOpen(false)}
                             className="profile-modal__close-button"
                             disabled={loading}
-                            data-testid="profileModalCloseButton"
                         >
                             Close
                         </Button>
@@ -169,7 +164,6 @@ export default function ProfileModal(props: Props) {
                             type="submit"
                             className="profile-modal__submit-button"
                             disabled={loading}
-                            data-testid="profileModalSubmitButton"
                         >
                             Edit Profile
                         </Button>

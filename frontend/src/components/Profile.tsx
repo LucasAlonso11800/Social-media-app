@@ -92,18 +92,18 @@ export default function Profile(props: Props) {
         const userCanBlock = state && state.username !== username;
 
         return (
-            <Card fluid>
+            <Card fluid data-testid="profile">
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width="16">
-                            <Image fluid className="profile__profile-image" src={imageSrc} data-testid="profileImage"/>
+                            <Image fluid className="profile__profile-image" src={imageSrc}/>
                         </Grid.Column>
                         <ProfileUserImage userImage={userImage} username={username} loading={userImageLoading} setUserImageModalOpen={setUserImageModalOpen} />
                     </Grid.Row>
                 </Grid>
                 <Card.Content>
                     <div className="profile__name-follow-container">
-                        <h2 className="profile__title" data-testid="profileName">{profileName}</h2>
+                        <h2 className="profile__title">{profileName}</h2>
                         <div className="profile__icons-container">
                             {userCanFollow && <FollowButton followeeId={userId} followStatus={followStatus} setFollowStatus={setFollowStatus} />}
                             {userCanEditAndDelete &&
@@ -115,14 +115,14 @@ export default function Profile(props: Props) {
                             {userCanBlock && <BlockUserButton blockingUserId={state!.id} blockedUserId={userId} isBlocking={isBlocking} setIsBlocking={setIsBlocking} />}
                         </div>
                     </div>
-                    <Card.Meta data-testid="username"><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
-                    <Card.Meta data-testid="userLocation">
+                    <Card.Meta><Icon name="user outline" className="profile__icon" /> {username}</Card.Meta>
+                    <Card.Meta>
                         <Popup
                             inverted
                             content="Lives in"
                             trigger={<Icon name="map marker alternate" className="profile__icon" />}
                         />{city}, {country}</Card.Meta>
-                    <Card.Meta data-testid="userAge">
+                    <Card.Meta>
                         <Popup
                             inverted
                             content="Age"

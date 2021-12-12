@@ -1,15 +1,15 @@
 /// <reference types="cypress" />
 
 describe('Register', () => {
-    const navbarId = '[data-testid="navbar"]';
-    const registerId = '[data-testid="register"]';
-    const submitButton = `${registerId} > button[type="submit"]`;
-    const errorMessage = `${registerId} > div.message > ul > li`;
-    const getInput = (name: string) => `${registerId} > .field > .input > input[name=${name}]`;
+    const navbar = '[data-testid="navbar"]';
+    const register = '[data-testid="register"]';
+    const submitButton = `${register} > button[type="submit"]`;
+    const errorMessage = `${register} > div.message > ul > li`;
+    const getInput = (name: string) => `${register} > .field > .input > input[name=${name}]`;
 
     beforeEach(() => {
         cy.visit(Cypress.env('url'));
-        cy.get(`${navbarId} > div > a:nth-child(2)`).click();
+        cy.get(`${navbar} > div > a:nth-child(2)`).click();
         cy.contains('Register');
     });
 
@@ -74,8 +74,8 @@ describe('Register', () => {
         cy.get(submitButton).click();
         cy.wait(1000);
         
-        cy.get(`${navbarId} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
-        cy.get(`${navbarId} > a:nth-child(2)`).should('have.text', username.toString()).should(() => {
+        cy.get(`${navbar} > div > a:nth-child(1)`).should('exist').and('have.text', 'Logout');
+        cy.get(`${navbar} > a:nth-child(2)`).should('have.text', username.toString()).should(() => {
             expect(localStorage.getItem('token')).to.not.undefined;
         });
     });
