@@ -5,48 +5,54 @@ import { dislikePostOrComment, likePostOrComment, login, setToken } from "../uti
 before(() => login());
 beforeEach(() => {
     setToken();
-    cy.get('[data-testid="navbarUsername"]').click();
+    cy.get('[data-testid="navbar"] > a:nth-child(2)').click();
     cy.url().should('include', '/user/');
     cy.wait(5000);
 });
 
+const postFormId = '[data-testid="postForm"]';
+const submitPostButton = `${postFormId} > .fields > button[type="submit"]`;
+const postBodyInput = `${postFormId} > .fields > .field > .field > .ui.input > input`;
+const postErrorMessage = `${postFormId} > div.message > ul > li`;
+const postCardId = '[data-testid="postCard"]';
+
 describe('Failing at creating posts', () => {
     it('Should start with button being disabled', () => {
-        cy.get('[data-testid="postFormButton"]').should('be.disabled');
+        cy.get(submitPostButton).should('be.disabled');
     });
 
     it('Should enable button when user starts typing in the input', () => {
-        cy.get('[data-testid="postBodyInput"]').type('Whatever');
-        cy.get('[data-testid="postFormButton"]').should('be.enabled');
+        cy.get(postBodyInput).type('Whatever');
+        cy.get(submitPostButton).should('be.enabled');
     });
 
     it('Should throw error when user tries to submit a post with a body longer than 140 characters', () => {
-        cy.get('[data-testid="postBodyInput"]').type('okaysothisisgoingtobeareallybutimeanreallyreallypostbodythatiscompletelygoingtofailoratleastthatswhatihopeforotherwiseitwouldbeabitsadtoseeitpastasifnothinghappened');
-        cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
-        cy.get('[data-testid="postBodyError"]').should('have.text', 'It can not be longer than 140 characters');
+        cy.get(postBodyInput).type('okaysothisisgoingtobeareallybutimeanreallyreallypostbodythatiscompletelygoingtofailoratleastthatswhatihopeforotherwiseitwouldbeabitsadtoseeitpastasifnothinghappened');
+        cy.get(submitPostButton).should('be.enabled').click();
+        cy.get(postErrorMessage).should('have.text', 'It can not be longer than 140 characters');
     });
 });
 
-describe('Creating, liking, unliking and deleting post', () => {
+describe.only('Creating, liking, unliking and deleting post', () => {
     const postBody: string = 'Just a normal post';
 
     it('Should create a post and display it', () => {
         // Create comment                
-        cy.get('[data-testid="postBodyInput"]').type(postBody);
-        cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
-        cy.get('[data-testid="postBodyError"]').should('not.exist');
+        cy.get(postBodyInput).type(postBody);
+        cy.get(submitPostButton).should('be.enabled').click();
+        cy.get(postErrorMessage).should('not.exist');
         cy.wait(5000);
         
         // Check if it exists
-        cy.get('[data-testid="postBody"]').first().should('have.text', postBody);
-        cy.get('[data-testid="postData"]').first().should('have.text', `${Cypress.env('defaultUsername')} - a few seconds`)
+        cy.get(`${postCardId} > .content > .meta`).first().should('have.text', `${Cypress.env('defaultUsername')} - a few seconds`)
+        cy.get(`${postCardId} > .content > .description`).first().should('have.text', postBody);
     });
 
     it('Should create a post, like it and dislike it', () => {
         // Create post
-        cy.get('[data-testid="postBodyInput"]').type(postBody);
-        cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
-        cy.get('[data-testid="postBodyError"]').should('not.exist');
+        cy.get(postBodyInput).type(postBody);
+        cy.get(submitPostButton).should('be.enabled').click();
+        cy.get(postErrorMessage).should('not.exist');
         cy.wait(5000);
 
         // Like said post
@@ -57,13 +63,13 @@ describe('Creating, liking, unliking and deleting post', () => {
 
     it('Should create a post and delete it', () => {
         // Create post
-        cy.get('[data-testid="postBodyInput"]').type(postBody);
-        cy.get('[data-testid="postFormButton"]').should('be.enabled').click();
-        cy.get('[data-testid="postBodyError"]').should('not.exist');
+        cy.get(postBodyInput).type(postBody);
+        cy.get(submitPostButton).should('be.enabled').click();
+        cy.get(postErrorMessage).should('not.exist');
         cy.wait(5000);
         // Delete it
         cy.get('[data-testid="deleteButton"]').first().click();
         cy.wait(5000);
-        cy.get('[data-testid="postData"]').first().should('not.have.text', `${Cypress.env('defaultUsername')} - a few seconds`);
+        cy.get(`${postCardId} > .content > .meta`).first().should('not.have.text', `${Cypress.env('defaultUsername')} - a few seconds`);
     })
 });

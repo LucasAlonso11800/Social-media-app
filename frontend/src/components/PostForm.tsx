@@ -62,7 +62,7 @@ export default function PostForm(props: Props) {
     };
 
     return (
-        <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
+        <Form onSubmit={formik.handleSubmit} style={{ width: '100%' }} data-testid="postForm">
             <h2>Create post</h2>
             <Form.Group style={{ width: '100%', margin: 0 }}>
                 <Form.Field className="post-form__body-input">
@@ -73,7 +73,6 @@ export default function PostForm(props: Props) {
                         value={formik.values.body}
                         onChange={formik.handleChange}
                         error={formik.touched.body && Boolean(formik.errors.body)}
-                        data-testid="postBodyInput"
                     />
                 </Form.Field>
                 <Button
@@ -81,13 +80,12 @@ export default function PostForm(props: Props) {
                     color="twitter"
                     disabled={formik.values.body.trim() === '' || loading}
                     className="post-form__button"
-                    data-testid="postFormButton"
                 >
                     Post
                 </Button>
             </Form.Group>
             {formik.touched.body && formik.errors.body &&
-                <div className="ui red message" data-testid="postBodyError">
+                <div className="ui red message">
                     <ul className="list">
                         <li>{formik.errors.body}</li>
                     </ul>

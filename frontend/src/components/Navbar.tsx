@@ -36,7 +36,6 @@ export default function NavBar() {
                 as={Link}
                 to="/search"
                 onClick={() => setActiveItem('search')}
-                data-testid="navbarSearch"
             />
             <Menu.Menu position='right'>
                 <Menu.Item
@@ -45,7 +44,6 @@ export default function NavBar() {
                         type: EActionType.LOGOUT,
                         payload: null
                     })}
-                    data-testid="logout"
                 />
             </Menu.Menu>
         </Menu>

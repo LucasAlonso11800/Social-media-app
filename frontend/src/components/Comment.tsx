@@ -23,12 +23,12 @@ export default function Comment(props: Props) {
     const userCanDelete = state && state.username === comment.username;
 
     return (
-        <Card fluid>
+        <Card fluid data-testid="comment">
             <Card.Content>
                 {userCanDelete && <DeleteButton postId={postId} commentId={comment.id} />}
                 <Card.Header>{comment.username}</Card.Header>
-                <Card.Meta data-testid="commentData">{transformDate(comment.createdAt)}</Card.Meta>
-                <Card.Description data-testid="commentBody">{comment.body}</Card.Description>
+                <Card.Meta>{transformDate(comment.createdAt)}</Card.Meta>
+                <Card.Description>{comment.body}</Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <LikeButton commentId={comment.id} />
